@@ -1,0 +1,186 @@
+<div class="container mat-typography" style="margin: 32px auto; max-width: 1200px;">
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="flex justify-center items-center" style="height: 16rem;">
+    <mat-spinner diameter="48" color="primary"></mat-spinner>
+  </div>
+
+  <!-- Bono no encontrado -->
+  <div *ngIf="!isLoading && !bond" class="text-center" style="padding: 48px 0;">
+    <mat-card class="mx-auto" style="max-width: 400px;">
+      <mat-card-content>
+        <h3 class="mat-title">Bono no encontrado</h3>
+        <p class="mat-body-2">El bono que buscas no existe o ha sido eliminado.</p>
+        <div style="margin-top: 24px;">
+          <button mat-stroked-button color="primary" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Volver
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Detalle del bono -->
+  <div *ngIf="!isLoading && bond">
+    <div style="margin-bottom: 24px;">
+      <button mat-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+      </button>
+      <div class="flex justify-between items-center" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h1 class="mat-headline" style="font-weight: bold;">{{ bond.name }}</h1>
+        </div>
+        <button mat-flat-button color="primary" (click)="editBond()">
+          <mat-icon>edit</mat-icon>
+          Editar
+        </button>
+      </div>
+    </div>
+
+    <div class="mat-elevation-z2" style="display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-bottom: 32px;">
+      <mat-card>
+        <mat-card-title>Valor nominal</mat-card-title>
+        <mat-card-content>
+          <p class="mat-display-1">{{ formatCurrency(bond.faceValue, bond.currency) }}</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-title>Tasa de interés</mat-card-title>
+        <mat-card-content>
+          <p class="mat-display-1">
+            {{ bond.interestRate }}% {{ bond.rateType === 'effective' ? 'efectiva' : 'nominal' }}
+          </p>
+          <span *ngIf="bond.compounding" class="mat-body-2">
+            Capitalización: {{ bond.compounding }}
+          </span>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-title>Plazo</mat-card-title>
+        <mat-card-content>
+          <p class="mat-display-1">{{ bond.term }} meses</p>
+          <p class="mat-body-2">Frecuencia de pago: {{ bond.paymentFrequency }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <mat-card class="mat-elevation-z2" style="margin-bottom: 32px;">
+      <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedIndexChange)="onTabChange($event)">
+        <mat-tab label="Flujo de Caja">
+          <div style="padding: 24px 0;">
+            <div class="flex justify-between items-center" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+              <h2 class="mat-title">Flujo de Caja (Método Francés)</h2>
+              <div>
+                <button mat-stroked-button color="primary" (click)="recalculateCashFlow()" [disabled]="isCalculating">
+                  <mat-progress-spinner *ngIf="isCalculating" diameter="20" mode="indeterminate" color="accent" style="margin-right: 8px;"></mat-progress-spinner>
+                  <mat-icon *ngIf="!isCalculating" style="margin-right: 8px;">refresh</mat-icon>
+                  {{ isCalculating ? 'Calculando...' : 'Recalcular' }}
+                </button>
+                <button mat-stroked-button color="accent" (click)="exportCashFlow()" style="margin-left: 8px;">
+                  <mat-icon style="margin-right: 8px;">file_download</mat-icon>
+                  Exportar
+                </button>
+              </div>
+            </div>
+            <div style="overflow-x: auto;">
+              <table mat-table [dataSource]="cashFlows" class="mat-elevation-z1" style="min-width: 900px;">
+                <ng-container matColumnDef="period">
+                  <th mat-header-cell *matHeaderCellDef>Período</th>
+                  <td mat-cell *matCellDef="let flow">{{ flow.period }}</td>
+                </ng-container>
+                <ng-container matColumnDef="date">
+                  <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                  <td mat-cell *matCellDef="let flow">{{ formatDate(flow.date) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="initialBalance">
+                  <th mat-header-cell *matHeaderCellDef>Saldo Inicial</th>
+                  <td mat-cell *matCellDef="let flow">{{ formatCurrency(flow.initialBalance, bond.currency) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="interest">
+                  <th mat-header-cell *matHeaderCellDef>Interés</th>
+                  <td mat-cell *matCellDef="let flow">{{ formatCurrency(flow.interest, bond.currency) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="amortization">
+                  <th mat-header-cell *matHeaderCellDef>Amortización</th>
+                  <td mat-cell *matCellDef="let flow">{{ formatCurrency(flow.amortization, bond.currency) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="installment">
+                  <th mat-header-cell *matHeaderCellDef>Cuota</th>
+                  <td mat-cell *matCellDef="let flow">{{ formatCurrency(flow.installment, bond.currency) }}</td>
+                </ng-container>
+                <ng-container matColumnDef="finalBalance">
+                  <th mat-header-cell *matHeaderCellDef>Saldo Final</th>
+                  <td mat-cell *matCellDef="let flow">{{ formatCurrency(flow.finalBalance, bond.currency) }}</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="['period','date','initialBalance','interest','amortization','installment','finalBalance']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['period','date','initialBalance','interest','amortization','installment','finalBalance'];"></tr>
+              </table>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Métricas Financieras">
+          <div style="padding: 24px 0;">
+            <h2 class="mat-title" style="margin-bottom: 24px;">Métricas Financieras</h2>
+            <div *ngIf="metrics; else noMetrics" class="mat-grid-list" style="display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+              <mat-card>
+                <mat-card-title>Tasas</mat-card-title>
+                <mat-card-content>
+                  <p class="mat-body-2">Tasas efectivas anuales</p>
+                  <div>
+                    <div>
+                      <span class="mat-body-2">TCEA</span>
+                      <div class="mat-display-1">{{ formatPercent(metrics.tcea) }}</div>
+                    </div>
+                    <div>
+                      <span class="mat-body-2">TREA</span>
+                      <div class="mat-display-1">{{ formatPercent(metrics.trea) }}</div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+              <mat-card>
+                <mat-card-title>Precio de Mercado</mat-card-title>
+                <mat-card-content>
+                  <p class="mat-body-2">Valor actual del bono</p>
+                  <div class="mat-display-1">{{ formatCurrency(metrics.marketPrice, bond.currency) }}</div>
+                  <p class="mat-body-2">Valor nominal: {{ formatCurrency(bond.faceValue, bond.currency) }}</p>
+                  <p class="mat-body-2">Diferencia: {{ formatCurrency(metrics.marketPrice - bond.faceValue, bond.currency) }}</p>
+                </mat-card-content>
+              </mat-card>
+              <mat-card>
+                <mat-card-title>Duración</mat-card-title>
+                <mat-card-content>
+                  <p class="mat-body-2">Sensibilidad a cambios en la tasa</p>
+                  <div>
+                    <span class="mat-body-2">Duración</span>
+                    <div class="mat-display-1">{{ metrics.duration.toFixed(2) }} años</div>
+                  </div>
+                  <div>
+                    <span class="mat-body-2">Duración Modificada</span>
+                    <div class="mat-display-1">{{ metrics.modifiedDuration.toFixed(2) }}</div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+              <mat-card>
+                <mat-card-title>Convexidad</mat-card-title>
+                <mat-card-content>
+                  <p class="mat-body-2">Medida de curvatura</p>
+                  <div class="mat-display-1">{{ metrics.convexity.toFixed(2) }}</div>
+                  <p class="mat-body-2" style="margin-top: 8px;">
+                    La convexidad es una medida de la curvatura en la relación entre los precios de los bonos y los rendimientos.
+                  </p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <ng-template #noMetrics>
+              <div class="text-center" style="padding: 48px 0;">
+                <p class="mat-body-2">No hay métricas financieras disponibles para este bono.</p>
+              </div>
+            </ng-template>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
+</div>

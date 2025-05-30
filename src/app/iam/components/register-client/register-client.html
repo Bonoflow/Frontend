@@ -1,0 +1,111 @@
+<!-- register-client.component.html -->
+<div class="horizontal-layout">
+  <!-- Imagen lateral -->
+  <div class="image-side">
+    <img src="assets/images/image-login.png" alt="Fondo decorativo" />
+  </div>
+
+  <!-- Formulario -->
+  <div class="form-side">
+    <mat-card class="register-patient-card">
+      <div class="logo-container">
+        <img src="assets/images/logo-oncontigo.png" alt="Logo OnContigo" class="logo" />
+      </div>
+
+      <mat-card-header class="card-header">
+        <mat-card-title class="card-title">Registro de Cliente</mat-card-title>
+        <mat-card-subtitle class="card-subtitle">Completa los campos para registrarte</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <div class="two-columns-container">
+            <!-- Imagen de perfil -->
+            <div class="profile-image-section">
+              <div class="image-preview" *ngIf="imagePreview; else placeholder">
+                <img [src]="imagePreview" alt="Preview de imagen de perfil" />
+                <button mat-icon-button class="remove-image" (click)="removeImage()" type="button">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+              <ng-template #placeholder>
+                <div class="image-placeholder">
+                  <mat-icon>account_circle</mat-icon>
+                  <span>Foto de perfil</span>
+                </div>
+              </ng-template>
+              <div class="image-upload-container">
+                <input
+                  #fileInput
+                  type="file"
+                  accept="image/*"
+                  (change)="onImagePicked($event)"
+                  style="display: none;" />
+                <button mat-stroked-button type="button" class="upload-button" (click)="fileInput.click()">
+                  <mat-icon>cloud_upload</mat-icon>
+                  Seleccionar imagen
+                </button>
+                <span class="image-requirements">Formatos: JPG, PNG (Max. 2MB)</span>
+              </div>
+            </div>
+
+            <!-- Campos de formulario -->
+            <div class="form-columns">
+              <div class="form-column">
+                <mat-form-field appearance="fill" class="modern-field">
+                  <mat-label>Nombre</mat-label>
+                  <input matInput formControlName="firstname" />
+                  <mat-icon matSuffix>person</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="modern-field">
+                  <mat-label>Email</mat-label>
+                  <input matInput formControlName="email" type="email" />
+                  <mat-icon matSuffix>email</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="modern-field">
+                  <mat-label>Fecha de Nacimiento</mat-label>
+                  <input matInput formControlName="birthDate" type="date" />
+                  <mat-icon matSuffix>cake</mat-icon>
+                </mat-form-field>
+              </div>
+
+              <div class="form-column">
+                <mat-form-field appearance="fill" class="modern-field">
+                  <mat-label>Apellido</mat-label>
+                  <input matInput formControlName="lastname" />
+                  <mat-icon matSuffix>person_outline</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="modern-field">
+                  <mat-label>Contraseña</mat-label>
+                  <input matInput formControlName="password" type="password" />
+                  <mat-icon matSuffix>lock</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="modern-field full-width">
+                  <mat-label>Descripción</mat-label>
+                  <textarea matInput formControlName="description" rows="2"></textarea>
+                  <mat-icon matSuffix>description</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit">
+              <mat-icon>how_to_reg</mat-icon>
+              Registrar
+            </button>
+            <button mat-stroked-button type="button" (click)="goBack()">
+              <mat-icon>cancel</mat-icon>
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

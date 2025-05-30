@@ -1,0 +1,72 @@
+.sidenav-header {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+
+}
+
+.logo {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+}
+
+.app-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.sidenav-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #f4f4f4;
+  width: 250px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.sidenav-nav-item {
+  margin: 4px 0;
+}
+
+.sidenav-nav-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #111;
+  padding: 12px 20px;
+  transition: background-color 0.2s ease;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.sidenav-nav-link:hover {
+  background-color: #e0e0e0;
+}
+
+.sidenav-nav-link.active {
+  background-color: #2f4eb3;
+  color: white;
+}
+
+.sidenav-nav-link.active .sidenav-link-icon {
+  color: white;
+}
+
+.sidenav-link-icon {
+  margin-right: 12px;
+  color: #444;
+}
+
+.logout-link {
+  margin-top: auto;
+  color: #d32f2f;
+}
+
+.logout-link:hover {
+  background-color: #ffcdd2;
+}

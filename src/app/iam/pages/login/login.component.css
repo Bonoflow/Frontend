@@ -1,0 +1,133 @@
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f6fa;
+  overflow: hidden;
+}
+
+.login-form-section {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 80px;
+  background-color: #ffffff;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+
+  .logo {
+    height: 45px;
+    object-fit: contain;
+  }
+}
+
+.login-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #222;
+  margin-bottom: 40px;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 4px 8px;
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding: 0 !important;
+  }
+
+  ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+    border-radius: 8px;
+  }
+}
+
+.login-button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 0;
+  font-weight: bold;
+  font-size: 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  background-color: #2f49d1;
+  color: #fff;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #233ab7;
+  }
+
+  mat-icon {
+    font-size: 18px;
+  }
+}
+
+.register-option {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: #444;
+
+  a {
+    color: #2f49d1;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 5px;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.error-message {
+  color: #e53935;
+  font-size: 13px;
+  margin-top: -8px;
+  margin-bottom: 12px;
+}
+
+.login-image-section {
+  width: 50%;
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2); /* oscurece ligeramente */
+  }
+}

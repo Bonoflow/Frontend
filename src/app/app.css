@@ -1,0 +1,16 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+app-sidenav {
+  flex: 0 0 250px; /* ancho fijo del sidebar */
+  max-width: 250px;
+}
+
+.app-content {
+  flex: 1 1 auto;
+  padding: 24px;
+  background: #f5f6fa;
+  min-width: 0;
+}

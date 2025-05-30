@@ -1,0 +1,128 @@
+/* Contenedor principal */
+.bond-form-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #f5f7fa;
+}
+
+/* Tarjeta del formulario */
+.bond-form-card {
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Estilos para la card de Material */
+mat-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+mat-card-header {
+  background-color: #3f51b5;
+  color: white;
+  padding: 1.5rem !important;
+}
+
+mat-card-title {
+  font-size: 1.5rem !important;
+  font-weight: 500 !important;
+}
+
+mat-card-subtitle {
+  color: #e0e0e0 !important;
+  margin-top: 0.5rem !important;
+}
+
+/* Contenido del formulario */
+mat-card-content {
+  padding: 2rem !important;
+}
+
+/* Secciones del formulario */
+.bond-section-title {
+  color: #3f51b5;
+  margin: 1.5rem 0 1rem 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bond-section-divider {
+  margin: 1.5rem 0 !important;
+  border-top-color: #e0e0e0 !important;
+}
+
+/* Campos del formulario */
+.bond-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.bond-form-field-half {
+  width: calc(50% - 0.5rem);
+}
+
+.bond-form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Estilos para los inputs */
+.mat-form-field-outline {
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.mat-input-element {
+  color: #333 !important;
+}
+
+/* Botones */
+.bond-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.bond-btn {
+  padding: 0.5rem 1.5rem !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.bond-btn-cancel {
+  border: 1px solid #e0e0e0 !important;
+}
+
+/* Mensajes de error */
+.mat-error {
+  font-size: 0.8rem !important;
+  margin-top: 0.3rem !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bond-form-container {
+    padding: 1rem;
+  }
+
+  .bond-form-row {
+    flex-direction: column;
+  }
+
+  .bond-form-field-half {
+    width: 100%;
+  }
+
+  mat-card-content {
+    padding: 1.5rem !important;
+  }
+}
