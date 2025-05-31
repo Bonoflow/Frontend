@@ -1,0 +1,67 @@
+.dashboard-container {
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 16px;
+}
+
+.dashboard-toolbar {
+  margin-bottom: 32px;
+}
+
+.dashboard-spacer {
+  flex: 1 1 auto;
+}
+
+.dashboard-cards {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.dashboard-card {
+  flex: 1 1 300px;
+  min-width: 280px;
+  max-width: 350px;
+}
+
+.dashboard-bonds-card {
+  margin-top: 16px;
+  padding: 24px;
+}
+
+.dashboard-bonds-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.dashboard-bonds-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.dashboard-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+}
+
+.dashboard-empty-state {
+  text-align: center;
+  padding: 32px 0;
+}
+
+.dashboard-empty-icon {
+  font-size: 48px;
+  color: #bdbdbd;
+  margin-bottom: 8px;
+}
+
+.dashboard-table {
+  width: 100%;
+  margin-top: 8px;
+}

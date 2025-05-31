@@ -1,14 +1,11 @@
 <div class="bond-form-container">
+  <mat-toolbar class="bond-form-header-toolbar">
+  <span class="bond-form-header-title">
+    {{ isEditMode ? 'Editar Bono' : 'Nuevo Bono' }}
+  </span>
+  </mat-toolbar>
   <div class="bond-form-card">
     <mat-card>
-      <mat-card-header>
-        <mat-card-title>
-          {{ isEditMode ? 'Editar Bono' : 'Nuevo Bono' }}
-        </mat-card-title>
-        <mat-card-subtitle>
-          {{ isEditMode ? 'Modifica los detalles del bono' : 'Ingresa los detalles del nuevo bono' }}
-        </mat-card-subtitle>
-      </mat-card-header>
       <mat-card-content>
         <form [formGroup]="bondForm" (ngSubmit)="onSubmit()">
 
@@ -120,8 +117,10 @@
 
           <!-- Botones -->
           <div class="bond-form-actions">
-            <button mat-stroked-button type="button" (click)="onCancel()" class="bond-btn">Cancelar</button>
-            <button mat-flat-button color="primary" type="submit" [disabled]="bondForm.invalid || isLoading" class="bond-btn">
+            <button mat-stroked-button type="button" (click)="onCancel()" class="bond-btn bond-btn-cancel">
+              Cancelar
+            </button>
+            <button mat-flat-button color="primary" type="submit" [disabled]="bondForm.invalid || isLoading" class="bond-btn main-button">
               <mat-progress-spinner *ngIf="isLoading" diameter="20" mode="indeterminate" color="accent"></mat-progress-spinner>
               <span *ngIf="!isLoading">{{ isEditMode ? 'Actualizar' : 'Crear' }} Bono</span>
               <span *ngIf="isLoading">Guardando...</span>

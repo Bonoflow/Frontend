@@ -1,0 +1,145 @@
+.edit-profile-title {
+  margin-bottom: 24px;
+  font-size: 2.8rem;
+  font-weight: 800;
+  text-align: center;
+  color: #2B4A99;
+  letter-spacing: 1.5px;
+}
+
+.client-theme {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(43, 74, 153, 0.10);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e3e7f3;
+}
+
+.edit-profile-card {
+  width: 60%;
+  margin: 0 auto;
+  min-height: 75vh; /* Card más alto según porcentaje */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.edit-profile-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.client-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.client-icon {
+  font-size: 48px;
+  color: #2B4A99;
+}
+
+.client-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #1b2e59;
+}
+
+.client-bg {
+  background-size: 160px;
+  opacity: 0.10;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 160px;
+  height: 160px;
+  pointer-events: none;
+}
+
+.profile-photo-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+.profile-photo-preview img {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #2B4A99;
+  box-shadow: 0 4px 16px rgba(43, 74, 153, 0.18);
+}
+.photo-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.edit-profile-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.edit-profile-field {
+  width: 100%;
+}
+.edit-profile-field mat-label,
+.edit-profile-field input,
+.edit-profile-field textarea {
+  font-size: 1.2rem;
+}
+
+@media (max-width: 1000px) {
+  .edit-profile-fields {
+    grid-template-columns: 1fr;
+  }
+  .edit-profile-card {
+    width: 95%;
+  }
+}
+
+.edit-profile-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+.edit-profile-changed {
+  background-color: #81c784 !important; /* Verde suave */
+  color: #fff !important;
+  transition: background 0.2s;
+}
+
+.edit-profile-field mat-label {
+  color: #b0b8c9 !important; /* Gris aún más suave */
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.client-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28px;
+  color: #2B4A99;
+  font-weight: 600;
+  gap: 10px;
+  font-size: 1.4rem;
+}
+
+/* Fondo para el calendario Angular Material */
+.mat-datepicker-content {
+  background: rebeccapurple !important;
+}

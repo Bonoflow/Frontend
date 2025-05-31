@@ -1,135 +1,177 @@
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px;
+.bond-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background-color: #f5f7fa;
 }
 
-.header-toolbar {
+.bond-form-header-toolbar {
   margin-bottom: 24px;
+  border-radius: 10px;
+  background: #fff !important;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 18px 24px;
+  width: 100%;
+  height: auto;
+  max-width: 800px;
+  min-height: unset;
+  border: 1.5px solid #e3e8ee;
+}
+
+.bond-form-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2f4eb3;
+}
+
+.bond-form-header-subtitle {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #4158d0;
+  margin-top: 6px;
+}
+
+.bond-form-card {
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Estilos para la card de Material */
+mat-card {
+  box-shadow: 0 4px 16px rgba(44,62,80,0.10) !important;
+  border-radius: 16px !important;
+  overflow: hidden;
+  background: #fff !important;
+  border: 1.5px solid #e3e8ee !important;
+}
+
+mat-card-content {
+  padding: 2rem !important;
+}
+
+/* Secciones del formulario */
+.bond-section-title {
+  color: #2f4eb3;
+  margin: 1.5rem 0 1rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bond-section-divider {
+  margin: 1.5rem 0 !important;
+  border-top-color: #e0e0e0 !important;
+}
+
+/* Campos del formulario */
+.bond-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.bond-form-field-half {
+  width: calc(50% - 0.5rem);
+}
+
+.bond-form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Estilos para los inputs */
+.mat-form-field-outline {
+  background-color: #fff;
   border-radius: 4px;
 }
 
-.spacer {
-  flex: 1 1 auto;
+.mat-input-element {
+  color: #333 !important;
 }
 
-.loading-spinner {
-  margin: 100px auto;
+/* Botones principales */
+.main-button,
+.mat-flat-button:not(.bond-btn-cancel),
+.mat-raised-button:not(.bond-btn-cancel) {
+  background: #2f4eb3 !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: background 0.18s;
+  box-shadow: none !important;
 }
 
-.cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
+.main-button:hover,
+.mat-flat-button:not(.bond-btn-cancel):hover,
+.mat-raised-button:not(.bond-btn-cancel):hover {
+  background: #223a7a !important;
 }
 
-.bond-card {
-  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
+/* Botón cancelar */
+.bond-btn-cancel,
+.mat-stroked-button.bond-btn-cancel {
+  border: 1.5px solid #e0e0e0 !important;
+  color: #2f4eb3 !important;
+  background: #fff !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: background 0.18s, color 0.18s;
 }
 
-.bond-card:hover {
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-  0 8px 10px 1px rgba(0, 0, 0, 0.14),
-  0 3px 14px 2px rgba(0, 0, 0, 0.12);
+.bond-btn-cancel:hover {
+  background: #e3e8ee !important;
+  color: #223a7a !important;
 }
 
-.bond-name {
-  font-size: 18px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 200px;
+/* Botones generales */
+.bond-btn {
+  padding: 0.5rem 1.5rem !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  letter-spacing: 0.5px !important;
+  font-size: 1rem !important;
+  min-width: 120px;
 }
 
-.bond-currency {
-  color: rgba(0, 0, 0, 0.54);
+/* Mensajes de error */
+.mat-error {
+  font-size: 0.8rem !important;
+  margin-top: 0.3rem !important;
 }
 
-.bond-details {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.bond-detail-row {
-  display: flex;
-  justify-content: space-between;
-}
-
-.bond-detail-label {
-  color: rgba(0, 0, 0, 0.6);
-  font-size: 14px;
-}
-
-.bond-detail-value {
-  color: rgba(0, 0, 0, 0.87);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.detail-button {
-  width: 100%;
-  text-align: center;
-}
-
-.empty-state {
-  margin-top: 48px;
-}
-
-.empty-card {
-  max-width: 500px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.empty-content {
-  padding: 24px;
-}
-
-.empty-icon {
-  width: 48px;
-  height: 48px;
-  font-size: 48px;
-  color: rgba(0, 0, 0, 0.12);
-  margin-bottom: 16px;
-}
-
-.empty-title {
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 8px;
-}
-
-.empty-description {
-  color: rgba(0, 0, 0, 0.6);
-  margin-bottom: 24px;
-}
-
-.empty-button {
-  margin-top: 16px;
+/* Spinner en el botón */
+mat-progress-spinner {
+  vertical-align: middle;
+  margin-right: 8px;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .cards-container {
-    grid-template-columns: 1fr;
+  .bond-form-container {
+    padding: 1rem;
   }
 
-  .header-toolbar {
-    flex-direction: column;
-    height: auto;
+  .bond-form-header-toolbar {
     padding: 12px;
+    max-width: 100%;
   }
 
-  .spacer {
-    display: none;
+  .bond-form-row {
+    flex-direction: column;
   }
 
-  button {
-    margin-top: 12px;
+  .bond-form-field-half {
     width: 100%;
+  }
+
+  mat-card-content {
+    padding: 1.5rem !important;
   }
 }

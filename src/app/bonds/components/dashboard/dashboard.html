@@ -1,0 +1,107 @@
+
+
+<div class="dashboard-container">
+  <mat-toolbar color="primary" class="dashboard-toolbar">
+    <span>Dashboard</span>
+    <span class="dashboard-spacer"></span>
+    <span>Bienvenido, {{ username }}</span>
+  </mat-toolbar>
+
+  <div class="dashboard-cards">
+    <mat-card class="dashboard-card">
+      <mat-card-title>Mis Bonos</mat-card-title>
+      <mat-card-content>
+        <p>Gestiona tus bonos financieros</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="view()">
+          Ver bonos
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="dashboard-card">
+      <mat-card-title>Nuevo Bono</mat-card-title>
+      <mat-card-content>
+        <p>Crea un nuevo bono financiero</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent" (click)="createNewBond()">
+          Crear bono
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="dashboard-card">
+      <mat-card-title>Mi Perfil</mat-card-title>
+      <mat-card-content>
+        <p>Gestiona tu información personal</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="view()">
+          Ver perfil
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <mat-card class="dashboard-bonds-card">
+    <div class="dashboard-bonds-header">
+      <span class="dashboard-bonds-title">Bonos Recientes</span>
+      <button mat-button color="primary" (click)="view()">
+        Ver todos
+      </button>
+    </div>
+
+    <div *ngIf="isLoading" class="dashboard-spinner-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <div *ngIf="!isLoading">
+      <div *ngIf="(bonds$ | async)?.length === 0" class="dashboard-empty-state">
+        <mat-icon class="dashboard-empty-icon">description</mat-icon>
+        <h3>No tienes bonos registrados</h3>
+        <button mat-raised-button color="primary" (click)="createNewBond()">
+          Crear tu primer bono
+        </button>
+      </div>
+
+      <div *ngIf="((bonds$ | async) || []).length > 0">
+        <table mat-table [dataSource]="(bonds$ | async | slice:0:5) || []" class="dashboard-table">
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let bond">{{ bond.name }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="faceValue">
+            <th mat-header-cell *matHeaderCellDef>Valor Nominal</th>
+            <td mat-cell *matCellDef="let bond">{{ formatCurrency(bond.faceValue, bond.currency) }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="interestRate">
+            <th mat-header-cell *matHeaderCellDef>Tasa</th>
+            <td mat-cell *matCellDef="let bond">{{ bond.interestRate }}%</td>
+          </ng-container>
+
+          <ng-container matColumnDef="term">
+            <th mat-header-cell *matHeaderCellDef>Plazo</th>
+            <td mat-cell *matCellDef="let bond">{{ bond.term }} meses</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let bond">
+              <button mat-button color="primary" (click)="viewBondDetail(bond.id)">
+                Ver detalles
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="['name', 'faceValue', 'interestRate', 'term', 'actions']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['name', 'faceValue', 'interestRate', 'term', 'actions'];"></tr>
+        </table>
+      </div>
+    </div>
+  </mat-card>
+</div>

@@ -1,72 +1,115 @@
-.sidenav-header {
-  display: flex;
-  align-items: center;
-  padding: 20px;
-
-}
-
-.logo {
-  width: 28px;
-  height: 28px;
-  margin-right: 10px;
-}
-
-.app-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 0;
-}
-
 .sidenav-nav {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  background-color: #f4f4f4;
-  width: 250px;
+  height: 100vh;
+  background: #f5f7fa;
+  width: 260px;
   font-family: 'Segoe UI', sans-serif;
+  box-shadow: 4px 0 32px 0 rgba(44,62,80,0.18), 0 2px 8px 0 rgba(44,62,80,0.08);  /* Sombra sutil para resaltar el borde blanco */
+  position: relative;
+}
+
+.sidenav-nav::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  box-shadow: 2px 0 8px 0 rgba(44,62,80,0.10);
+  pointer-events: none;
+}
+
+.sidenav-header {
+  display: flex;
+  align-items: center;
+  padding: 28px 20px 18px 20px;
+  background: #f5f7fa;
+  border-bottom: 1px solid #d1d9e6;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  margin-right: 14px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+}
+
+.app-name {
+  font-size: 21px;
+  font-weight: 700;
+  margin: 0;
+  color: #2f4eb3;
+  letter-spacing: 1px;
 }
 
 .sidenav-nav-item {
-  margin: 4px 0;
+  margin: 6px 0;
 }
 
 .sidenav-nav-link {
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: #111;
-  padding: 12px 20px;
-  transition: background-color 0.2s ease;
+  color: #2f4eb3;
+  padding: 12px 22px;
+  transition: background 0.18s, color 0.18s;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
+  background: transparent;
+  position: relative;
 }
 
-.sidenav-nav-link:hover {
-  background-color: #e0e0e0;
-}
-
+.sidenav-nav-link:hover,
 .sidenav-nav-link.active {
-  background-color: #2f4eb3;
-  color: white;
+  background: linear-gradient(90deg, #e3e8ee 0%, #dbeafe 100%);
+  color: #1a2a6c;
 }
 
-.sidenav-nav-link.active .sidenav-link-icon {
-  color: white;
+.sidenav-nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 4px;
+  background: #2f4eb3;
+}
+
+.sidenav-nav-item.logout-item {
+  margin-top: auto;
+}
+
+.logout-link {
+  color: #b71c1c;
+  font-weight: 600;
+}
+
+.logout-link:hover {
+  background: #ffeaea;
+  color: #b71c1c;
 }
 
 .sidenav-link-icon {
-  margin-right: 12px;
-  color: #444;
+  margin-right: 14px;
+  color: #4158d0;
+  font-size: 22px;
 }
 
 .logout-link {
   margin-top: auto;
-  color: #d32f2f;
+  color: #b71c1c;
+  font-weight: 600;
 }
 
 .logout-link:hover {
-  background-color: #ffcdd2;
+  background: #ffeaea;
+  color: #b71c1c;
 }

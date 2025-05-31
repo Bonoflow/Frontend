@@ -43,12 +43,14 @@ export class BondDetail implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      const bondId = +params["id"]
+      const bondId = +params["id"];
       if (bondId) {
-        this.loadBondData(bondId)
+        this.loadBondData(bondId);
+        console.log("Bond ID from route params:", bondId);
+      } else {
+        console.log("No se encontro el ID del bono en los parámetros de la ruta.");
       }
-      console.log("Bond ID from route params:", bondId);
-    })
+    });
   }
 
   loadBondData(bondId: number): void {
@@ -57,8 +59,9 @@ export class BondDetail implements OnInit {
       next: (bond) => {
         if (bond) {
           this.bond = bond;
+          console.log("Bono cargado:", this.bond);
           // Primero intenta obtener métricas y cashflows guardados
-          this.financialMetricService.getOne(bondId).subscribe({
+          this.financialMetricService.getByBondId(bondId).subscribe({
             next: (metrics) => {
               this.metrics = metrics;
               console.log("Se encontraron metricas guardadas");

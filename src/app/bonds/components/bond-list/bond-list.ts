@@ -46,11 +46,34 @@ export class BondList implements OnInit {
   }
 
   viewBondDetail(bondId: number): void {
+    console.log("Navigating to bond detail with ID:", bondId);
     this.router.navigate(['/client/bond/detail', bondId]);
   }
 
   createNewBond(): void {
     this.router.navigate(["/client/bond-form"])
+  }
+
+  deleteBond(bondId: number): void {
+
+    if (confirm("¿Estás seguro de que deseas eliminar este bono? Esta acción no se puede deshacer.")) {
+      this.bondService.delete(bondId).subscribe({
+        next: () => {
+          alert("Bono eliminado exitosamente.");
+          this.loadBonds(); // Recarga la lista de bonos
+        },
+        error: (error) => {
+          console.error("Error al eliminar el bono:", error);
+          if (error.status === 404) {
+            alert("El bono no existe o ya fue eliminado.");
+          } else if (error.status === 401 || error.status === 403) {
+            alert("No tienes permisos para eliminar este bono.");
+          } else {
+            alert("Error al eliminar el bono. Por favor, inténtalo de nuevo más tarde.");
+          }
+        }
+      });
+    }
   }
 
   formatCurrency(amount: number, currency: string): string {
@@ -63,11 +86,11 @@ export class BondList implements OnInit {
 
   getGraceTypeLabel(graceType: string): string {
     switch (graceType) {
-      case "no_grace":
+      case "NO_GRACE":
         return "Sin gracia"
-      case "partial":
+      case "PARTIAL":
         return "Parcial"
-      case "total":
+      case "TOTAL":
         return "Total"
       default:
         return graceType
@@ -80,18 +103,18 @@ export class BondList implements OnInit {
 
   getPaymentFrequencyLabel(frequency: string): string {
     switch (frequency) {
-      case "monthly":
-        return "Mensual"
-      case "bimonthly":
-        return "Bimestral"
-      case "quarterly":
-        return "Trimestral"
-      case "semiannual":
-        return "Semestral"
-      case "annual":
-        return "Anual"
+      case "MONTHLY":
+        return "Mensual";
+      case "BIMONTHLY":
+        return "Bimestral";
+      case "QUARTERLY":
+        return "Trimestral";
+      case "SEMIANNUAL":
+        return "Semestral";
+      case "ANNUAL":
+        return "Anual";
       default:
-        return frequency
+        return frequency;
     }
   }
 }
