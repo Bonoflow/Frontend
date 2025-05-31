@@ -13,4 +13,13 @@ export class CashFlowService extends BaseService<CashflowModel> {
     super(http);
     this.extraUrl = environment.cashFlowURL;
   }
+
+
+  getAllByBondId(bondId: number) {
+    this.setToken();
+    return this.http.get<CashflowModel[]>(`${this.buildPath()}/bond/${bondId}`, this.httpOptions)
+      .pipe(catchError(this.handleError));
+  }
+
+
 }

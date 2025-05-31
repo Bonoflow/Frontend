@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {BondService} from '../../service/bond.service';
 import {CashFlowService} from '../../service/cashflow.service';
 import {FinancialMetricService} from '../../service/financial-metric.service';
+import {forkJoin} from 'rxjs';
 
 
 @Component({
@@ -56,49 +57,87 @@ export class BondDetail implements OnInit {
       next: (bond) => {
         if (bond) {
           this.bond = bond;
-          this.bondService.calculateFinancialMetrics(bond).subscribe({
+          // Primero intenta obtener métricas y cashflows guardados
+          this.financialMetricService.getOne(bondId).subscribe({
             next: (metrics) => {
               this.metrics = metrics;
-              this.calculateCashFlow();
+              console.log("Se encontraron metricas guardadas");
+              this.cashFlowService.getAll().subscribe({
+                next: (flows) => {
+                  // Filtra los cashflows por bondId
+                  console.log("Se encontraron cashflows guardadas");
+                  this.cashFlows = flows.filter(f => f.bondId === bondId);
+                  this.isLoading = false;
+                },
+                error: () => {
+                  // Si no existen, calcula y opcionalmente guarda
+                  console.log("No se encontraron cashflows guardadas, calculando nuevas...");
+                  this.calculateAndSaveCashFlow();
+
+                }
+              });
             },
-            error: (error) => {
-              console.error("Error calculating metrics:", error);
-              this.isLoading = false;
+            error: () => {
+              console.log("No se encontraron métricas guardadas, calculando nuevas...");
+              this.calculateAndSaveMetrics();
+
             }
           });
         } else {
-          this.router.navigate(["/bonds"]);
+          this.router.navigate(["client/bonds"]);
         }
       },
-      error: (error) => {
-        console.error("Error loading bond data:", error);
+      error: () => {
         this.isLoading = false;
       }
     });
   }
 
-  calculateCashFlow(): void {
-    if (!this.bond) return
-
-    this.isCalculating = true
+  calculateAndSaveCashFlow(): void {
+    if (!this.bond) return;
     this.bondService.calculateCashFlow(this.bond).subscribe({
       next: (flows) => {
-        this.cashFlows = flows
-        this.isCalculating = false
-        this.isLoading = false
+        this.cashFlows = flows;
+        if (flows && flows.length > 0) {
+          forkJoin(flows.map(flow => this.cashFlowService.create(flow))).subscribe({
+            next: () => {
+              this.isLoading = false;
+            },
+            error: () => {
+              this.isLoading = false;
+            }
+          });
+        } else {
+          this.isLoading = false;
+        }
       },
-      error: (error) => {
-        console.error("Error calculating cash flow:", error)
-        this.isCalculating = false
-        this.isLoading = false
-      },
-    })
+      error: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
-  recalculateCashFlow(): void {
-    if (this.bond) {
-      this.calculateCashFlow()
-    }
+  calculateAndSaveMetrics(): void {
+    if (!this.bond) return;
+    this.bondService.calculateFinancialMetrics(this.bond).subscribe({
+      next: (metrics) => {
+        this.metrics = metrics;
+        this.financialMetricService.create(metrics).subscribe({
+          next: () => {
+
+            this.isCalculating = false;
+            this.calculateAndSaveCashFlow();
+          },
+          error: () => {
+            this.isCalculating = false;
+            this.calculateAndSaveCashFlow();
+          }
+        });
+      },
+      error: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   exportCashFlow(): void {
@@ -110,11 +149,11 @@ export class BondDetail implements OnInit {
     if (this.bond) {
       this.router.navigate(["/bonds", this.bond.id, "edit"])
     }
-  }
+  } // Rutas
 
   goBack(): void {
     window.history.back();
-  }
+  } // Rutas
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;

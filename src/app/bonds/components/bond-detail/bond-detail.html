@@ -72,11 +72,6 @@
             <div class="flex justify-between items-center" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
               <h2 class="mat-title">Flujo de Caja (Método Francés)</h2>
               <div>
-                <button mat-stroked-button color="primary" (click)="recalculateCashFlow()" [disabled]="isCalculating">
-                  <mat-progress-spinner *ngIf="isCalculating" diameter="20" mode="indeterminate" color="accent" style="margin-right: 8px;"></mat-progress-spinner>
-                  <mat-icon *ngIf="!isCalculating" style="margin-right: 8px;">refresh</mat-icon>
-                  {{ isCalculating ? 'Calculando...' : 'Recalcular' }}
-                </button>
                 <button mat-stroked-button color="accent" (click)="exportCashFlow()" style="margin-left: 8px;">
                   <mat-icon style="margin-right: 8px;">file_download</mat-icon>
                   Exportar
