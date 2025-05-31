@@ -46,7 +46,13 @@ export class EditProfile implements OnInit {
           description: profile.description,
           photo: profile.photo || ''
         });
-
+        this.originalProfileData = {
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          birthDate: profile.birthDate,
+          description: profile.description,
+          photo: profile.photo || ''
+        };
       }
     });
 

@@ -1,53 +1,44 @@
-.edit-profile-title {
-  margin-bottom: 24px;
-  font-size: 2.8rem;
-  font-weight: 800;
-  text-align: center;
-  color: #2B4A99;
-  letter-spacing: 1.5px;
+.client-theme {
+  position: relative;
 }
 
-.client-theme {
+.edit-profile-header-toolbar {
+  background: #fff !important;
+  color: #2f4eb3 !important;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 18px 24px;
+  margin-bottom: 32px;
+}
+
+.edit-profile-card-content {
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 4px 24px rgba(43, 74, 153, 0.10);
-  position: relative;
-  overflow: hidden;
-  border: 1px solid #e3e7f3;
+}
+
+.edit-profile-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2f4eb3;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  text-align: left;
+}
+.spacer {
+  flex: 1 1 auto;
 }
 
 .edit-profile-card {
   width: 60%;
   margin: 0 auto;
-  min-height: 75vh; /* Card más alto según porcentaje */
+  min-height: 75vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.edit-profile-spinner-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-}
-
-.client-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.client-icon {
-  font-size: 48px;
-  color: #2B4A99;
-}
-
-.client-title {
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: #1b2e59;
 }
 
 .client-bg {
@@ -59,6 +50,21 @@
   width: 160px;
   height: 160px;
   pointer-events: none;
+}
+
+.edit-profile-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 40px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.edit-profile-photo-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .profile-photo-preview {
@@ -84,9 +90,26 @@
   transform: translate(-50%, -50%);
 }
 
+/* Wrapper para centrar el bloque de campos */
+.edit-profile-fields-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* Caja de campos con borde y botón abajo a la izquierda */
 .edit-profile-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  padding: 24px;
+  background: #fff;
+  justify-self: center;
+  min-height: 350px;
+  width: 100%;
+  max-width: 600px;
   gap: 32px;
 }
 
@@ -99,47 +122,58 @@
   font-size: 1.2rem;
 }
 
+.edit-profile-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: 0;
+  gap: 16px;
+  align-self: flex-start;
+}
+
+.edit-profile-changed {
+  background-color: #2B4A99 !important;
+  color: #fff !important;
+  transition: background 0.2s;
+}
+
+.edit-profile-inactive {
+  background-color: #e0e3ee !important;
+  color: #2B4A99 !important;
+}
+
+.edit-profile-loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.edit-profile-field mat-label {
+  color: #b0b8c9 !important;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
 @media (max-width: 1000px) {
   .edit-profile-fields {
-    grid-template-columns: 1fr;
+    max-width: 100%;
   }
   .edit-profile-card {
     width: 95%;
   }
 }
 
-.edit-profile-actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 24px;
-  margin-bottom: 20px;
-  gap: 16px;
-}
-
-.edit-profile-changed {
-  background-color: #81c784 !important; /* Verde suave */
-  color: #fff !important;
-  transition: background 0.2s;
-}
-
-.edit-profile-field mat-label {
-  color: #b0b8c9 !important; /* Gris aún más suave */
-  font-weight: 500;
-  opacity: 0.7;
-}
-
-.client-message {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 28px;
-  color: #2B4A99;
-  font-weight: 600;
-  gap: 10px;
-  font-size: 1.4rem;
-}
-
-/* Fondo para el calendario Angular Material */
-.mat-datepicker-content {
-  background: rebeccapurple !important;
+@media (max-width: 900px) {
+  .edit-profile-form-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .edit-profile-photo-col {
+    margin-bottom: 16px;
+  }
+  .edit-profile-fields {
+    min-width: 0;
+    max-width: 100%;
+  }
 }

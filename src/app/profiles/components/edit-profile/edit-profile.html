@@ -1,72 +1,78 @@
-<h2 class="edit-profile-title">Mi Cuenta</h2>
 <mat-card class="edit-profile-card client-theme">
-  <div class="client-header">
-    <mat-icon class="client-icon">account_circle</mat-icon>
-    <span class="client-title">Gestiona tu información personal</span>
-  </div>
-  <mat-card-content>
+
+  <mat-toolbar color="primary" class="edit-profile-header-toolbar" >
+    <span class="edit-profile-header-title">Información de tu cuenta de perfil</span>
+    <span class="spacer"></span>
+  </mat-toolbar>
+
+  <mat-card-content class="edit-profile-card-content">
     <div class="client-bg"></div>
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-      <div class="profile-photo-preview" *ngIf="profileForm.get('photo')?.value">
-        <h1>Foto de Perfil</h1>
-        <img [src]="profileForm.get('photo')?.value" alt="Foto de perfil" />
-        <mat-spinner *ngIf="isLoading" diameter="32" class="photo-spinner"></mat-spinner>
-      </div>
-      <div class="edit-profile-actions" style="justify-content:center; margin-bottom: 16px;">
-        <input type="file" accept="image/*" (change)="onPhotoSelected($event)" id="photoInput" style="display:none;">
-        <button mat-stroked-button color="primary" type="button" (click)="photoInput.click()" [disabled]="isLoading">
-          Cambiar foto
-        </button>
-        <input #photoInput type="file" accept="image/*" (change)="onPhotoSelected($event)" style="display:none;">
-      </div>
-      <div class="edit-profile-fields">
-        <mat-form-field appearance="fill" class="edit-profile-field">
-          <mat-label>Nombres</mat-label>
-          <input matInput formControlName="firstName" required>
-          <mat-error *ngIf="profileForm.get('firstName')?.hasError('required')">
-            El nombre es obligatorio
-          </mat-error>
-        </mat-form-field>
+      <div class="edit-profile-form-grid">
+        <!-- Columna de la foto -->
+        <div class="edit-profile-photo-col">
+          <div class="profile-photo-preview" *ngIf="profileForm.get('photo')?.value">
+            <h2>Foto de Perfil</h2>
+            <img [src]="profileForm.get('photo')?.value" alt="Foto de perfil" />
+            <mat-spinner *ngIf="isLoading" diameter="32" class="photo-spinner"></mat-spinner>
+          </div>
+          <div class="edit-profile-actions-image" style="justify-content:center; margin-bottom: 16px;">
+            <input #photoInput type="file" accept="image/*" (change)="onPhotoSelected($event)" style="display:none;">
+            <button mat-stroked-button color="primary" type="button" (click)="photoInput.click()" [disabled]="isLoading">
+              Cambiar foto
+            </button>
+          </div>
+        </div>
+        <!-- Columna de los campos -->
+        <div class="edit-profile-fields-wrapper">
+          <div class="edit-profile-fields">
+            <mat-form-field appearance="fill" class="edit-profile-field">
+              <mat-label>Nombres</mat-label>
+              <input matInput formControlName="firstName" required>
+              <mat-error *ngIf="profileForm.get('firstName')?.hasError('required')">
+                El nombre es obligatorio
+              </mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill" class="edit-profile-field">
-          <mat-label>Apellidos</mat-label>
-          <input matInput formControlName="lastName" required>
-          <mat-error *ngIf="profileForm.get('lastName')?.hasError('required')">
-            El apellido es obligatorio
-          </mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="fill" class="edit-profile-field">
+              <mat-label>Apellidos</mat-label>
+              <input matInput formControlName="lastName" required>
+              <mat-error *ngIf="profileForm.get('lastName')?.hasError('required')">
+                El apellido es obligatorio
+              </mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill" class="edit-profile-field">
-          <mat-label>Fecha de nacimiento</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="birthDate" required>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="profileForm.get('birthDate')?.hasError('required')">
-            La fecha es obligatoria
-          </mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="fill" class="edit-profile-field">
+              <mat-label>Fecha de nacimiento</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="birthDate" required>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="profileForm.get('birthDate')?.hasError('required')">
+                La fecha es obligatoria
+              </mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill" class="edit-profile-field">
-          <mat-label>Sobre mí</mat-label>
-          <textarea matInput formControlName="description" rows="1"></textarea>
-        </mat-form-field>
+            <mat-form-field appearance="fill" class="edit-profile-field">
+              <mat-label>Sobre mí</mat-label>
+              <textarea matInput formControlName="description" rows="1"></textarea>
+            </mat-form-field>
+
+            <div class="edit-profile-actions">
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!isProfileChanged() || profileForm.invalid || isLoading"
+                [ngClass]="{'edit-profile-changed': isProfileChanged(),'edit-profile-inactive': !isProfileChanged()}"
+              >
+                Guardar cambios
+                <mat-spinner *ngIf="isLoading" diameter="24" style="margin-left:8px;"></mat-spinner>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="edit-profile-actions">
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="!isProfileChanged() || profileForm.invalid || isLoading"
-          [ngClass]="{'edit-profile-changed': isProfileChanged()}"
-        >
-          Guardar cambios
-          <mat-spinner *ngIf="isLoading" diameter="24" style="margin-left:8px;"></mat-spinner>
-        </button>
-      </div>
-      <div class="client-message">
-        <mat-icon>account_balance_wallet</mat-icon>
-        <span>¡Gestiona tu cuenta para un mejor control financiero!</span>
-      </div>
+
     </form>
   </mat-card-content>
 </mat-card>
