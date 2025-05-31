@@ -15,6 +15,8 @@ const routes: Routes = [
   {path: 'client/profile', component: Home},
   {path: 'client/bonds', component: BondPage},
   {path: 'client/bond-form', component: BondForm},
+  { path: 'client/bond-form', component: BondForm },
+  { path: 'client/bond-form/:id/edit', component: BondForm },
   { path: 'client/bond/detail/:id', component: BondDetail },
 ];
 

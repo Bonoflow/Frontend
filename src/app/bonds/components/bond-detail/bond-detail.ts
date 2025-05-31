@@ -147,7 +147,7 @@ export class BondDetail implements OnInit {
 
   editBond(): void {
     if (this.bond) {
-      this.router.navigate(["/bonds", this.bond.id, "edit"])
+      this.router.navigate(["/client/bond-form", this.bond.id, "edit"])
     }
   } // Rutas
 

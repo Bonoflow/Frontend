@@ -98,14 +98,26 @@ export class BondForm implements OnInit {
       this.bondService.getOne(this.bondId).subscribe({
         next: (bond) => {
           if (bond) {
-            this.bondForm.patchValue(bond)
+            console.log("Cargando bono:", bond);
+            this.bondForm.patchValue({
+              name: bond.name,
+              nominal_value: bond.faceValue,
+              currency: bond.currency,
+              interest_rate: bond.interestRate,
+              rate_type: bond.rateType,
+              capitalization: bond.compounding,
+              term: bond.term,
+              payment_frequency: bond.paymentFrequency,
+              grace_type: bond.graceType,
+              grace_period: bond.gracePeriod,
+            });
           }
         },
         error: (error) => {
-          console.error("Error loading bond:", error)
-          this.router.navigate(["/bonds"])
+          console.error("Error loading bond:", error);
+          this.router.navigate(["/bonds"]);
         },
-      })
+      });
     }
   }
 
