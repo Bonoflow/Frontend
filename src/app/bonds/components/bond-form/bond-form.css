@@ -2,59 +2,87 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
   background-color: #f5f7fa;
 }
 
 .bond-form-header-toolbar {
+  max-width: 1200px;
   margin-bottom: 24px;
   border-radius: 10px;
   background: #fff;
   box-shadow: 0 2px 8px rgba(44,62,80,0.08);
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   padding: 18px 24px;
-  width: 100%;
-  max-width: 800px;
 }
 
-.bond-form-header-toolbar span {
+.bond-form-header-title {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #2f4eb3;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  display: block;
+  text-align: left;
 }
 
 .bond-form-header-subtitle {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 400;
   color: #4158d0;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .bond-form-card {
+  max-width: 1200px;
   width: 100%;
-  max-width: 800px;
+
+}
+
+/* Dos columnas */
+.bond-form-columns {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.bond-form-field-wrapper {
+  max-width: 100%;
+}
+
+.bond-form-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Tamaño predefinido para los campos */
+.bond-form-field {
+
+  max-width: 70%;
+  margin-bottom: 0.5rem;
 }
 
 /* Estilos para la card de Material */
 mat-card {
   box-shadow: 0 4px 16px rgba(44,62,80,0.10) !important;
-  border-radius: 16px !important;
+  border-radius: 18px !important;
   overflow: hidden;
   background: #fff !important;
   border: 1.5px solid #e3e8ee !important;
 }
 
 mat-card-content {
-  padding: 2rem !important;
+  padding: 2.5rem 2.5rem 2rem 2.5rem !important;
 }
 
 /* Secciones del formulario */
 .bond-section-title {
   color: #2f4eb3;
   margin: 1.5rem 0 1rem 0;
-  font-size: 1.2rem;
+  font-size: 1.22rem;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -66,30 +94,89 @@ mat-card-content {
   border-top-color: #e0e0e0 !important;
 }
 
-/* Campos del formulario */
-.bond-form-field {
+/* Mejora visual de mat-form-field y mat-select */
+mat-form-field {
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
-.bond-form-field-half {
-  width: calc(50% - 0.5rem);
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #e3e8ee;
+  border-radius: 8px;
+  border-width: 1.5px;
+  border-color: #e3e8ee !important;
 }
 
-.bond-form-row {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  color: #2f4eb3;
+  border-color: #2f4eb3 !important;
 }
 
-/* Estilos para los inputs */
-.mat-form-field-outline {
-  background-color: #fff;
-  border-radius: 4px;
+.mat-form-field-appearance-outline .mat-form-field-outline-start,
+.mat-form-field-appearance-outline .mat-form-field-outline-end {
+  border-radius: 8px;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-flex {
+  background: #eaf0ff !important;
+  border-radius: 8px;
+}
+
+.mat-form-field-label {
+  color: #4158d0 !important;
+  font-weight: 500;
+  font-size: 1rem;
 }
 
 .mat-input-element {
-  color: #333 !important;
+  color: #223a7a !important;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #2f4eb3 !important;
+  border-color: #2f4eb3 !important;
+}
+
+.mat-form-field-appearance-outline.mat-form-field-invalid .mat-form-field-outline-thick {
+  color: #b71c1c !important;
+  border-color: #b71c1c !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-infix {
+  padding: 0.5rem 0.25rem;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-suffix .mat-icon {
+  color: #bfc9e6;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-underline {
+  display: none;
+}
+
+/* mat-select fondo sólido */
+.mat-select-trigger {
+  background: #eaf0ff !important;
+  border-radius: 8px !important;
+  color: #223a7a !important;
+}
+
+.mat-select-panel {
+  background: #fff !important;
+  color: #223a7a !important;
+}
+
+.mat-option {
+  background: #fff !important;
+  color: #223a7a !important;
+}
+
+.mat-option.mat-selected {
+  background: #eaf0ff !important;
+  color: #2f4eb3 !important;
 }
 
 /* Botones principales */
@@ -150,6 +237,31 @@ mat-progress-spinner {
 }
 
 /* Responsive */
+@media (max-width: 1100px) {
+  .bond-form-card,
+  .bond-form-header-toolbar {
+    max-width: 98vw;
+  }
+  .bond-form-field {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .bond-form-columns {
+    flex-direction: column;
+    gap: 0;
+  }
+  .bond-form-col {
+    width: 100%;
+  }
+  .bond-form-field {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .bond-form-container {
     padding: 1rem;
@@ -158,14 +270,6 @@ mat-progress-spinner {
   .bond-form-header-toolbar {
     padding: 12px;
     max-width: 100%;
-  }
-
-  .bond-form-row {
-    flex-direction: column;
-  }
-
-  .bond-form-field-half {
-    width: 100%;
   }
 
   mat-card-content {

@@ -8,8 +8,11 @@
   background: #f5f7fa;
   width: 260px;
   font-family: 'Segoe UI', sans-serif;
-  box-shadow: 4px 0 32px 0 rgba(44,62,80,0.18), 0 2px 8px 0 rgba(44,62,80,0.08);  /* Sombra sutil para resaltar el borde blanco */
-  position: relative;
+  box-shadow: 4px 0 32px 0 rgba(44,62,80,0.18), 0 2px 8px 0 rgba(44,62,80,0.08);
+  position: sticky;
+  top: 0;
+  font-size: 17px; /* Aumenta el tamaño de letra */
+  z-index: 100;
 }
 
 .sidenav-nav::after {

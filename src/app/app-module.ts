@@ -87,7 +87,8 @@ import {MatNativeDateModule} from '@angular/material/core';
     MatProgressSpinnerModule,
     MatTabsModule,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+
   ],
   providers: [
     provideAnimationsAsync()

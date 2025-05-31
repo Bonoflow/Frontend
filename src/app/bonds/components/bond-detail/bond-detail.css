@@ -1,0 +1,160 @@
+.bond-detail-header-toolbar {
+  background: #fff !important;
+  color: #2f4eb3 !important;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 18px 24px;
+  margin-bottom: 32px;
+}
+
+
+
+.bond-detail-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2f4eb3;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 768px) {
+  .bond-detail-header-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
+  }
+  .spacer {
+    display: none;
+  }
+  .bond-detail-header-title {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+}
+
+/* Bond Summary Cards */
+
+.bond-summary-cards {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.bond-summary-cards mat-card {
+  flex: 1 1 0;
+  min-width: 260px;
+  max-width: 340px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 18px 24px;
+}
+
+.bond-summary-icon {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  color: #2f4eb3;
+}
+
+mat-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #223a7a;
+  margin-bottom: 8px;
+}
+
+.mat-display-1 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #223a7a;
+  margin-bottom: 4px;
+}
+
+.mat-body-2, .bond-summary-label {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+@media (max-width: 900px) {
+  .bond-summary-cards {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .bond-summary-cards mat-card {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/**/
+
+.bond-detail-cashflow-table {
+  min-width: 900px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.bond-detail-table-header-row,
+.bond-detail-table-row {
+  height: 48px;
+}
+
+.bond-detail-table-header-cell {
+  background: #f5f7fa;
+  color: #223a7a;
+  font-weight: 700;
+  font-size: 1rem;
+  border-bottom: 2px solid #e3e8ee;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.bond-detail-table-cell {
+  font-size: 1rem;
+  color: #223a7a;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e3e8ee;
+  background: #fff;
+}
+
+.bond-detail-table-row:last-child .bond-detail-table-cell {
+  border-bottom: none;
+}
+
+/* Scroll horizontal en pantallas pequeñas */
+@media (max-width: 1100px) {
+  .bond-detail-cashflow-table {
+    min-width: 700px;
+  }
+}
+
+@media (max-width: 900px) {
+  .bond-detail-cashflow-table {
+    min-width: 100%;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .bond-detail-cashflow-table {
+    min-width: 600px;
+    font-size: 0.9rem;
+  }
+}
