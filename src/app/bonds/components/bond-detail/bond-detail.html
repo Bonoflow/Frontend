@@ -65,7 +65,7 @@
       </mat-card>
     </div>
 
-    <mat-card class="bond-detail-tabs-card">
+    <mat-card class="bond-detail-tabs-card mat-elevation-z2 bond-detail-tabs-card-outline">
       <mat-tab-group class="bond-detail-tab-group" [(selectedIndex)]="selectedTabIndex" (selectedIndexChange)="onTabChange($event)">
         <mat-tab>
           <ng-template mat-tab-label>
@@ -74,12 +74,6 @@
           <div class="bond-detail-tab-body" style="padding: 24px 0;">
             <div class="bond-detail-section-header">
               <h2 class="bond-detail-section-title">Flujo de Caja (Método Francés)</h2>
-              <div>
-                <button mat-stroked-button color="accent" (click)="exportCashFlow()" class="bond-detail-export-btn">
-                  <mat-icon style="margin-right: 8px;">file_download</mat-icon>
-                  Exportar
-                </button>
-              </div>
             </div>
             <div style="overflow-x: auto;">
               <table mat-table [dataSource]="cashFlows" class="bond-detail-cashflow-table">
