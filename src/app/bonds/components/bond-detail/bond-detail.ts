@@ -64,23 +64,23 @@ export class BondDetail implements OnInit {
               console.log("Se encontraron metricas guardadas");
               this.cashFlowService.getAll().subscribe({
                 next: (flows) => {
-                  // Filtra los cashflows por bondId
+                  // Filtra y ordena los cashflows por bondId y período
                   console.log("Se encontraron cashflows guardadas");
-                  this.cashFlows = flows.filter(f => f.bondId === bondId);
+                  this.cashFlows = flows
+                    .filter(f => f.bondId === bondId)
+                    .sort((a, b) => (a.period ?? 0) - (b.period ?? 0));
                   this.isLoading = false;
                 },
                 error: () => {
                   // Si no existen, calcula y opcionalmente guarda
                   console.log("No se encontraron cashflows guardadas, calculando nuevas...");
                   this.calculateAndSaveCashFlow();
-
                 }
               });
             },
             error: () => {
               console.log("No se encontraron métricas guardadas, calculando nuevas...");
               this.calculateAndSaveMetrics();
-
             }
           });
         } else {
@@ -152,13 +152,8 @@ export class BondDetail implements OnInit {
   } // Rutas
 
   goBack(): void {
-    window.history.back();
+    this.router.navigate(["/client/bonds"]);
   } // Rutas
-
-  setActiveTab(tab: string): void {
-    this.activeTab = tab;
-    this.selectedTabIndex = tab === 'cash-flow' ? 0 : 1;
-  }
 
   formatCurrency(amount: number, currency: string): string {
     return new Intl.NumberFormat("es-PE", {
