@@ -235,6 +235,7 @@
 
 .create-bond-button:hover {
   background-color: #334296;
+  color: white;
 }
 
 /* Spinner de carga */
