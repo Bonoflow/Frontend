@@ -5,6 +5,7 @@ import {HttpClient} from "@angular/common/http";
 //Import the user model
 import {User} from "../models/user.model";
 import {BaseService} from '../../shared/services/base.service';
+import {BehaviorSubject} from 'rxjs';
 
 
 @Injectable({
@@ -14,6 +15,11 @@ export class UserApiService extends  BaseService<User>{
   constructor(http: HttpClient) {
     super(http);
     this.extraUrl = environment.userURL;
+  }
+
+  private loggedIn = new BehaviorSubject<boolean>(this.isLogged());
+  get isLogged$() {
+    return this.loggedIn.asObservable();
   }
 
   setLogged(isLogged: boolean){

@@ -17,7 +17,7 @@ import {Router} from '@angular/router';
   styleUrl: './register-client.css'
 })
 export class RegisterClient {
-
+  hidePassword = true;
   selectedFile: File | null = null;
   imagePreview: string | null = null;
   registerForm: FormGroup = new FormGroup({

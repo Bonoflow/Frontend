@@ -1,5 +1,5 @@
 <div class="app-layout">
-  <app-sidenav #sidenav></app-sidenav>
+  <app-sidenav *ngIf="showSidenav" #sidenav></app-sidenav>
   <div class="app-content">
     <router-outlet></router-outlet>
   </div>
