@@ -37,7 +37,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { BondList } from './bonds/components/bond-list/bond-list';
 import { BondDetail } from './bonds/components/bond-detail/bond-detail';
 import {MatTabsModule} from '@angular/material/tabs';
-import { Dashboard } from './bonds/components/dashboard/dashboard';
 import { EditProfile } from './profiles/components/edit-profile/edit-profile';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { ProfilePage } from './profiles/pages/profile-page/profile-page';
@@ -56,7 +55,6 @@ import {MatNativeDateModule} from '@angular/material/core';
     BondPage,
     BondList,
     BondDetail,
-    Dashboard,
     EditProfile,
     ProfilePage,
   ],
