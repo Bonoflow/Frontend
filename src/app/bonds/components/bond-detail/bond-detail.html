@@ -13,7 +13,7 @@
   </mat-toolbar>
 
   <!-- Loading Spinner -->
-  <div *ngIf="isLoading" class="flex justify-center items-center" style="height: 16rem;">
+  <div *ngIf="isLoading" class="bond-loading-overlay">
     <mat-spinner diameter="48" color="primary"></mat-spinner>
   </div>
 
@@ -48,10 +48,10 @@
         <mat-card-title>Tasa de interés</mat-card-title>
         <mat-card-content>
           <p class="mat-display-1">
-            {{ bond.interestRate }}% {{ bond.rateType === 'effective' ? 'efectiva' : 'nominal' }}
+            {{ bond.interestRate }}% {{ bond.rateType === 'EFFECTIVE' ? 'efectiva' : 'nominal' }}
           </p>
           <span *ngIf="bond.compounding" class="mat-body-2">
-            Capitalización: {{ bond.compounding }}
+            Capitalización: {{ getCompoundingLabel(bond.compounding) }}
           </span>
         </mat-card-content>
       </mat-card>
@@ -60,7 +60,7 @@
         <mat-card-title>Plazo</mat-card-title>
         <mat-card-content>
           <p class="mat-display-1">{{ bond.term }} meses</p>
-          <p class="mat-body-2">Frecuencia de pago: {{ bond.paymentFrequency }}</p>
+          <p class="mat-body-2">Frecuencia de pago: {{ getPaymentFrequencyLabel(bond.paymentFrequency) }}</p>
         </mat-card-content>
       </mat-card>
     </div>

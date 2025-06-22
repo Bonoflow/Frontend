@@ -63,11 +63,11 @@ export class BondForm implements OnInit {
       nominal_value: [0, [Validators.required, Validators.min(1)]],
       currency: ["PEN", [Validators.required]],
       interest_rate: [0, [Validators.required, Validators.min(0.01)]],
-      rate_type: ["effective", [Validators.required]],
-      capitalization: ["monthly"],
+      rate_type: ["EFFECTIVE", [Validators.required]],
+      capitalization: ["MONTHLY", [Validators.required]],
       term: [12, [Validators.required, Validators.min(1)]],
-      payment_frequency: ["monthly", [Validators.required]],
-      grace_type: ["no_grace", [Validators.required]],
+      payment_frequency: ["MONTHLY", [Validators.required]],
+      grace_type: ["NO_GRACE", [Validators.required]],
       grace_period: [0, [Validators.required, Validators.min(0)]],
     })
   }
@@ -171,7 +171,7 @@ export class BondForm implements OnInit {
   }
 
   get showCapitalization(): boolean {
-    return this.bondForm.get("rate_type")?.value === "nominal"
+    return this.bondForm.get("rate_type")?.value === "nominal";
   }
 
   // Getters para validación

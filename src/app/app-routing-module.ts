@@ -7,6 +7,8 @@ import {BondPage} from './bonds/pages/bond-page/bond-page';
 import {BondForm} from './bonds/components/bond-form/bond-form';
 import {BondDetail} from './bonds/components/bond-detail/bond-detail';
 import {ProfilePage} from './profiles/pages/profile-page/profile-page';
+import {ConfigurationPage} from './users/pages/configuration-page/configuration-page';
+
 
 
 const routes: Routes = [
@@ -20,6 +22,7 @@ const routes: Routes = [
   { path: 'client/bond-form/:id/edit', component: BondForm },
   { path: 'client/bond/detail/:id', component: BondDetail },
   { path: 'client/profile', component: ProfilePage },
+  { path: 'client/configuration', component: ConfigurationPage },
 ];
 
 @NgModule({

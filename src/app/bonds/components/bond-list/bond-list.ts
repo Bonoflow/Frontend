@@ -98,7 +98,7 @@ export class BondList implements OnInit {
   }
 
   getRateTypeLabel(rateType: string): string {
-    return rateType === "effective" ? "Efectiva" : "Nominal"
+    return rateType === "EFFECTIVE" ? "Efectiva" : "Nominal"
   }
 
   getPaymentFrequencyLabel(frequency: string): string {

@@ -20,5 +20,6 @@ export const environment = {
   bondURL: '/bonds',
   cashFlowURL: '/cashflows',
   financialMetricURL: '/financial-metrics',
+  configurationURL: '/configurations',
 
 }

@@ -9,6 +9,8 @@ import {FinancialMetricService} from '../../service/financial-metric.service';
 import {forkJoin} from 'rxjs';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
+import {BondCalculatorService} from '../../../utils/bond-calcultations';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-bond-detail',
@@ -38,7 +40,8 @@ export class BondDetail implements OnInit, AfterViewInit {
     private bondService: BondService,
     private cashFlowService: CashFlowService,
     private financialMetricService: FinancialMetricService,
-    private cdr: ChangeDetectorRef // Agregar ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private bondCalculatorService: BondCalculatorService
   ) {}
 
   ngOnInit(): void {
@@ -143,7 +146,7 @@ export class BondDetail implements OnInit, AfterViewInit {
 
   calculateAndSaveCashFlow(): void {
     if (!this.bond) return;
-    this.bondService.calculateCashFlow(this.bond).subscribe({
+    this.bondCalculatorService.calculateCashFlow(this.bond).subscribe({
       next: (flows) => {
         this.cashFlows = flows;
         this.cashFlowsDataSource.data = this.cashFlows;
@@ -177,7 +180,7 @@ export class BondDetail implements OnInit, AfterViewInit {
   // Resto de métodos sin cambios...
   calculateAndSaveMetrics(): void {
     if (!this.bond) return;
-    this.bondService.calculateFinancialMetrics(this.bond).subscribe({
+    this.bondCalculatorService.calculateFinancialMetrics(this.bond).subscribe({
       next: (metrics) => {
         this.metrics = metrics;
         this.financialMetricService.create(metrics).subscribe({
@@ -213,6 +216,40 @@ export class BondDetail implements OnInit, AfterViewInit {
       currency: currency,
       minimumFractionDigits: 2,
     }).format(amount);
+  }
+
+  getPaymentFrequencyLabel(frequency: string): string {
+    switch (frequency) {
+      case "MONTHLY":
+        return "Mensual";
+      case "BIMONTHLY":
+        return "Bimestral";
+      case "QUARTERLY":
+        return "Trimestral";
+      case "SEMIANNUAL":
+        return "Semestral";
+      case "ANNUAL":
+        return "Anual";
+      default:
+        return frequency;
+    }
+  }
+
+  getCompoundingLabel(compounding: string): string {
+    switch (compounding) {
+      case "MONTHLY":
+        return "Mensual";
+      case "BIMONTHLY":
+        return "Bimestral";
+      case "QUARTERLY":
+        return "Trimestral";
+      case "SEMIANNUAL":
+        return "Semestral";
+      case "ANNUAL":
+        return "Anual";
+      default:
+        return compounding;
+    }
   }
 
   formatDate(date: Date): string {

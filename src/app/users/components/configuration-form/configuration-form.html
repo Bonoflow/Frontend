@@ -1,0 +1,59 @@
+<mat-card class="configuration-card client-theme">
+  <mat-toolbar color="primary" class="configuration-header-toolbar">
+    <span class="configuration-header-title">Configuración de tu cuenta</span>
+    <span class="spacer"></span>
+  </mat-toolbar>
+  <mat-card-content class="configuration-card-content">
+    <div class="client-bg"></div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="configuration-fields-wrapper">
+        <div class="configuration-fields">
+          <mat-form-field appearance="fill" class="configuration-field">
+            <mat-label>Moneda</mat-label>
+            <mat-select formControlName="currency" required>
+              <mat-option *ngFor="let curr of currency" [value]="curr.value">
+                {{ curr.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="configuration-field">
+            <mat-label>Tipo de tasa</mat-label>
+            <mat-select formControlName="rateType" required>
+              <mat-option *ngFor="let type of rateTypes" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field
+            appearance="fill"
+            class="configuration-field"
+            [ngClass]="{'compounding-disabled': form.get('compounding')?.disabled}">
+            <mat-label>Capitalización</mat-label>
+            <mat-select formControlName="compounding">
+              <mat-option *ngFor="let comp of compoundings" [value]="comp.value">
+                {{ comp.label }}
+              </mat-option>
+            </mat-select>
+            <mat-hint *ngIf="form.get('rateType')?.value === 'EFFECTIVE'">
+              La capitalización solo aplica para tasa nominal.
+            </mat-hint>
+            <mat-error *ngIf="form.hasError('compoundingRequired') && form.get('rateType')?.value === 'NOMINAL'">
+              Debes seleccionar una capitalización para tasa nominal.
+            </mat-error>
+          </mat-form-field>
+          <div class="configuration-actions">
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="form.invalid"
+              class="configuration-changed"
+            >
+              Guardar cambios
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

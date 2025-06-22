@@ -1,0 +1,220 @@
+.client-theme {
+  position: relative;
+}
+
+.configuration-header-toolbar {
+  background: #fff !important;
+  color: #2f4eb3 !important;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 18px 24px;
+  margin-bottom: 32px;
+}
+
+.configuration-card-content {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(43, 74, 153, 0.10);
+}
+
+.configuration-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2f4eb3;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  text-align: left;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+
+.configuration-card {
+  width: 60%;
+  margin: 0 auto;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.client-bg {
+  background-size: 160px;
+  opacity: 0.10;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 160px;
+  height: 160px;
+  pointer-events: none;
+}
+
+.configuration-fields-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.configuration-fields {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  padding: 24px;
+  background: #fff;
+  min-height: 300px;
+  width: 100%;
+  max-width: 600px;
+  gap: 32px;
+}
+
+.configuration-field {
+  width: 100%;
+}
+.configuration-field mat-label,
+.configuration-field input,
+.configuration-field textarea {
+  font-size: 1.2rem;
+}
+
+.configuration-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: 0;
+  gap: 16px;
+  align-self: flex-start;
+}
+
+.configuration-changed {
+  background-color: #2B4A99 !important;
+  color: #fff !important;
+  transition: background 0.2s;
+}
+
+@media (max-width: 1000px) {
+  .configuration-fields {
+    max-width: 100%;
+  }
+  .configuration-card {
+    width: 95%;
+  }
+}.client-theme {
+   position: relative;
+ }
+
+.configuration-header-toolbar {
+  background: #fff !important;
+  color: #2f4eb3 !important;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 18px 24px;
+  margin-bottom: 32px;
+}
+
+.configuration-card-content {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(43, 74, 153, 0.10);
+}
+
+.configuration-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2f4eb3;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  text-align: left;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+
+.configuration-card {
+  width: 60%;
+  margin: 0 auto;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.client-bg {
+  background-size: 160px;
+  opacity: 0.10;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 160px;
+  height: 160px;
+  pointer-events: none;
+}
+
+.configuration-fields-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.configuration-fields {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  padding: 24px;
+  background: #fff;
+  min-height: 300px;
+  width: 100%;
+  max-width: 600px;
+  gap: 32px;
+}
+
+.configuration-field {
+  width: 100%;
+}
+.configuration-field mat-label,
+.configuration-field input,
+.configuration-field textarea {
+  font-size: 1.2rem;
+}
+
+.configuration-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: 0;
+  gap: 16px;
+  align-self: flex-start;
+}
+
+.configuration-changed {
+  background-color: #2B4A99 !important;
+  color: #fff !important;
+  transition: background 0.2s;
+}
+
+.compounding-disabled {
+  background: #f0f0f0 !important;
+  border-radius: 8px;
+  opacity: 0.7;
+}
+.compounding-disabled .mat-select-disabled {
+  color: #b0b8c9 !important;
+}
+
+@media (max-width: 1000px) {
+  .configuration-fields {
+    max-width: 100%;
+  }
+  .configuration-card {
+    width: 95%;
+  }
+}

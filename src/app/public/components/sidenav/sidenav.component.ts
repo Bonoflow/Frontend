@@ -24,6 +24,7 @@ export class SidenavComponent {
       'Inicio': 'home',
       'Bono': 'card_giftcard',
       'Perfil': 'person',
+      'Configuración': 'settings',
 
     };
     return icons[button] || 'help';
@@ -38,7 +39,7 @@ export class SidenavComponent {
   }
 
   getSidebarButtons(): string[] {
-    return ["Inicio","Bono","Perfil"];
+    return ["Inicio","Bono","Perfil","Configuración"];
   }
 
   getButtonRoute(button: string): string {
@@ -46,6 +47,7 @@ export class SidenavComponent {
       "Inicio": "client/home",
       "Perfil": "client/profile",
       "Bono": "client/bonds",
+      "Configuración": "client/configuration",
     };
     return clientRoutes[button] || "/";
   }

@@ -41,6 +41,8 @@ import { EditProfile } from './profiles/components/edit-profile/edit-profile';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { ProfilePage } from './profiles/pages/profile-page/profile-page';
 import {MatNativeDateModule} from '@angular/material/core';
+import { ConfigurationForm } from './users/components/configuration-form/configuration-form';
+import { ConfigurationPage } from './users/pages/configuration-page/configuration-page';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,8 @@ import {MatNativeDateModule} from '@angular/material/core';
     BondDetail,
     EditProfile,
     ProfilePage,
+    ConfigurationForm,
+    ConfigurationPage,
   ],
   imports: [
     BrowserModule,
