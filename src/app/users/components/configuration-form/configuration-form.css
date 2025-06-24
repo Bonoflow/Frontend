@@ -177,6 +177,18 @@
   gap: 32px;
 }
 
+/* Fondo celeste claro, sin transparencia, cuando está habilitado */
+.mat-mdc-select[formcontrolname="compounding"].mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: #e3f2fd !important;
+  opacity: 1 !important;
+}
+
+/* Overlay de foco/hover opaco (sin transparencia) */
+.mat-mdc-form-field-focus-overlay {
+  background-color: #e3f2fd !important;
+  opacity: 1 !important;
+}
+
 .configuration-field {
   width: 100%;
 }

@@ -35,12 +35,15 @@
 }
 
 .logo {
-  width: 36px;
-  height: 36px;
+  width: 200px;
+  height: 100px;
   margin-right: 14px;
   border-radius: 8px;
   background: #fff;
   box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+  object-fit: cover;      /* Mantiene la proporción y recorta si es necesario */
+  object-position: center;
+  display: block;
 }
 
 .app-name {

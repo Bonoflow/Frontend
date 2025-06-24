@@ -6,11 +6,16 @@ export class BondModel {
   interestRate: number;
   rateType: string;
   compounding?: string;
-  term: number;
   paymentFrequency: string;
   currency: string;
   graceType: string;
   gracePeriod: number;
+  issueDate: string;
+  maturityDate: string;
+  issuanceExpenses?: number;
+  placementExpenses?: number;
+  structuringExpenses?: number;
+  cavaliExpenses?: number;
 
   constructor(
     clientId: number,
@@ -24,7 +29,13 @@ export class BondModel {
     graceType: string,
     gracePeriod: number,
     compounding?: string,
-    id?: number
+    id?: number,
+    issueDate?: string,
+    maturityDate?: string,
+    issuanceExpenses?: number,
+    placementExpenses?: number,
+    structuringExpenses?: number,
+    cavaliExpenses?: number
   ) {
     this.id = id;
     this.clientId = clientId;
@@ -33,10 +44,15 @@ export class BondModel {
     this.interestRate = interestRate;
     this.rateType = rateType;
     this.compounding = compounding;
-    this.term = term;
     this.paymentFrequency = paymentFrequency;
     this.currency = currency;
     this.graceType = graceType;
     this.gracePeriod = gracePeriod;
+    this.issueDate = issueDate || new Date().toISOString();
+    this.maturityDate = maturityDate || new Date(new Date().setFullYear(new Date().getFullYear() + term)).toISOString();
+    this.issuanceExpenses = issuanceExpenses || 0;
+    this.placementExpenses = placementExpenses || 0;
+    this.structuringExpenses = structuringExpenses || 0;
+    this.cavaliExpenses = cavaliExpenses || 0;
   }
 }

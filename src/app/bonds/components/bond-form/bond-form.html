@@ -79,20 +79,65 @@
               </div>
             </div>
 
+            <!-- ...dentro de <div class="bond-section"> o crea una nueva sección para Gastos -->
+            <div class="bond-section">
+              <h3 class="bond-section-title">Gastos</h3>
+              <div class="bond-form-field-wrapper">
+                <mat-form-field appearance="outline" class="bond-form-field">
+                  <mat-label>Gastos de emisión</mat-label>
+                  <input matInput type="number" formControlName="issuance_expenses" min="0" step="0.01" placeholder="0" />
+                </mat-form-field>
+              </div>
+              <div class="bond-form-field-wrapper">
+                <mat-form-field appearance="outline" class="bond-form-field">
+                  <mat-label>Gastos de colocación</mat-label>
+                  <input matInput type="number" formControlName="placement_expenses" min="0" step="0.01" placeholder="0" />
+                </mat-form-field>
+              </div>
+              <div class="bond-form-field-wrapper">
+                <mat-form-field appearance="outline" class="bond-form-field">
+                  <mat-label>Gastos de estructuración</mat-label>
+                  <input matInput type="number" formControlName="structuring_expenses" min="0" step="0.01" placeholder="0" />
+                </mat-form-field>
+              </div>
+              <div class="bond-form-field-wrapper">
+                <mat-form-field appearance="outline" class="bond-form-field">
+                  <mat-label>Gastos Cavali</mat-label>
+                  <input matInput type="number" formControlName="cavali_expenses" min="0" step="0.01" placeholder="0" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Campo Fecha de Emisión -->
+            <div class="bond-form-field-wrapper">
+              <mat-form-field appearance="outline" class="bond-form-field">
+                <mat-label>Fecha de emisión</mat-label>
+                <input matInput [matDatepicker]="pickerIssue" formControlName="issue_date" placeholder="Selecciona fecha" />
+                <mat-datepicker-toggle matSuffix [for]="pickerIssue"></mat-datepicker-toggle>
+                <mat-datepicker #pickerIssue></mat-datepicker>
+                <mat-error *ngIf="bondForm.get('issue_date')?.invalid && bondForm.get('issue_date')?.touched">
+                  La fecha de emisión es requerida
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Campo Fecha de Vencimiento -->
+            <div class="bond-form-field-wrapper">
+              <mat-form-field appearance="outline" class="bond-form-field">
+                <mat-label>Fecha de vencimiento</mat-label>
+                <input matInput [matDatepicker]="pickerMaturity" formControlName="maturity_date" placeholder="Selecciona fecha" />
+                <mat-datepicker-toggle matSuffix [for]="pickerMaturity"></mat-datepicker-toggle>
+                <mat-datepicker #pickerMaturity></mat-datepicker>
+                <mat-error *ngIf="bondForm.get('maturity_date')?.invalid && bondForm.get('maturity_date')?.touched">
+                  La fecha de vencimiento es requerida
+                </mat-error>
+              </mat-form-field>
+            </div>
+
             <!-- Columna 2 -->
             <div class="bond-form-col bond-form-col-side">
               <div class="bond-section">
                 <h3 class="bond-section-title">Plazos y pagos</h3>
-                <div class="bond-form-field-wrapper">
-                  <mat-form-field appearance="outline" class="bond-form-field">
-                    <mat-label>Plazo (meses)</mat-label>
-                    <input matInput type="number" formControlName="term" min="1" placeholder="12" />
-                    <mat-error *ngIf="termInvalid && termTouched">
-                      <span *ngIf="term?.errors?.['required']">El plazo es requerido</span>
-                      <span *ngIf="term?.errors?.['min']">El plazo debe ser al menos 1 mes</span>
-                    </mat-error>
-                  </mat-form-field>
-                </div>
                 <div class="bond-form-field-wrapper">
                   <mat-form-field appearance="outline" class="bond-form-field">
                     <mat-label>Frecuencia de pago</mat-label>

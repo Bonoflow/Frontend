@@ -18,6 +18,7 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
   templateUrl: './bond-detail.html',
   styleUrl: './bond-detail.css'
 })
+
 export class BondDetail implements OnInit, AfterViewInit {
 
   bond: BondModel | null = null;
@@ -27,11 +28,9 @@ export class BondDetail implements OnInit, AfterViewInit {
   isCalculating = false;
   activeTab = "cash-flow";
   displayedColumns: string[] = ['period','date','initialBalance','interest','amortization','installment','finalBalance'];
-  cashFlowsDataSource = new MatTableDataSource<any>();
+  cashFlowsDataSource = new MatTableDataSource<CashflowModel>();
 
-  // Cambia el ViewChild para ser más específico
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-
   selectedTabIndex = 0;
 
   constructor(
@@ -62,19 +61,9 @@ export class BondDetail implements OnInit, AfterViewInit {
 
   private setupPaginator(): void {
     if (this.paginator) {
-      console.log('Paginator disponible en setupPaginator');
       this.cashFlowsDataSource.paginator = this.paginator;
-
-      // Forzar detección de cambios
       this.cdr.detectChanges();
-
-      console.log('Paginator configurado:');
-      console.log('- Length:', this.cashFlowsDataSource.data.length);
-      console.log('- Page Size:', this.paginator.pageSize);
-      console.log('- Page Index:', this.paginator.pageIndex);
     } else {
-      console.log('Paginator no disponible en setupPaginator');
-      // Reintentar después de un breve delay
       setTimeout(() => this.setupPaginator(), 100);
     }
   }
@@ -83,55 +72,43 @@ export class BondDetail implements OnInit, AfterViewInit {
     this.selectedTabIndex = index;
     if (index === 0) {
       this.activeTab = 'cash-flow';
-      // Reconfigurar paginator cuando se cambia al tab de cash flow
       setTimeout(() => {
         this.setupPaginator();
       }, 50);
     } else if (index === 1) {
       this.activeTab = 'metrics';
-      console.log('Tab cambiado a: Métricas');
     }
   }
 
   loadBondData(bondId: number): void {
     this.isLoading = true;
     this.bondService.getOne(bondId).subscribe({
-      next: (bond) => {
+      next: (bond: BondModel) => {
         if (bond) {
           this.bond = bond;
-          console.log("Bono cargado:", this.bond);
           this.financialMetricService.getByBondId(bondId).subscribe({
-            next: (metrics) => {
+            next: (metrics: FinancialMetricModel) => {
               this.metrics = metrics;
-              console.log("Se encontraron metricas guardadas");
               this.cashFlowService.getAll().subscribe({
-                next: (flows) => {
-                  console.log("Se encontraron cashflows guardadas");
+                next: (flows: CashflowModel[]) => {
                   this.cashFlows = flows
-                    .filter(f => f.bondId === bondId)
+                    .filter((f: CashflowModel) => f.bondId === bondId)
                     .sort((a, b) => (a.period ?? 0) - (b.period ?? 0));
-
-                  // Actualizar datos del dataSource
                   this.cashFlowsDataSource.data = this.cashFlows;
-
-                  console.log('Datos cargados:', this.cashFlows.length, 'elementos');
-
-                  // Configurar paginator después de cargar datos
                   setTimeout(() => {
                     this.setupPaginator();
                   }, 100);
-
                   this.isLoading = false;
                 },
                 error: () => {
-                  console.log("No se encontraron cashflows guardadas, calculando nuevas...");
                   this.calculateAndSaveCashFlow();
+                  console.log("PR1");
                 }
               });
             },
             error: () => {
-              console.log("No se encontraron métricas guardadas, calculando nuevas...");
-              this.calculateAndSaveMetrics();
+              this.calculateAndSaveCashFlow();
+              console.log("PR2");
             }
           });
         } else {
@@ -140,64 +117,53 @@ export class BondDetail implements OnInit, AfterViewInit {
       },
       error: () => {
         this.isLoading = false;
+        console.error("Error al cargar el bono con ID:", bondId);
       }
     });
   }
 
   calculateAndSaveCashFlow(): void {
+
+    console.log("Calculando :", this.bond);
+
     if (!this.bond) return;
-    this.bondCalculatorService.calculateCashFlow(this.bond).subscribe({
-      next: (flows) => {
-        this.cashFlows = flows;
-        this.cashFlowsDataSource.data = this.cashFlows;
+    const flows = this.bondCalculatorService.calculateCashFlowsOnly(this.bond);
+    this.cashFlows = flows;
+    this.cashFlowsDataSource.data = this.cashFlows;
+    setTimeout(() => this.setupPaginator(), 100);
 
-        console.log('Datos calculados:', this.cashFlows.length, 'elementos');
-
-        // Configurar paginator después de calcular datos
-        setTimeout(() => {
-          this.setupPaginator();
-        }, 100);
-
-        if (flows && flows.length > 0) {
-          forkJoin(flows.map(flow => this.cashFlowService.create(flow))).subscribe({
-            next: () => {
-              this.isLoading = false;
-            },
-            error: () => {
-              this.isLoading = false;
-            }
-          });
-        } else {
+    if (flows && flows.length > 0) {
+      forkJoin(flows.map((flow: CashflowModel) => this.cashFlowService.create(flow))).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.calculateAndSaveMetrics(); // Llama aquí después de guardar los flujos
+        },
+        error: () => {
           this.isLoading = false;
         }
-      },
-      error: () => {
-        this.isLoading = false;
-      }
-    });
+      });
+    } else {
+      this.isLoading = false;
+    }
   }
 
-  // Resto de métodos sin cambios...
   calculateAndSaveMetrics(): void {
-    if (!this.bond) return;
-    this.bondCalculatorService.calculateFinancialMetrics(this.bond).subscribe({
-      next: (metrics) => {
-        this.metrics = metrics;
-        this.financialMetricService.create(metrics).subscribe({
-          next: () => {
-            this.isCalculating = false;
-            this.calculateAndSaveCashFlow();
-          },
-          error: () => {
-            this.isCalculating = false;
-            this.calculateAndSaveCashFlow();
-          }
-        });
-      },
-      error: () => {
-        this.isLoading = false;
-      }
-    });
+    if (!this.bond || !this.cashFlows.length) return;
+    const metrics = this.bondCalculatorService.calculateMetricsOnly(this.bond, this.cashFlows);
+    this.metrics = metrics;
+    const result = this.financialMetricService.create(metrics);
+    if (result.subscribe) {
+      result.subscribe({
+        next: () => {
+          this.isCalculating = false;
+        },
+        error: () => {
+          this.isCalculating = false;
+        }
+      });
+    } else {
+      this.isCalculating = false;
+    }
   }
 
   editBond(): void {

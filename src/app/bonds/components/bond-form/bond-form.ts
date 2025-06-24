@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {BondService} from '../../service/bond.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {BondModel} from '../../model/bond.model';
-import {ClientService} from '../../../users/services/client.service';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BondService } from '../../service/bond.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BondModel } from '../../model/bond.model';
+import { ClientService } from '../../../users/services/client.service';
+import { ConfigurationService } from '../../../users/services/configuration.service';
 
 @Component({
   selector: 'app-bond-form',
@@ -12,51 +13,53 @@ import {ClientService} from '../../../users/services/client.service';
   styleUrl: './bond-form.css'
 })
 export class BondForm implements OnInit {
-  bondForm: FormGroup
-  isLoading = false
-  isEditMode = false
-  bondId?: number
+  bondForm: FormGroup;
+  isLoading = false;
+  isEditMode = false;
+  bondId?: number;
+  configuration: any;
 
   currencies = [
     { value: "PEN", label: "Soles (PEN)" },
     { value: "USD", label: "Dólares (USD)" },
     { value: "EUR", label: "Euros (EUR)" },
-  ]
+  ];
 
   rateTypes = [
-    { value: "effective", label: "Efectiva" },
-    { value: "nominal", label: "Nominal" },
-  ]
+    { value: "EFFECTIVE", label: "Efectiva" },
+    { value: "NOMINAL", label: "Nominal" },
+  ];
 
   capitalizations = [
-    { value: "daily", label: "Diaria" },
-    { value: "monthly", label: "Mensual" },
-    { value: "bimonthly", label: "Bimestral" },
-    { value: "quarterly", label: "Trimestral" },
-    { value: "semiannual", label: "Semestral" },
-    { value: "annual", label: "Anual" },
-  ]
+    { value: "DAILY", label: "Diaria" },
+    { value: "MONTHLY", label: "Mensual" },
+    { value: "BIMONTHLY", label: "Bimestral" },
+    { value: "QUARTERLY", label: "Trimestral" },
+    { value: "SEMIANNUAL", label: "Semestral" },
+    { value: "ANNUAL", label: "Anual" },
+  ];
 
   paymentFrequencies = [
-    { value: "monthly", label: "Mensual" },
-    { value: "bimonthly", label: "Bimestral" },
-    { value: "quarterly", label: "Trimestral" },
-    { value: "semiannual", label: "Semestral" },
-    { value: "annual", label: "Anual" },
-  ]
+    { value: "MONTHLY", label: "Mensual" },
+    { value: "BIMONTHLY", label: "Bimestral" },
+    { value: "QUARTERLY", label: "Trimestral" },
+    { value: "SEMIANNUAL", label: "Semestral" },
+    { value: "ANNUAL", label: "Anual" },
+  ];
 
   graceTypes = [
-    { value: "no_grace", label: "Sin gracia" },
-    { value: "partial", label: "Parcial" },
-    { value: "total", label: "Total" },
-  ]
+    { value: "NO_GRACE", label: "Sin gracia" },
+    { value: "PARTIAL", label: "Parcial" },
+    { value: "TOTAL", label: "Total" },
+  ];
 
   constructor(
     private fb: FormBuilder,
     private bondService: BondService,
     private router: Router,
     private route: ActivatedRoute,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private configurationService: ConfigurationService
   ) {
     this.bondForm = this.fb.group({
       name: ["", [Validators.required, Validators.minLength(3)]],
@@ -65,32 +68,54 @@ export class BondForm implements OnInit {
       interest_rate: [0, [Validators.required, Validators.min(0.01)]],
       rate_type: ["EFFECTIVE", [Validators.required]],
       capitalization: ["MONTHLY", [Validators.required]],
-      term: [12, [Validators.required, Validators.min(1)]],
       payment_frequency: ["MONTHLY", [Validators.required]],
       grace_type: ["NO_GRACE", [Validators.required]],
       grace_period: [0, [Validators.required, Validators.min(0)]],
-    })
+      issue_date: [null, [Validators.required]],
+      maturity_date: [null, [Validators.required]],
+      issuance_expenses: [0],
+      placement_expenses: [0],
+      structuring_expenses: [0],
+      cavali_expenses: [0],
+    });
   }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       if (params["id"]) {
-        this.isEditMode = true
-        this.bondId = +params["id"]
-        this.loadBond()
+        this.isEditMode = true;
+        this.bondId = +params["id"];
+        this.loadBond();
       }
-    })
+    });
+
+    // Cargar configuración y setear valores por defecto
+    const clientId = this.clientService.getClientId();
+    if (clientId) {
+      this.configurationService.getConfigurationByUserId(clientId).subscribe({
+        next: (config) => {
+          this.configuration = config;
+          if (config) {
+            this.bondForm.patchValue({
+              currency: config.currency || "PEN",
+              rate_type: config.rateType || "EFFECTIVE",
+              capitalization: config.compounding || "MONTHLY",
+            });
+          }
+        }
+      });
+    }
 
     // Mostrar/ocultar capitalización según el tipo de tasa
     this.bondForm.get("rate_type")?.valueChanges.subscribe((value) => {
-      const capitalizationControl = this.bondForm.get("capitalization")
-      if (value === "nominal") {
-        capitalizationControl?.setValidators([Validators.required])
+      const capitalizationControl = this.bondForm.get("capitalization");
+      if (value === "NOMINAL") {
+        capitalizationControl?.setValidators([Validators.required]);
       } else {
-        capitalizationControl?.clearValidators()
+        capitalizationControl?.clearValidators();
       }
-      capitalizationControl?.updateValueAndValidity()
-    })
+      capitalizationControl?.updateValueAndValidity();
+    });
   }
 
   loadBond(): void {
@@ -98,7 +123,6 @@ export class BondForm implements OnInit {
       this.bondService.getOne(this.bondId).subscribe({
         next: (bond) => {
           if (bond) {
-            console.log("Cargando bono:", bond);
             this.bondForm.patchValue({
               name: bond.name,
               nominal_value: bond.faceValue,
@@ -106,15 +130,19 @@ export class BondForm implements OnInit {
               interest_rate: bond.interestRate,
               rate_type: bond.rateType,
               capitalization: bond.compounding,
-              term: bond.term,
               payment_frequency: bond.paymentFrequency,
               grace_type: bond.graceType,
               grace_period: bond.gracePeriod,
+              issue_date: bond.issueDate,
+              maturity_date: bond.maturityDate,
+              issuance_expenses: bond.issuanceExpenses || 0,
+              placement_expenses: bond.placementExpenses || 0,
+              structuring_expenses: bond.structuringExpenses || 0,
+              cavali_expenses: bond.cavaliExpenses || 0,
             });
           }
         },
-        error: (error) => {
-          console.error("Error loading bond:", error);
+        error: () => {
           this.router.navigate(["/bonds"]);
         },
       });
@@ -126,12 +154,19 @@ export class BondForm implements OnInit {
       this.isLoading = true;
       const clientId = this.clientService.getClientId();
       if (clientId == null) {
-        // Maneja el error, muestra mensaje o redirige
         this.isLoading = false;
-        console.error("No se encontró el clientId.");
         return;
       }
       const form = this.bondForm.value;
+
+      // Calcular maturity_date si no se ingresó manualmente
+      let maturityDate = form.maturity_date;
+      if (!maturityDate && form.issue_date && form.term) {
+        const issue = new Date(form.issue_date);
+        issue.setMonth(issue.getMonth() + Number(form.term));
+        maturityDate = issue.toISOString().split('T')[0];
+      }
+
       const bondData: BondModel = {
         name: form.name,
         faceValue: form.nominal_value,
@@ -139,11 +174,16 @@ export class BondForm implements OnInit {
         interestRate: form.interest_rate,
         rateType: form.rate_type,
         compounding: form.capitalization,
-        term: form.term,
         paymentFrequency: form.payment_frequency,
         graceType: form.grace_type,
         gracePeriod: form.grace_period,
-        clientId: clientId
+        clientId: clientId,
+        issueDate: form.issue_date,
+        maturityDate: maturityDate,
+        issuanceExpenses: form.issuance_expenses,
+        placementExpenses: form.placement_expenses,
+        structuringExpenses: form.structuring_expenses,
+        cavaliExpenses: form.cavali_expenses,
       };
 
       const operation =
@@ -158,9 +198,8 @@ export class BondForm implements OnInit {
             this.router.navigate(["/client/bond/detail", result.id || this.bondId]);
           }
         },
-        error: (error: any) => {
+        error: () => {
           this.isLoading = false;
-          console.error("Error saving bond:", error);
         },
       });
     }
@@ -171,27 +210,15 @@ export class BondForm implements OnInit {
   }
 
   get showCapitalization(): boolean {
-    return this.bondForm.get("rate_type")?.value === "nominal";
+    return this.bondForm.get("rate_type")?.value === "NOMINAL";
   }
 
   // Getters para validación
-  get name() {
-    return this.bondForm.get("name")
-  }
-  get nominal_value() {
-    return this.bondForm.get("nominal_value")
-  }
-  get interest_rate() {
-    return this.bondForm.get("interest_rate")
-  }
-  get term() {
-    return this.bondForm.get("term")
-  }
-  get grace_period() {
-    return this.bondForm.get("grace_period")
-  }
-
-  // Agrega estos getters al final de tu clase BondForm
+  get name() { return this.bondForm.get("name"); }
+  get nominal_value() { return this.bondForm.get("nominal_value"); }
+  get interest_rate() { return this.bondForm.get("interest_rate"); }
+  get term() { return this.bondForm.get("term"); }
+  get grace_period() { return this.bondForm.get("grace_period"); }
 
   get nameTouched() { return this.name?.touched; }
   get nameInvalid() { return this.name?.invalid; }

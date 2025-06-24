@@ -43,8 +43,12 @@
             <span class="bond-detail-value">{{ bond.interestRate }}% {{ getRateTypeLabel(bond.rateType) }}</span>
           </div>
           <div class="bond-detail-row">
-            <span class="bond-detail-label">Plazo:</span>
-            <span class="bond-detail-value">{{ bond.term }} meses</span>
+            <span class="bond-detail-label">Fecha de Emision:</span>
+            <span class="bond-detail-value">{{ bond.issueDate }}</span>
+          </div>
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Fecha de Vencimiento:</span>
+            <span class="bond-detail-value">{{ bond.maturityDate }}</span>
           </div>
           <div class="bond-detail-row">
             <span class="bond-detail-label">Frecuencia:</span>
