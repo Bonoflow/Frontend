@@ -6,17 +6,15 @@
   </mat-toolbar>
 
   <mat-card-content class="edit-profile-card-content">
-    <div class="client-bg"></div>
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
       <div class="edit-profile-form-grid">
         <!-- Columna de la foto -->
         <div class="edit-profile-photo-col">
           <div class="profile-photo-preview" *ngIf="profileForm.get('photo')?.value">
-            <h2>Foto de Perfil</h2>
             <img [src]="profileForm.get('photo')?.value" alt="Foto de perfil" />
             <mat-spinner *ngIf="isLoading" diameter="32" class="photo-spinner"></mat-spinner>
           </div>
-          <div class="edit-profile-actions-image" style="justify-content:center; margin-bottom: 16px;">
+          <div class="edit-profile-actions-image">
             <input #photoInput type="file" accept="image/*" (change)="onPhotoSelected($event)" style="display:none;">
             <button mat-stroked-button color="primary" type="button" (click)="photoInput.click()" [disabled]="isLoading">
               Cambiar foto
@@ -33,7 +31,6 @@
                 El nombre es obligatorio
               </mat-error>
             </mat-form-field>
-
             <mat-form-field appearance="fill" class="edit-profile-field">
               <mat-label>Apellidos</mat-label>
               <input matInput formControlName="lastName" required>
@@ -51,12 +48,10 @@
                 La fecha es obligatoria
               </mat-error>
             </mat-form-field>
-
             <mat-form-field appearance="fill" class="edit-profile-field">
               <mat-label>Sobre mí</mat-label>
-              <textarea matInput formControlName="description" rows="1"></textarea>
+              <textarea matInput formControlName="description" rows="2"></textarea>
             </mat-form-field>
-
             <div class="edit-profile-actions">
               <button
                 mat-raised-button
@@ -66,13 +61,12 @@
                 [ngClass]="{'edit-profile-changed': isProfileChanged(),'edit-profile-inactive': !isProfileChanged()}"
               >
                 Guardar cambios
-                <mat-spinner *ngIf="isLoading" diameter="24" style="margin-left:8px;"></mat-spinner>
+
               </button>
             </div>
           </div>
         </div>
       </div>
-
     </form>
   </mat-card-content>
 </mat-card>
