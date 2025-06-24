@@ -9,10 +9,10 @@
       <mat-card-content>
         <form [formGroup]="bondForm" (ngSubmit)="onSubmit()">
           <div class="bond-form-columns">
-            <!-- Columna 1 -->
-            <div class="bond-form-col bond-form-col-main">
+            <!-- Columna 1: Información Básica -->
+            <div class="bond-form-col bond-form-col-left">
               <div class="bond-section">
-                <h3 class="bond-section-title">Información general</h3>
+                <h3 class="bond-section-title">Información General</h3>
                 <div class="bond-form-field-wrapper">
                   <mat-form-field appearance="outline" class="bond-form-field">
                     <mat-label>Nombre del bono</mat-label>
@@ -23,16 +23,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="bond-form-field-wrapper">
-                  <mat-form-field appearance="outline" class="bond-form-field">
-                    <mat-label>Valor nominal</mat-label>
-                    <input matInput type="number" formControlName="nominal_value" min="0" step="0.01" placeholder="10000" />
-                    <mat-error *ngIf="nominalValueInvalid && nominalValueTouched">
-                      <span *ngIf="nominal_value?.errors?.['required']">El valor nominal es requerido</span>
-                      <span *ngIf="nominal_value?.errors?.['min']">El valor debe ser mayor a 0</span>
-                    </mat-error>
-                  </mat-form-field>
-                </div>
+
                 <div class="bond-form-field-wrapper">
                   <mat-form-field appearance="outline" class="bond-form-field">
                     <mat-label>Moneda</mat-label>
@@ -43,9 +34,50 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Valor nominal</mat-label>
+                    <input matInput type="number" formControlName="nominal_value" min="0" step="0.01" placeholder="10000" />
+                    <mat-error *ngIf="nominalValueInvalid && nominalValueTouched">
+                      <span *ngIf="nominal_value?.errors?.['required']">El valor nominal es requerido</span>
+                      <span *ngIf="nominal_value?.errors?.['min']">El valor debe ser mayor a 0</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
               </div>
+
               <div class="bond-section">
-                <h3 class="bond-section-title">Tasa</h3>
+                <h3 class="bond-section-title">Fechas Clave</h3>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Fecha de emisión</mat-label>
+                    <input matInput [matDatepicker]="pickerIssue" formControlName="issue_date" placeholder="Selecciona fecha" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerIssue"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerIssue></mat-datepicker>
+                    <mat-error *ngIf="bondForm.get('issue_date')?.invalid && bondForm.get('issue_date')?.touched">
+                      La fecha de emisión es requerida
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Fecha de vencimiento</mat-label>
+                    <input matInput [matDatepicker]="pickerMaturity" formControlName="maturity_date" placeholder="Selecciona fecha" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerMaturity"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerMaturity></mat-datepicker>
+                    <mat-error *ngIf="bondForm.get('maturity_date')?.invalid && bondForm.get('maturity_date')?.touched">
+                      La fecha de vencimiento es requerida
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna 2: Configuración Financiera -->
+            <div class="bond-form-col bond-form-col-middle">
+              <div class="bond-section">
+                <h3 class="bond-section-title">Tasa de Interés</h3>
                 <div class="bond-form-field-wrapper">
                   <mat-form-field appearance="outline" class="bond-form-field">
                     <mat-label>Tasa de interés (%)</mat-label>
@@ -56,6 +88,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
+
                 <div class="bond-form-field-wrapper">
                   <mat-form-field appearance="outline" class="bond-form-field">
                     <mat-label>Tipo de tasa</mat-label>
@@ -66,6 +99,7 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+
                 <div class="bond-form-field-wrapper" *ngIf="showCapitalization">
                   <mat-form-field appearance="outline" class="bond-form-field">
                     <mat-label>Capitalización</mat-label>
@@ -77,67 +111,9 @@
                   </mat-form-field>
                 </div>
               </div>
-            </div>
 
-            <!-- ...dentro de <div class="bond-section"> o crea una nueva sección para Gastos -->
-            <div class="bond-section">
-              <h3 class="bond-section-title">Gastos</h3>
-              <div class="bond-form-field-wrapper">
-                <mat-form-field appearance="outline" class="bond-form-field">
-                  <mat-label>Gastos de emisión</mat-label>
-                  <input matInput type="number" formControlName="issuance_expenses" min="0" step="0.01" placeholder="0" />
-                </mat-form-field>
-              </div>
-              <div class="bond-form-field-wrapper">
-                <mat-form-field appearance="outline" class="bond-form-field">
-                  <mat-label>Gastos de colocación</mat-label>
-                  <input matInput type="number" formControlName="placement_expenses" min="0" step="0.01" placeholder="0" />
-                </mat-form-field>
-              </div>
-              <div class="bond-form-field-wrapper">
-                <mat-form-field appearance="outline" class="bond-form-field">
-                  <mat-label>Gastos de estructuración</mat-label>
-                  <input matInput type="number" formControlName="structuring_expenses" min="0" step="0.01" placeholder="0" />
-                </mat-form-field>
-              </div>
-              <div class="bond-form-field-wrapper">
-                <mat-form-field appearance="outline" class="bond-form-field">
-                  <mat-label>Gastos Cavali</mat-label>
-                  <input matInput type="number" formControlName="cavali_expenses" min="0" step="0.01" placeholder="0" />
-                </mat-form-field>
-              </div>
-            </div>
-
-            <!-- Campo Fecha de Emisión -->
-            <div class="bond-form-field-wrapper">
-              <mat-form-field appearance="outline" class="bond-form-field">
-                <mat-label>Fecha de emisión</mat-label>
-                <input matInput [matDatepicker]="pickerIssue" formControlName="issue_date" placeholder="Selecciona fecha" />
-                <mat-datepicker-toggle matSuffix [for]="pickerIssue"></mat-datepicker-toggle>
-                <mat-datepicker #pickerIssue></mat-datepicker>
-                <mat-error *ngIf="bondForm.get('issue_date')?.invalid && bondForm.get('issue_date')?.touched">
-                  La fecha de emisión es requerida
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- Campo Fecha de Vencimiento -->
-            <div class="bond-form-field-wrapper">
-              <mat-form-field appearance="outline" class="bond-form-field">
-                <mat-label>Fecha de vencimiento</mat-label>
-                <input matInput [matDatepicker]="pickerMaturity" formControlName="maturity_date" placeholder="Selecciona fecha" />
-                <mat-datepicker-toggle matSuffix [for]="pickerMaturity"></mat-datepicker-toggle>
-                <mat-datepicker #pickerMaturity></mat-datepicker>
-                <mat-error *ngIf="bondForm.get('maturity_date')?.invalid && bondForm.get('maturity_date')?.touched">
-                  La fecha de vencimiento es requerida
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- Columna 2 -->
-            <div class="bond-form-col bond-form-col-side">
               <div class="bond-section">
-                <h3 class="bond-section-title">Plazos y pagos</h3>
+                <h3 class="bond-section-title">Plazos y Pagos</h3>
                 <div class="bond-form-field-wrapper">
                   <mat-form-field appearance="outline" class="bond-form-field">
                     <mat-label>Frecuencia de pago</mat-label>
@@ -149,8 +125,12 @@
                   </mat-form-field>
                 </div>
               </div>
+            </div>
+
+            <!-- Columna 3: Configuraciones Adicionales -->
+            <div class="bond-form-col bond-form-col-right">
               <div class="bond-section">
-                <h3 class="bond-section-title">Período de gracia</h3>
+                <h3 class="bond-section-title">Período de Gracia</h3>
                 <div class="bond-form-field-wrapper">
                   <mat-form-field appearance="outline" class="bond-form-field">
                     <mat-label>Tipo de gracia</mat-label>
@@ -161,6 +141,7 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+
                 <div class="bond-form-field-wrapper">
                   <mat-form-field appearance="outline" class="bond-form-field">
                     <mat-label>Período de gracia (meses)</mat-label>
@@ -172,8 +153,41 @@
                   </mat-form-field>
                 </div>
               </div>
+
+              <div class="bond-section">
+                <h3 class="bond-section-title">Gastos</h3>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Gastos de emisión (1%)</mat-label>
+                    <input matInput type="number" formControlName="issuance_expenses" readonly />
+                  </mat-form-field>
+                </div>
+
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Gastos de colocación (0.5%)</mat-label>
+                    <input matInput type="number" formControlName="placement_expenses" readonly />
+                  </mat-form-field>
+                </div>
+
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Gastos de estructuración (0.3%)</mat-label>
+                    <input matInput type="number" formControlName="structuring_expenses" readonly />
+                  </mat-form-field>
+                </div>
+
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Gastos Cavali (0.2%)</mat-label>
+                    <input matInput type="number" formControlName="cavali_expenses" readonly />
+                  </mat-form-field>
+                </div>
+
+              </div>
             </div>
           </div>
+
           <!-- Botones -->
           <div class="bond-form-actions">
             <button mat-stroked-button type="button" (click)="onCancel()" class="bond-btn bond-btn-cancel">
@@ -196,7 +210,6 @@
               <span *ngIf="!isLoading">{{ isEditMode ? 'Actualizar' : 'Crear' }} Bono</span>
               <span *ngIf="isLoading">Guardando...</span>
             </button>
-
           </div>
         </form>
       </mat-card-content>

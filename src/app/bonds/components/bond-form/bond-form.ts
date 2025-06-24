@@ -73,10 +73,10 @@ export class BondForm implements OnInit {
       grace_period: [0, [Validators.required, Validators.min(0)]],
       issue_date: [null, [Validators.required]],
       maturity_date: [null, [Validators.required]],
-      issuance_expenses: [0],
-      placement_expenses: [0],
-      structuring_expenses: [0],
-      cavali_expenses: [0],
+      issuance_expenses: [{ value: 0, disabled: true }],
+      placement_expenses: [{ value: 0, disabled: true }],
+      structuring_expenses: [{ value: 0, disabled: true }],
+      cavali_expenses: [{ value: 0, disabled: true }],
     });
   }
 
@@ -115,6 +115,22 @@ export class BondForm implements OnInit {
         capitalizationControl?.clearValidators();
       }
       capitalizationControl?.updateValueAndValidity();
+    });
+
+    // Calcular gastos automáticamente al cambiar el valor nominal
+    this.bondForm.get('nominal_value')?.valueChanges.subscribe((nominal) => {
+      const n = Number(nominal) || 0;
+      // Ajusta los porcentajes según tu lógica de negocio
+      const issuance = +(n * 0.01).toFixed(2);      // 1%
+      const placement = +(n * 0.005).toFixed(2);     // 0.5%
+      const structuring = +(n * 0.003).toFixed(2);   // 0.3%
+      const cavali = +(n * 0.002).toFixed(2);        // 0.2%
+      this.bondForm.patchValue({
+        issuance_expenses: issuance,
+        placement_expenses: placement,
+        structuring_expenses: structuring,
+        cavali_expenses: cavali,
+      }, { emitEvent: false });
     });
   }
 
@@ -157,7 +173,7 @@ export class BondForm implements OnInit {
         this.isLoading = false;
         return;
       }
-      const form = this.bondForm.value;
+      const form = this.bondForm.getRawValue();
 
       // Calcular maturity_date si no se ingresó manualmente
       let maturityDate = form.maturity_date;
