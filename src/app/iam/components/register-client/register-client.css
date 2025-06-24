@@ -29,7 +29,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: 0.9;
+
     }
 
     .image-content {
@@ -321,11 +321,11 @@
 /* Animaciones */
 @keyframes fadeInUp {
   from {
-    opacity: 0;
+
     transform: translateY(20px);
   }
   to {
-    opacity: 1;
+
     transform: translateY(0);
   }
 }

@@ -152,7 +152,7 @@
 .edit-profile-field mat-label {
   color: #b0b8c9 !important;
   font-weight: 500;
-  opacity: 0.7;
+
 }
 
 @media (max-width: 1000px) {

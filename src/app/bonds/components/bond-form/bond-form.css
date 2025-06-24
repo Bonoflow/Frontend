@@ -47,7 +47,7 @@
 .bond-form-card {
   width: 100%;
   max-width: 1200px;
-  background: transparent;
+
 }
 
 /* Contenido del card */
@@ -107,6 +107,12 @@ mat-card {
 .bond-form-field-wrapper {
   width: 100%;
 }
+
+.bond-form-field {
+  background-color: #f0f0f0; /* blanco semitransparente */
+  border-radius: 4px; /* opcional para esquinas redondeadas */
+}
+
 
 .bond-form-field {
   width: 100%;

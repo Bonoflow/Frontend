@@ -10,7 +10,7 @@ import {forkJoin} from 'rxjs';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {BondCalculatorService} from '../../../utils/bond-calcultations';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
+
 
 @Component({
   selector: 'app-bond-detail',

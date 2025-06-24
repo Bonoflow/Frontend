@@ -65,7 +65,7 @@
   flex-direction: column;
   border-radius: 12px;
   padding: 24px;
-  background: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
   min-height: 300px;
   width: 100%;
   max-width: 600px;
@@ -180,13 +180,13 @@
 /* Fondo celeste claro, sin transparencia, cuando está habilitado */
 .mat-mdc-select[formcontrolname="compounding"].mdc-text-field--filled:not(.mdc-text-field--disabled) {
   background-color: #e3f2fd !important;
-  opacity: 1 !important;
+
 }
 
 /* Overlay de foco/hover opaco (sin transparencia) */
 .mat-mdc-form-field-focus-overlay {
   background-color: #e3f2fd !important;
-  opacity: 1 !important;
+
 }
 
 .configuration-field {

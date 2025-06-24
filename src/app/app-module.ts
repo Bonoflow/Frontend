@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 
 import { SidenavComponent } from './public/components/sidenav/sidenav.component';
-import { HeaderComponent } from './public/components/header/header.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -49,7 +48,6 @@ import { ConfigurationPage } from './users/pages/configuration-page/configuratio
     App,
     LoginComponent,
     SidenavComponent,
-    HeaderComponent,
     Home,
     RegisterClient,
     SignupClient,
