@@ -1,232 +1,76 @@
-.client-theme {
-  position: relative;
+.configuration-card {
+  max-width: 600px;
+  margin: 40px auto;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+  background: #fff;
 }
 
 .configuration-header-toolbar {
+  border-radius: 10px 10px 0 0;
   background: #fff !important;
   color: #2f4eb3 !important;
-  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
+  box-shadow: none;
   padding: 18px 24px;
-  margin-bottom: 32px;
-}
-
-.configuration-card-content {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(43, 74, 153, 0.10);
 }
 
 .configuration-header-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #2f4eb3;
-  margin: 0;
-  padding: 0;
-  line-height: 1.2;
-  text-align: left;
 }
+
 .spacer {
   flex: 1 1 auto;
 }
 
-.configuration-card {
-  width: 60%;
-  margin: 0 auto;
-  min-height: 60vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.client-bg {
-  background-size: 160px;
-  opacity: 0.10;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 160px;
-  height: 160px;
-  pointer-events: none;
+.configuration-card-content {
+  padding: 32px 24px;
 }
 
 .configuration-fields-wrapper {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100%;
+  align-items: flex-start;
   width: 100%;
 }
 
 .configuration-fields {
   display: flex;
-  flex-direction: column;
-  border-radius: 12px;
-  padding: 24px;
-  background-color: rgba(0, 0, 0, 0.5);
-  min-height: 300px;
-  width: 100%;
+  flex-wrap: wrap;
+  gap: 24px 32px;
   max-width: 600px;
-  gap: 32px;
+  width: 100%;
 }
 
 .configuration-field {
-  width: 100%;
-}
-.configuration-field mat-label,
-.configuration-field input,
-.configuration-field textarea {
-  font-size: 1.2rem;
+  flex: 1 1 260px;
+  min-width: 220px;
 }
 
 .configuration-actions {
-  display: flex;
-  justify-content: center;
-  margin-top: auto;
-  margin-bottom: 0;
-  gap: 16px;
-  align-self: flex-start;
-}
-
-.configuration-changed {
-  background-color: #2B4A99 !important;
-  color: #fff !important;
-  transition: background 0.2s;
-}
-
-@media (max-width: 1000px) {
-  .configuration-fields {
-    max-width: 100%;
-  }
-  .configuration-card {
-    width: 95%;
-  }
-}.client-theme {
-   position: relative;
- }
-
-.configuration-header-toolbar {
-  background: #fff !important;
-  color: #2f4eb3 !important;
-  box-shadow: 0 2px 8px rgba(44,62,80,0.08);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  padding: 18px 24px;
-  margin-bottom: 32px;
-}
-
-.configuration-card-content {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(43, 74, 153, 0.10);
-}
-
-.configuration-header-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #2f4eb3;
-  margin: 0;
-  padding: 0;
-  line-height: 1.2;
-  text-align: left;
-}
-.spacer {
-  flex: 1 1 auto;
-}
-
-.configuration-card {
-  width: 60%;
-  margin: 0 auto;
-  min-height: 60vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.client-bg {
-  background-size: 160px;
-  opacity: 0.10;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 160px;
-  height: 160px;
-  pointer-events: none;
-}
-
-.configuration-fields-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
   width: 100%;
-}
-
-.configuration-fields {
   display: flex;
-  flex-direction: column;
-  border-radius: 12px;
-  padding: 24px;
-  background: #fff;
-  min-height: 300px;
-  width: 100%;
-  max-width: 600px;
-  gap: 32px;
+  justify-content: flex-end;
+  margin-top: 12px;
 }
 
-/* Fondo celeste claro, sin transparencia, cuando está habilitado */
-.mat-mdc-select[formcontrolname="compounding"].mdc-text-field--filled:not(.mdc-text-field--disabled) {
-  background-color: #e3f2fd !important;
-
-}
-
-/* Overlay de foco/hover opaco (sin transparencia) */
-.mat-mdc-form-field-focus-overlay {
-  background-color: #e3f2fd !important;
-
-}
-
-.configuration-field {
-  width: 100%;
-}
-.configuration-field mat-label,
-.configuration-field input,
-.configuration-field textarea {
-  font-size: 1.2rem;
-}
-
-.configuration-actions {
-  display: flex;
-  justify-content: center;
-  margin-top: auto;
-  margin-bottom: 0;
-  gap: 16px;
-  align-self: flex-start;
-}
-
-.configuration-changed {
-  background-color: #2B4A99 !important;
-  color: #fff !important;
-  transition: background 0.2s;
-}
-
-.compounding-disabled {
-  background: #f0f0f0 !important;
-  border-radius: 8px;
+.config-btn[disabled] {
+  background: #e0e3ee !important;
+  color: #a0a4b8 !important;
+  cursor: not-allowed;
   opacity: 0.7;
 }
-.compounding-disabled .mat-select-disabled {
-  color: #b0b8c9 !important;
-}
 
-@media (max-width: 1000px) {
+@media (max-width: 700px) {
   .configuration-fields {
-    max-width: 100%;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .configuration-field {
+    min-width: 100%;
   }
   .configuration-card {
-    width: 95%;
+    margin: 16px;
   }
 }

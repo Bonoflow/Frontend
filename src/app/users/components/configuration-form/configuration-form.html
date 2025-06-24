@@ -4,7 +4,6 @@
     <span class="spacer"></span>
   </mat-toolbar>
   <mat-card-content class="configuration-card-content">
-    <div class="client-bg"></div>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="configuration-fields-wrapper">
         <div class="configuration-fields">
@@ -43,13 +42,13 @@
           </mat-form-field>
           <div class="configuration-actions">
             <button
-              mat-raised-button
+              mat-flat-button
               color="primary"
               type="submit"
-              [disabled]="form.invalid"
-              class="configuration-changed"
+              [disabled]="form.invalid || !form.dirty"
+              class="config-btn"
             >
-              Guardar cambios
+              Guardar configuración
             </button>
           </div>
         </div>
