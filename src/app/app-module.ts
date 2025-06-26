@@ -1,4 +1,4 @@
-import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {LOCALE_ID, NgModule, provideBrowserGlobalErrorListeners} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
@@ -39,7 +39,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { EditProfile } from './profiles/components/edit-profile/edit-profile';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { ProfilePage } from './profiles/pages/profile-page/profile-page';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
 import { ConfigurationForm } from './users/components/configuration-form/configuration-form';
 import { ConfigurationPage } from './users/pages/configuration-page/configuration-page';
 import { RegisterInvestor } from './iam/components/register-investor/register-investor';
@@ -116,7 +116,9 @@ import { BondDetailInvestor } from './bonds/components/bond-detail-investor/bond
 
   ],
   providers: [
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    { provide: LOCALE_ID, useValue: 'es' },
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }
   ],
   bootstrap: [App]
 })

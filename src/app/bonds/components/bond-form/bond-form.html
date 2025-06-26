@@ -142,9 +142,9 @@
                   </mat-form-field>
                 </div>
 
-                <div class="bond-form-field-wrapper">
+                <div class="bond-form-field-wrapper" *ngIf="bondForm.get('grace_type')?.value === 'PARTIAL' || bondForm.get('grace_type')?.value === 'TOTAL'">
                   <mat-form-field appearance="outline" class="bond-form-field">
-                    <mat-label>Período de gracia (meses)</mat-label>
+                    <mat-label>Numero de periodos de gracia</mat-label>
                     <input matInput type="number" formControlName="grace_period" min="0" placeholder="0" />
                     <mat-error *ngIf="gracePeriodInvalid && gracePeriodTouched">
                       <span *ngIf="grace_period?.errors?.['required']">El período de gracia es requerido</span>

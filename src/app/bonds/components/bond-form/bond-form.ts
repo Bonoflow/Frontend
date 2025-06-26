@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BondModel } from '../../model/bond.model';
 import { ClientService } from '../../../users/services/client.service';
 import { ConfigurationService } from '../../../users/services/configuration.service';
+import {BondCalculatorService} from '../../../utils/bond-calcultations';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-bond-form',
@@ -59,7 +61,9 @@ export class BondForm implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private clientService: ClientService,
-    private configurationService: ConfigurationService
+    private configurationService: ConfigurationService,
+    private bondCalculatorService: BondCalculatorService,
+    private snackBar: MatSnackBar,
   ) {
     this.bondForm = this.fb.group({
       name: ["", [Validators.required, Validators.minLength(3)]],
@@ -89,11 +93,12 @@ export class BondForm implements OnInit {
       }
     });
 
-    // Cargar configuración y setear valores por defecto
+    // Cargar configuración y setear valores por defecto solo si NO es edit mode
     const clientId = this.clientService.getClientId();
-    if (clientId) {
+    if (clientId && !this.isEditMode) {
       this.configurationService.getConfigurationByUserId(clientId).subscribe({
         next: (config) => {
+          console.log("Configuracion encontrada:", config);
           this.configuration = config;
           if (config) {
             this.bondForm.patchValue({
@@ -168,6 +173,7 @@ export class BondForm implements OnInit {
   onSubmit(): void {
     if (this.bondForm.valid) {
       this.isLoading = true;
+
       const clientId = this.clientService.getClientId();
       if (clientId == null) {
         this.isLoading = false;
@@ -201,6 +207,18 @@ export class BondForm implements OnInit {
         structuringExpenses: form.structuring_expenses,
         cavaliExpenses: form.cavali_expenses,
       };
+
+      try {
+        this.bondCalculatorService.validateBond(bondData);
+      } catch (error) {
+        this.isLoading = false;
+        this.snackBar.open(
+          error instanceof Error ? error.message : String(error),
+          'Cerrar',
+          { duration: 5000, panelClass: ['snackbar-error'] }
+        );
+        return;
+      }
 
       const operation =
         this.isEditMode && this.bondId

@@ -374,6 +374,11 @@ export class BondCalculatorService {
         bond.paymentFrequency
       );
 
+      console.log(bond.issueDate);
+      console.log(bond.maturityDate);
+      console.log(bond.paymentFrequency);
+
+
       if (bond.gracePeriod < 0) {
         errors.push('El período de gracia no puede ser negativo');
       }
@@ -382,6 +387,7 @@ export class BondCalculatorService {
         errors.push('El período de gracia no puede ser mayor o igual al plazo total');
       }
     } catch (e) {
+      console.error('Error al calcular períodos desde fechas:', e);
       errors.push(`Error en fechas: ${e instanceof Error ? e.message : 'Error desconocido'}`);
     }
 
