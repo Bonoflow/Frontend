@@ -68,6 +68,19 @@ export class BondDetail implements OnInit, AfterViewInit {
     }
   }
 
+  deleteBond(){
+    if (this.bond) {
+      this.bondService.delete(this.bond.id).subscribe({
+        next: () => {
+          this.router.navigate(["/client/bonds"]);
+        },
+        error: (error) => {
+          console.error("Error al eliminar el bono:", error);
+        }
+      });
+    }
+  }
+
   onTabChange(index: number): void {
     this.selectedTabIndex = index;
     if (index === 0) {
@@ -184,6 +197,15 @@ export class BondDetail implements OnInit, AfterViewInit {
     }).format(amount);
   }
 
+  getGraceTypeLabel(graceType: string): string {
+    switch (graceType) {
+      case 'NO_GRACE': return 'Sin gracia';
+      case 'PARTIAL': return 'Parcial';
+      case 'TOTAL': return 'Total';
+      default: return graceType;
+    }
+  }
+
   getPaymentFrequencyLabel(frequency: string): string {
     switch (frequency) {
       case "MONTHLY":
@@ -196,6 +218,8 @@ export class BondDetail implements OnInit, AfterViewInit {
         return "Semestral";
       case "ANNUAL":
         return "Anual";
+      case "DAILY":
+        return "Diaria";
       default:
         return frequency;
     }
@@ -213,6 +237,8 @@ export class BondDetail implements OnInit, AfterViewInit {
         return "Semestral";
       case "ANNUAL":
         return "Anual";
+      case "DAILY":
+        return "Diaria";
       default:
         return compounding;
     }

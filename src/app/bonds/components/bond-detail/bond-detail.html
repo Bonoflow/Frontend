@@ -6,9 +6,13 @@
     </button>
     <span class="bond-detail-header-title">{{ bond?.name || 'Detalle del Bono' }}</span>
     <span class="spacer"></span>
-    <button mat-flat-button color="accent" (click)="editBond()" *ngIf="bond">
+    <button mat-flat-button class="edit-bond-btn" (click)="editBond()" *ngIf="bond">
       <mat-icon>edit</mat-icon>
       Editar
+    </button>
+    <button mat-flat-button color="warn" (click)="deleteBond()" *ngIf="bond" style="margin-left: 8px;">
+      <mat-icon>delete</mat-icon>
+      Eliminar
     </button>
   </mat-toolbar>
 
@@ -68,10 +72,12 @@
         <div class="bond-summary-modern-icon-bg">
           <mat-icon class="bond-summary-modern-icon">schedule</mat-icon>
         </div>
-        <mat-card-title class="bond-summary-modern-title">Fecha de Emisión</mat-card-title>
+        <mat-card-title class="bond-summary-modern-title">Fechas</mat-card-title>
         <mat-card-content>
-          <p class="bond-summary-modern-value">{{ bond.issueDate }}</p>
-          <p class="bond-summary-modern-label">Frecuencia de pago: {{ getPaymentFrequencyLabel(bond.paymentFrequency) }}</p>
+          <p class="bond-summary-modern-value">Emisión: {{ bond.issueDate }}</p>
+          <p class="bond-summary-modern-label">Vencimiento: {{ bond.maturityDate }}</p>
+          <p class="bond-summary-modern-label">Frecuencia: {{ getPaymentFrequencyLabel(bond.paymentFrequency) }}</p>
+          <p class="bond-summary-modern-label">Tipo de gracia: {{ getGraceTypeLabel(bond.graceType) }}</p>
         </mat-card-content>
       </mat-card>
 
@@ -153,15 +159,6 @@
                       <div class="bond-detail-metrics-value">{{ formatPercent(metrics.trea) }}</div>
                     </div>
                   </div>
-                </mat-card-content>
-              </mat-card>
-              <mat-card class="bond-detail-metrics-card">
-                <mat-card-title class="bond-detail-metrics-title">Precio de Mercado</mat-card-title>
-                <mat-card-content>
-                  <p class="bond-detail-metrics-label">Valor actual del bono</p>
-                  <div class="bond-detail-metrics-value">{{ formatCurrency(metrics.marketPrice, bond.currency) }}</div>
-                  <p class="bond-detail-metrics-label">Valor nominal: {{ formatCurrency(bond.faceValue, bond.currency) }}</p>
-                  <p class="bond-detail-metrics-label">Diferencia: {{ formatCurrency(metrics.marketPrice - bond.faceValue, bond.currency) }}</p>
                 </mat-card-content>
               </mat-card>
               <mat-card class="bond-detail-metrics-card">

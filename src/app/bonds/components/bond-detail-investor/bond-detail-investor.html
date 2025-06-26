@@ -36,34 +36,40 @@
   </div>
 
   <div *ngIf="!isLoading && bond">
-    <div class="bond-summary-cards mat-elevation-z2">
-      <mat-card>
-        <mat-icon color="primary" class="bond-summary-icon">attach_money</mat-icon>
-        <mat-card-title>Valor nominal</mat-card-title>
+    <div class="bond-summary-cards-modern">
+      <mat-card class="bond-summary-modern-card">
+        <div class="bond-summary-modern-icon-bg">
+          <mat-icon class="bond-summary-modern-icon">attach_money</mat-icon>
+        </div>
+        <mat-card-title class="bond-summary-modern-title">Valor nominal</mat-card-title>
         <mat-card-content>
-          <p class="mat-display-1">{{ formatCurrency(bond.faceValue, bond.currency) }}</p>
+          <p class="bond-summary-modern-value">{{ formatCurrency(bond.faceValue, bond.currency) }}</p>
         </mat-card-content>
       </mat-card>
-      <mat-card>
-        <mat-icon color="primary" class="bond-summary-icon">percent</mat-icon>
-        <mat-card-title>Tasa de interés</mat-card-title>
+      <mat-card class="bond-summary-modern-card">
+        <div class="bond-summary-modern-icon-bg">
+          <mat-icon class="bond-summary-modern-icon">percent</mat-icon>
+        </div>
+        <mat-card-title class="bond-summary-modern-title">Tasa de interés</mat-card-title>
         <mat-card-content>
-          <p class="mat-display-1">
+          <p class="bond-summary-modern-value">
             {{ bond.interestRate }}% {{ getRateTypeLabel(bond.rateType) }}
           </p>
-          <span *ngIf="bond.compounding" class="mat-body-2">
-            Capitalización: {{ getCompoundingLabel(bond.compounding) }}
-          </span>
+          <span *ngIf="bond.compounding" class="bond-summary-modern-label">
+        Capitalización: {{ getCompoundingLabel(bond.compounding) }}
+      </span>
         </mat-card-content>
       </mat-card>
-      <mat-card>
-        <mat-icon color="primary" class="bond-summary-icon">schedule</mat-icon>
-        <mat-card-title>Fechas</mat-card-title>
+      <mat-card class="bond-summary-modern-card">
+        <div class="bond-summary-modern-icon-bg">
+          <mat-icon class="bond-summary-modern-icon">schedule</mat-icon>
+        </div>
+        <mat-card-title class="bond-summary-modern-title">Fechas</mat-card-title>
         <mat-card-content>
-          <p class="mat-body-2">Emisión: {{ bond.issueDate }}</p>
-          <p class="mat-body-2">Vencimiento: {{ bond.maturityDate }}</p>
-          <p class="mat-body-2">Frecuencia: {{ getPaymentFrequencyLabel(bond.paymentFrequency) }}</p>
-          <p class="mat-body-2">Tipo de gracia: {{ getGraceTypeLabel(bond.graceType) }}</p>
+          <p class="bond-summary-modern-value">Emisión: {{ bond.issueDate }}</p>
+          <p class="bond-summary-modern-label">Vencimiento: {{ bond.maturityDate }}</p>
+          <p class="bond-summary-modern-label">Frecuencia: {{ getPaymentFrequencyLabel(bond.paymentFrequency) }}</p>
+          <p class="bond-summary-modern-label">Tipo de gracia: {{ getGraceTypeLabel(bond.graceType) }}</p>
         </mat-card-content>
       </mat-card>
     </div>
@@ -145,15 +151,7 @@
                   </div>
                 </mat-card-content>
               </mat-card>
-              <mat-card class="bond-detail-metrics-card">
-                <mat-card-title class="bond-detail-metrics-title">Precio de Mercado</mat-card-title>
-                <mat-card-content>
-                  <p class="bond-detail-metrics-label">Valor actual del bono</p>
-                  <div class="bond-detail-metrics-value">{{ formatCurrency(metrics.marketPrice, bond.currency) }}</div>
-                  <p class="bond-detail-metrics-label">Valor nominal: {{ formatCurrency(bond.faceValue, bond.currency) }}</p>
-                  <p class="bond-detail-metrics-label">Diferencia: {{ formatCurrency(metrics.marketPrice - bond.faceValue, bond.currency) }}</p>
-                </mat-card-content>
-              </mat-card>
+
               <mat-card class="bond-detail-metrics-card">
                 <mat-card-title class="bond-detail-metrics-title">Duración</mat-card-title>
                 <mat-card-content>

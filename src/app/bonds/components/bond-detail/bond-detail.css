@@ -9,6 +9,14 @@
   margin-bottom: 32px;
 }
 
+.edit-bond-btn {
+  background: #2f4eb3 !important;
+  color: #fff !important;
+}
+.edit-bond-btn:hover {
+  background: #2f4eb3 !important;
+}
+
 .bond-loading-overlay {
   position: fixed;
   top: 0;
@@ -68,7 +76,7 @@
   margin-bottom: 32px;
   justify-content: space-between;
   flex-wrap: wrap;
-  background: linear-gradient(90deg, #f5f7fa 0%, #e3e8ee 100%);
+  background: #ffffff;
   border-radius: 18px;
   padding: 32px 24px;
   box-shadow: 0 8px 32px rgba(44,62,80,0.10);

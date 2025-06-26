@@ -170,6 +170,7 @@ export class BondDetailInvestor implements OnInit, AfterViewInit {
       case 'QUARTERLY': return 'Trimestral';
       case 'SEMIANNUAL': return 'Semestral';
       case 'ANNUAL': return 'Anual';
+      case 'DAILY': return 'Diaria';
       default: return frequency;
     }
   }
@@ -190,6 +191,7 @@ export class BondDetailInvestor implements OnInit, AfterViewInit {
       case 'QUARTERLY': return 'Trimestral';
       case 'SEMIANNUAL': return 'Semestral';
       case 'ANNUAL': return 'Anual';
+      case 'DAILY': return 'Diaria';
       default: return compounding;
     }
   }
