@@ -17,6 +17,9 @@ export class UserApiService extends  BaseService<User>{
     this.extraUrl = environment.userURL;
   }
 
+  private isInvestorSubject = new BehaviorSubject<boolean>(this.getIsInvestor());
+  isInvestor$ = this.isInvestorSubject.asObservable();
+
   private loggedIn = new BehaviorSubject<boolean>(this.isLogged());
   get isLogged$() {
     return this.loggedIn.asObservable();
@@ -39,8 +42,10 @@ export class UserApiService extends  BaseService<User>{
 
   setIsInvestor(isInvestor: boolean) {
     if (typeof window !== 'undefined' && window.localStorage) {
+      this.isInvestorSubject.next(isInvestor);
       localStorage.setItem('isInvestor', String(isInvestor));
     }
+
   }
 
   getIsInvestor(): boolean {
@@ -72,6 +77,8 @@ export class UserApiService extends  BaseService<User>{
     }
     return 0;
   }
+
+
 
 
 

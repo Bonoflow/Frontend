@@ -1,8 +1,9 @@
-import {Component, Input, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
 import {UserApiService} from '../../../users/services/user.service';
 import {MatDrawer} from '@angular/material/sidenav';
 import {ClientService} from '../../../users/services/client.service';
 import {InvestorService} from '../../../users/services/investor.service';
+import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -11,13 +12,18 @@ import {InvestorService} from '../../../users/services/investor.service';
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.css'
 })
-export class SidenavComponent {
+export class SidenavComponent implements OnDestroy {
 
   isOpen = false;
+  private userSub: Subscription;
   @ViewChild('drawer') drawer!: MatDrawer;
 
   onToggleSidenav(isOpen: boolean) {
     isOpen ? this.drawer.open() : this.drawer.close();
+  }
+
+  ngOnDestroy() {
+    this.userSub.unsubscribe();
   }
 
   getIconForButton(button: string): string {
@@ -39,6 +45,9 @@ export class SidenavComponent {
               private investorService: InvestorService) {
 
     this.isInvestor = this.userApiService.getIsInvestor()
+    this.userSub = this.userApiService.isInvestor$.subscribe(val => {
+      this.isInvestor = val;
+    });
   }
 
   getSidebarButtons(): string[] {
