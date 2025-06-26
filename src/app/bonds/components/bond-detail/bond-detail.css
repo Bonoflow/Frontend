@@ -25,7 +25,7 @@
 .bond-loading-overlay .mat-spinner {
   width: 72px !important;
   height: 72px !important;
-  stroke: #2f4eb3 !important; /* Color visible */
+  stroke: #2f4eb3 !important;
   filter: drop-shadow(0 2px 8px rgba(44,62,80,0.18));
   background: #fff;
   border-radius: 50%;
@@ -61,64 +61,92 @@
   }
 }
 
-/* Bond Summary Cards */
-
-.bond-summary-cards {
+/* --- NUEVO: Bond Summary Cards Moderno (Glassmorphism) --- */
+.bond-summary-cards-modern {
   display: flex;
-  gap: 24px;
+  gap: 32px;
   margin-bottom: 32px;
   justify-content: space-between;
   flex-wrap: wrap;
+  background: linear-gradient(90deg, #f5f7fa 0%, #e3e8ee 100%);
+  border-radius: 18px;
+  padding: 32px 24px;
+  box-shadow: 0 8px 32px rgba(44,62,80,0.10);
 }
 
-.bond-summary-cards mat-card {
+.bond-summary-modern-card {
   flex: 1 1 0;
   min-width: 260px;
   max-width: 340px;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(44,62,80,0.10);
-  background: #fff;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.65);
+  box-shadow: 0 4px 24px rgba(44,62,80,0.12);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(44,62,80,0.08);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 18px 24px;
+  align-items: center;
+  padding: 28px 18px 22px 18px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.bond-summary-modern-card:hover {
+  box-shadow: 0 8px 32px rgba(44,62,80,0.18);
+  transform: translateY(-4px) scale(1.03);
 }
 
-.bond-summary-icon {
-  font-size: 2.2rem;
-  margin-bottom: 8px;
+.bond-summary-modern-icon-bg {
+  background: linear-gradient(135deg, #2f4eb3 60%, #6b8cff 100%);
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 12px rgba(44,62,80,0.10);
+}
+
+.bond-summary-modern-icon {
+  font-size: 2.6rem;
+  color: #fff;
+  filter: drop-shadow(0 2px 8px rgba(44,62,80,0.18));
+}
+
+.bond-summary-modern-title {
+  font-size: 1.08rem;
+  font-weight: 700;
   color: #2f4eb3;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
-mat-card-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #223a7a;
-  margin-bottom: 8px;
-}
-
-.mat-display-1 {
-  font-size: 1rem;
+.bond-summary-modern-value {
+  font-size: 1.45rem;
   font-weight: 700;
   color: #223a7a;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  text-align: center;
 }
 
-.mat-body-2, .bond-summary-label {
+.bond-summary-modern-label {
   color: #6b7280;
   font-size: 1rem;
+  text-align: center;
 }
 
 @media (max-width: 900px) {
-  .bond-summary-cards {
+  .bond-summary-cards-modern {
     flex-direction: column;
-    gap: 16px;
+    gap: 18px;
+    padding: 18px 8px;
   }
-  .bond-summary-cards mat-card {
+  .bond-summary-modern-card {
     max-width: 100%;
     width: 100%;
   }
 }
+
+/* --- FIN NUEVO --- */
 
 /*Cash Flow*/
 
@@ -168,7 +196,6 @@ mat-card-title {
   border-bottom: none;
 }
 
-/* Scroll horizontal en pantallas pequeñas */
 @media (max-width: 1100px) {
   .bond-detail-cashflow-table {
     min-width: 700px;
@@ -196,8 +223,8 @@ mat-card-title {
   grid-template-columns: repeat(2, 1fr);
   gap: 28px;
   margin-bottom: 16px;
-  padding: 1.5rem 2.5rem; /* padding lateral */
-  justify-content: center; /* centra el grid */
+  padding: 1.5rem 2.5rem;
+  justify-content: center;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
@@ -253,5 +280,3 @@ mat-card-title {
   flex-direction: column;
   gap: 2px;
 }
-
-
