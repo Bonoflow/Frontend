@@ -37,10 +37,18 @@ export class UserApiService extends  BaseService<User>{
     return false;
   }
 
-  setIsDoctor(isDoctor: boolean) {
+  setIsInvestor(isInvestor: boolean) {
     if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('isDoctor', String(isDoctor));
+      localStorage.setItem('isInvestor', String(isInvestor));
     }
+  }
+
+  getIsInvestor(): boolean {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const isInvestor = localStorage.getItem('isInvestor');
+      return isInvestor === 'true';
+    }
+    return false;
   }
 
   getIsDoctor(): boolean {

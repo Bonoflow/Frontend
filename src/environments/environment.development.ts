@@ -17,8 +17,10 @@ export const environment = {
   userURL: '/users',
   profileURL: '/profiles',
   clientURL: '/clients',
+  investorURL: '/investors',
   bondURL: '/bonds',
   cashFlowURL: '/cashflows',
   financialMetricURL: '/financial-metrics',
   configurationURL: '/configurations',
+  investmentURL: '/investments',
 }

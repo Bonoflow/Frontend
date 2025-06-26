@@ -42,6 +42,20 @@ import { ProfilePage } from './profiles/pages/profile-page/profile-page';
 import {MatNativeDateModule} from '@angular/material/core';
 import { ConfigurationForm } from './users/components/configuration-form/configuration-form';
 import { ConfigurationPage } from './users/pages/configuration-page/configuration-page';
+import { RegisterInvestor } from './iam/components/register-investor/register-investor';
+import { SignupInvestor } from './iam/pages/signup-investor/signup-investor';
+import { SignupRole } from './iam/pages/signup-role/signup-role';
+import { EditProfileInvestor } from './profiles/components/edit-profile-investor/edit-profile-investor';
+import { ProfileInvestor } from './profiles/pages/profile-investor/profile-investor';
+import { HomeInvestor } from './public/pages/home-investor/home-investor';
+import {BondPageInvestor} from './bonds/pages/bond-page-investor/bond-page-investor';
+import {InvestorBondList} from './bonds/components/bond-list-investor/bond-list-investor';
+import { ConfirmDialog } from './public/components/confirm-dialog/confirm-dialog';
+import {PortfolioInvestor} from './bonds/components/portfolio-investor/portfolio-investor';
+import { BondDetailInvestor } from './bonds/components/bond-detail-investor/bond-detail-investor';
+
+
+
 
 @NgModule({
   declarations: [
@@ -59,6 +73,17 @@ import { ConfigurationPage } from './users/pages/configuration-page/configuratio
     ProfilePage,
     ConfigurationForm,
     ConfigurationPage,
+    RegisterInvestor,
+    SignupInvestor,
+    SignupRole,
+    EditProfileInvestor,
+    ProfileInvestor,
+    HomeInvestor,
+    BondPageInvestor,
+    InvestorBondList,
+    ConfirmDialog,
+    PortfolioInvestor,
+    BondDetailInvestor
   ],
   imports: [
     BrowserModule,

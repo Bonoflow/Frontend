@@ -1,30 +1,31 @@
 import { Component } from '@angular/core';
-import {ClientModel} from '../../../users/models/client.model';
-import {Profile} from '../../../users/models/profile.model';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {UserApiService} from '../../../users/services/user.service';
-import {ClientService} from '../../../users/services/client.service';
-import {AuthenticationApiService} from '../../services/authentication-api.service';
-import {ProfileService} from '../../../users/services/profile.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {StorageService} from '../../../shared/services/storage.service';
-import {Router} from '@angular/router';
+import { InvestorModel } from '../../../users/models/investor.model';
+import { Profile } from '../../../users/models/profile.model';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UserApiService } from '../../../users/services/user.service';
+import { InvestorService } from '../../../users/services/investor.service';
+import { AuthenticationApiService } from '../../services/authentication-api.service';
+import { ProfileService } from '../../../users/services/profile.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { StorageService } from '../../../shared/services/storage.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-register-client',
+  selector: 'app-register-investor',
   standalone: false,
-  templateUrl: './register-client.html',
-  styleUrl: './register-client.css'
+  templateUrl: './register-investor.html',
+  styleUrl: './register-investor.css'
 })
-export class RegisterClient {
+export class RegisterInvestor {
   hidePassword = true;
   selectedFile: File | null = null;
   imagePreview: string | null = null;
   registerForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    company: new FormControl('', [Validators.required]),
-    ruc: new FormControl('', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]),
+    firstname: new FormControl('', [Validators.required]),
+    lastname: new FormControl('', [Validators.required]),
+    birthDate: new FormControl('', [Validators.required]),
     photo: new FormControl('xd', [Validators.required]),
     description: new FormControl(''),
   });
@@ -33,7 +34,7 @@ export class RegisterClient {
 
   constructor(
     private userApiService: UserApiService,
-    private clientService: ClientService,
+    private investorService: InvestorService,
     private authenticationApiService: AuthenticationApiService,
     private profileService: ProfileService,
     private snackBar: MatSnackBar,
@@ -81,7 +82,7 @@ export class RegisterClient {
     this.authenticationApiService.signUp(
       this.registerForm.value.email,
       this.registerForm.value.password,
-      ['ROLE_USER', 'ROLE_CLIENT']
+      ['ROLE_USER', 'ROLE_INVESTOR']
     ).subscribe(() => {
       this.authenticationApiService.signIn(
         this.registerForm.value.email,
@@ -91,35 +92,30 @@ export class RegisterClient {
         this.userApiService.setUserId(userId);
         this.userApiService.setLogged(true);
 
-        const clientProfile = new Profile(
-          'noname', // firstName
-          'no_lastname', // lastName
-          new Date('1990-01-01'), // birthDate
-          userId, // userId
-          this.registerForm.value.description, // description
-          this.photo_d ?? '', // photo
-          this.registerForm.value.company, // company
-          this.registerForm.value.ruc // ruc
+        const investorProfile = new Profile(
+          this.registerForm.value.firstname,
+          this.registerForm.value.lastname,
+          this.registerForm.value.birthDate,
+          userId,
+          this.registerForm.value.description,
+          this.photo_d ?? undefined,
         );
 
-        console.log(clientProfile);
-
-        this.profileService.create(clientProfile).subscribe(
+        this.profileService.create(investorProfile).subscribe(
           (profileResponse: any) => {
-            this.clientService.getClientByUserId(userId).subscribe(
-              (client: ClientModel) => {
-                if (client.id !== undefined) {
-                  this.clientService.setClientId(client.id);
-                  this.userApiService.setIsInvestor(false);
-                  this.snackBar.open('Bienvenido ' + clientProfile.firstName + ' 🤗', 'Cerrar', { duration: 2000 });
-                  this.router.navigateByUrl('/client/home');
+            this.investorService.getInvestorByUserId(userId).subscribe(
+              (investor: InvestorModel) => {
+                if (investor.id !== undefined) {
+                  this.investorService.setInvestorId(investor.id);
+                  this.userApiService.setIsInvestor(true);
+                  this.snackBar.open('Bienvenido ' + investorProfile.firstName + ' 🤗', 'Cerrar', { duration: 2000 });
+                  this.router.navigateByUrl('/investor/home');
                 }
               },
               () => {
-                this.snackBar.open('Error al obtener el perfil del cliente.', 'Cerrar', { duration: 3000, panelClass: ['error-snackbar'] });
+                this.snackBar.open('Error al obtener el perfil del inversor.', 'Cerrar', { duration: 3000, panelClass: ['error-snackbar'] });
               }
             );
-
           },
           () => {
             this.snackBar.open('Error al crear el perfil.', 'Cerrar', { duration: 3000, panelClass: ['error-snackbar'] });

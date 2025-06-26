@@ -1,0 +1,40 @@
+<div class="horizontal-layout-investor">
+  <!-- Sección de imagen -->
+  <div class="image-side-investor">
+    <div class="image-overlay-investor"></div>
+    <img src="assets/images/image-login.png" alt="Fondo decorativo" class="background-image-investor" />
+    <div class="image-content-investor">
+      <h2>¿Cómo deseas registrarte?</h2>
+      <p>Selecciona el tipo de usuario para continuar con el registro</p>
+    </div>
+  </div>
+
+  <!-- Sección de selección de tipo de usuario -->
+  <div class="form-side-investor">
+    <mat-card class="register-investor-card">
+      <div class="logo-container-investor">
+        <img src="assets/images/logo-bonoflow.png" alt="Logo OnContigo" class="logo-investor" />
+      </div>
+      <mat-card-header class="card-header-investor">
+        <mat-card-title class="card-title-investor">Elige tu tipo de cuenta</mat-card-title>
+        <mat-card-subtitle class="card-subtitle-investor">¿Eres inversor o cliente?</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-actions-investor" style="flex-direction: column; gap: 2rem;">
+          <button mat-flat-button color="primary" class="submit-button-investor" (click)="goToInvestorRegister()">
+            <mat-icon>trending_up</mat-icon>
+            Soy Inversor
+          </button>
+          <button mat-stroked-button color="accent" class="cancel-button-investor" (click)="goToClientRegister()">
+            <mat-icon>person</mat-icon>
+            Soy Cliente
+          </button>
+          <button mat-stroked-button type="button" color="basic" class="back-button-investor custom-color" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Volver
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

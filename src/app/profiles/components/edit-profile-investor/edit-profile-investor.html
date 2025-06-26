@@ -25,15 +25,23 @@
         <div class="edit-profile-fields-wrapper">
           <div class="edit-profile-fields">
             <mat-form-field appearance="fill" class="edit-profile-field">
-              <mat-label>Nombre de empresa</mat-label>
-              <input matInput formControlName="company" required>
+              <mat-label>Nombres</mat-label>
+              <input matInput formControlName="firstName" required>
             </mat-form-field>
             <mat-form-field appearance="fill" class="edit-profile-field">
-              <mat-label>RUC</mat-label>
-              <input matInput formControlName="ruc" required maxlength="11" minlength="11">
+              <mat-label>Apellidos</mat-label>
+              <input matInput formControlName="lastName" required>
             </mat-form-field>
+
             <mat-form-field appearance="fill" class="edit-profile-field">
-              <mat-label>Descripción de la empresa</mat-label>
+              <mat-label>Fecha de nacimiento</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="birthDate" required>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="edit-profile-field">
+              <mat-label>Sobre mí</mat-label>
               <textarea matInput formControlName="description" rows="2"></textarea>
             </mat-form-field>
             <div class="edit-profile-actions">

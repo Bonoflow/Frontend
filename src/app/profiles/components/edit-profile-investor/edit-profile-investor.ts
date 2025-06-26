@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Profile } from '../../../users/models/profile.model';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ProfileService} from '../../../users/services/profile.service';
 import {UserApiService} from '../../../users/services/user.service';
 import {StorageService} from '../../../shared/services/storage.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Profile} from '../../../users/models/profile.model';
 
 @Component({
-  selector: 'app-edit-profile',
+  selector: 'app-edit-profile-investor',
   standalone: false,
-  templateUrl: './edit-profile.html',
-  styleUrl: './edit-profile.css'
+  templateUrl: './edit-profile-investor.html',
+  styleUrl: './edit-profile-investor.css'
 })
-export class EditProfile implements OnInit {
+export class EditProfileInvestor implements OnInit {
   profileForm: FormGroup;
   isLoading = false;
   profileId?: number;
@@ -24,32 +24,42 @@ export class EditProfile implements OnInit {
               private storageService: StorageService,
               private snackBar: MatSnackBar) {
     this.profileForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      birthDate: ['', Validators.required],
       description: [''],
       photo: [''],
-      company: ['', Validators.required],
-      ruc: ['', [Validators.required, Validators.pattern('^[0-9]{11}$')]],
     });
   }
 
 
   ngOnInit(): void {
     let userId = this.userService.getUserId();
-    console.log(userId);
     this.profileService.getProfileByUserId(userId).subscribe((profile: Profile) => {
       if (profile) {
         console.log("Profile found:", profile);
         this.profileId = profile.id;
+
+        // Convert birthDate to a Date object if it's a string
+
         this.profileForm.patchValue({
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          birthDate: profile.birthDate,
           description: profile.description,
           photo: profile.photo || '',
-          company: profile.company || '',
-          ruc: profile.ruc || ''
+
         });
+
+        console.log(profile.birthDate);
+        console.log(this.profileForm.value.birthDate);
+
         this.originalProfileData = {
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          birthDate: profile.birthDate,
           description: profile.description,
           photo: profile.photo || '',
-          company: profile.company || '',
-          ruc: profile.ruc || ''
         };
       }
     });
@@ -78,16 +88,13 @@ export class EditProfile implements OnInit {
       this.isLoading = true;
       const userId = this.userService.getUserId();
       const profileToUpdate = {
-        firstName: 'noname',
-        lastName: 'no_lastname',
-        birthDate: new Date('1990-01-01'),  // Assuming you want to set a default value
+        firstName: this.profileForm.value.firstName,
+        lastName: this.profileForm.value.lastName,
+        birthDate: this.profileForm.value.birthDate,
         description: this.profileForm.value.description,
         photo: this.profileForm.value.photo || '',
-        userId: userId,
-        company: this.profileForm.value.company || '',
-        ruc: this.profileForm.value.ruc || ''
+        userId: userId
       };
-      console.log(profileToUpdate);
       this.profileService.update(this.profileId, profileToUpdate).subscribe({
         next: (profile: Profile) => {
           this.isLoading = false;
@@ -104,5 +111,4 @@ export class EditProfile implements OnInit {
   isProfileChanged(): boolean {
     return JSON.stringify(this.profileForm.value) !== JSON.stringify(this.originalProfileData);
   }
-
 }

@@ -94,7 +94,7 @@ export class Home implements OnInit {
     this.profileService.getProfileByUserId(userId).subscribe({
       next: (currentUser) => {
         if (currentUser) {
-          this.firstName = currentUser.firstName;
+          this.firstName = currentUser.firstName ?? "";
         }
         this.isLoading = false;
       },

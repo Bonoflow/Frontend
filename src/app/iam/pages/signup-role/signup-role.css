@@ -1,0 +1,182 @@
+.horizontal-layout-investor {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f7fa;
+}
+
+/* Sección de imagen */
+.image-side-investor {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.image-overlay-investor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(63, 81, 181, 0.3), rgba(48, 63, 159, 0.3));
+  z-index: 1;
+}
+
+.background-image-investor {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-content-investor {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem;
+  max-width: 500px;
+}
+
+.image-content-investor h2 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.image-content-investor p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Sección de selección */
+.form-side-investor {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.register-investor-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: none;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.logo-container-investor {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo-investor {
+  width: 200px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+  display: inline-block;
+}
+
+.card-header-investor {
+  text-align: center;
+  margin-bottom: 2rem;
+  align-content: center;
+  justify-content: center;
+}
+
+.card-title-investor {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.card-subtitle-investor {
+  color: #7f8c8d;
+  font-size: 1rem;
+}
+
+.form-actions-investor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-direction: column;
+}
+
+.submit-button-investor,
+.cancel-button-investor {
+  padding: 0.75rem 2.5rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.submit-button-investor mat-icon,
+.cancel-button-investor mat-icon {
+  margin-right: 0.5rem;
+}
+
+.submit-button-investor:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.2);
+}
+
+.cancel-button-investor:hover {
+  transform: translateY(-2px);
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.custom-color {
+  color: #1976d2;
+  border-color: #1976d2;
+}
+
+.custom-color:hover {
+  background: #e3f2fd;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .horizontal-layout-investor {
+    flex-direction: column;
+  }
+
+  .image-side-investor {
+    display: none;
+  }
+
+  .form-side-investor {
+    padding: 1.5rem;
+  }
+
+  .register-investor-card {
+    padding: 1.5rem;
+    max-width: 95vw;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
