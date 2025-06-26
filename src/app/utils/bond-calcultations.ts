@@ -184,6 +184,20 @@ export class BondCalculatorService {
     const cashFlows: CashflowModel[] = [];
     let currentBalance = bond.faceValue;
 
+    // Agregar período 0 (inicial)
+    cashFlows.push({
+      bondId: bond.id!,
+      period: 0,
+      date: bond.issueDate, // La fecha de emisión
+      initialBalance: this.round(currentBalance),
+      interest: 0,
+      amortization: 0,
+      installment: 0,
+      finalBalance: this.round(currentBalance),
+      fixedInstallment: this.round(fixedInstallment)
+    });
+
+    // Generar los períodos restantes (1 a totalPeriods)
     for (let period = 1; period <= totalPeriods; period++) {
       const periodInfo = this.getPeriodType(period, bond.gracePeriod, bond.graceType);
       const date = this.addPeriods(bond.issueDate, period, bond.paymentFrequency);
