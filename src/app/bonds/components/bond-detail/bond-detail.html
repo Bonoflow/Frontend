@@ -62,8 +62,9 @@
             {{ bond.interestRate }}% {{ bond.rateType === 'EFFECTIVE' ? 'efectiva' : 'nominal' }}
           </p>
           <span *ngIf="bond.compounding" class="bond-summary-modern-label">
-        Capitalización: {{ getCompoundingLabel(bond.compounding) }}
-      </span>
+            Capitalización: {{ getCompoundingLabel(bond.compounding) }}
+          </span>
+          <p class="bond-summary-modern-label">Tasa de Descuento: {{ bond.marketRate }}%</p>
         </mat-card-content>
       </mat-card>
 

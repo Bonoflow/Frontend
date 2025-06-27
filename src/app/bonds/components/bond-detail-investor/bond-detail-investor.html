@@ -57,7 +57,8 @@
           </p>
           <span *ngIf="bond.compounding" class="bond-summary-modern-label">
         Capitalización: {{ getCompoundingLabel(bond.compounding) }}
-      </span>
+          </span>
+          <p class="bond-summary-modern-label">Tasa de Descuento: {{ bond.marketRate }}%</p>
         </mat-card-content>
       </mat-card>
       <mat-card class="bond-summary-modern-card">

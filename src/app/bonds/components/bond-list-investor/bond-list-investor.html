@@ -34,6 +34,16 @@
             </span>
           </div>
           <div class="bond-detail-row">
+            <span class="bond-detail-label">Tasa de interés:</span>
+            <span class="bond-detail-value">
+              {{ bond?.interestRate ?? '-' }}% {{ getRateTypeLabel(bond?.rateType ?? '') }}
+            </span>
+          </div>
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Tasa de Descuento:</span>
+            <span class="bond-detail-value">{{ bond.marketRate }}%</span>
+          </div>
+          <div class="bond-detail-row">
             <span class="bond-detail-label">Fecha de Emisión:</span>
             <span class="bond-detail-value">{{ bond?.issueDate ?? '-' }}</span>
           </div>

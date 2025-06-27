@@ -27,12 +27,8 @@ export class BondCalculatorService {
     precision: 2,
     tolerance: 1e-6,
     maxIterations: 100,
-    marketSpread: 0.01, // 1%
+    marketSpread: 0.01,
   };
-
-  // ========================================================================
-  // MÉTODOS PÚBLICOS PRINCIPALES
-  // ========================================================================
 
   public calculateCashFlowsOnly(bond: BondModel): CashflowModel[] {
     this.validateBond(bond);
@@ -47,13 +43,7 @@ export class BondCalculatorService {
     return this.calculateFinancialMetrics(bond, cashFlows);
   }
 
-  // ========================================================================
-  // CÁLCULO DE FLUJO DE CAJA (MODIFICADO PARA USAR FECHAS)
-  // ========================================================================
-
   public calculateFrenchMethodCashFlow(bond: BondModel): CashflowModel[] {
-    console.log(`🚀 INICIANDO CÁLCULO DE FLUJO DE CAJA - MÉTODO FRANCÉS`);
-
     const periodicRate = this.convertToPeriodicRate(
       bond.interestRate,
       bond.rateType,
@@ -61,7 +51,6 @@ export class BondCalculatorService {
       bond.compounding
     );
 
-    // Calcular total de períodos basado en fechas
     const totalPeriods = this.calculateTotalPeriodsFromDates(
       bond.issueDate,
       bond.maturityDate,
@@ -84,7 +73,6 @@ export class BondCalculatorService {
     );
   }
 
-  // Nuevo método para calcular períodos basado en fechas
   private calculateTotalPeriodsFromDates(
     issueDate: string,
     maturityDate: string,
@@ -92,24 +80,13 @@ export class BondCalculatorService {
   ): number {
     const issue = new Date(issueDate);
     const maturity = new Date(maturityDate);
+    if (isNaN(issue.getTime()) || isNaN(maturity.getTime())) throw new Error('Fechas inválidas');
+    if (issue >= maturity) throw new Error('La fecha de vencimiento debe ser posterior a la fecha de emisión');
 
-    if (isNaN(issue.getTime()) || isNaN(maturity.getTime())) {
-      throw new Error('Fechas inválidas');
-    }
-
-    if (issue >= maturity) {
-      throw new Error('La fecha de vencimiento debe ser posterior a la fecha de emisión');
-    }
-
-    // Calcular diferencia en meses de forma más precisa
     const diffYears = maturity.getFullYear() - issue.getFullYear();
     const diffMonths = maturity.getMonth() - issue.getMonth();
     let totalMonths = diffYears * 12 + diffMonths;
-
-    // Ajustar por días
-    if (maturity.getDate() < issue.getDate()) {
-      totalMonths--;
-    }
+    if (maturity.getDate() < issue.getDate()) totalMonths--;
 
     switch (frequency) {
       case 'MONTHLY': return Math.max(1, totalMonths);
@@ -121,13 +98,8 @@ export class BondCalculatorService {
     }
   }
 
-  private calculateFixedInstallment(
-    faceValue: number,
-    periodicRate: number,
-    amortizationPeriods: number
-  ): number {
+  private calculateFixedInstallment(faceValue: number, periodicRate: number, amortizationPeriods: number): number {
     if (amortizationPeriods <= 0) return 0;
-
     if (periodicRate > 0) {
       const factor = Math.pow(1 + periodicRate, amortizationPeriods);
       return (faceValue * (periodicRate * factor)) / (factor - 1);
@@ -147,28 +119,16 @@ export class BondCalculatorService {
 
     switch (periodType) {
       case 'GRACE_TOTAL':
-        // En gracia total no se paga nada
-        installment = 0;
-        amortization = 0;
         break;
-
       case 'GRACE_PARTIAL':
-        // En gracia parcial solo se pagan intereses
         installment = interest;
-        amortization = 0;
         break;
-
       case 'AMORTIZATION':
-        // En período de amortización se paga capital + intereses
-        if (fixedInstallment > 0) {
-          amortization = fixedInstallment - interest;
-        } else {
-          // Para tasa 0% o casos especiales
-          amortization = currentBalance / Math.max(1, amortizationPeriods);
-        }
+        amortization = fixedInstallment > 0
+          ? fixedInstallment - interest
+          : currentBalance / Math.max(1, amortizationPeriods);
         installment = interest + amortization;
         break;
-
       default:
         throw new Error(`Tipo de período no reconocido: ${periodType}`);
     }
@@ -186,14 +146,9 @@ export class BondCalculatorService {
     const cashFlows: CashflowModel[] = [];
     let currentBalance = bond.faceValue;
 
-    // Calcular gastos totales (solo en período 0)
-    const totalExpenses =
-      (bond.issuanceExpenses || 0) +
-      (bond.placementExpenses || 0) +
-      (bond.structuringExpenses || 0) +
-      (bond.cavaliExpenses || 0);
+    const totalExpenses = (bond.issuanceExpenses || 0) + (bond.placementExpenses || 0) +
+      (bond.structuringExpenses || 0) + (bond.cavaliExpenses || 0);
 
-    // ===== PERÍODO 0 (EMISIÓN) =====
     cashFlows.push({
       bondId: bond.id!,
       period: 0,
@@ -202,12 +157,11 @@ export class BondCalculatorService {
       interest: 0,
       amortization: 0,
       installment: 0,
-      finalBalance: this.round(currentBalance-totalExpenses),
-      fixedInstallment: this.round(bond.faceValue-totalExpenses),
+      finalBalance: this.round(currentBalance - totalExpenses),
+      fixedInstallment: this.round(bond.faceValue - totalExpenses),
       expenses: totalExpenses
     });
 
-    // ===== PERÍODOS 1 A N (PAGOS) =====
     for (let period = 1; period <= totalPeriods; period++) {
       const periodInfo = this.getPeriodType(period, bond.gracePeriod, bond.graceType);
       const date = this.addPeriods(bond.issueDate, period, bond.paymentFrequency);
@@ -223,8 +177,6 @@ export class BondCalculatorService {
       );
 
       currentBalance -= amortization;
-
-      // Ajuste para el último período por redondeo
       if (period === totalPeriods && currentBalance > 0 && currentBalance < 1) {
         currentBalance = 0;
       }
@@ -239,17 +191,12 @@ export class BondCalculatorService {
         installment: this.round(installment),
         finalBalance: this.round(currentBalance),
         fixedInstallment: this.round(fixedInstallment),
-        expenses: 0 // No hay gastos en períodos posteriores
+        expenses: 0
       });
     }
 
     return cashFlows;
   }
-
-  // Resto de los métodos permanecen iguales...
-  // ========================================================================
-  // CÁLCULO DE MÉTRICAS FINANCIERAS (SIN CAMBIOS)
-  // ========================================================================
 
   public calculateFinancialMetrics(
     bond: BondModel,
@@ -262,11 +209,8 @@ export class BondCalculatorService {
       bond.compounding
     );
 
-    const totalExpenses =
-      (bond.issuanceExpenses || 0) +
-      (bond.placementExpenses || 0) +
-      (bond.structuringExpenses || 0) +
-      (bond.cavaliExpenses || 0);
+    const totalExpenses = (bond.issuanceExpenses || 0) + (bond.placementExpenses || 0) +
+      (bond.structuringExpenses || 0) + (bond.cavaliExpenses || 0);
 
     const netProceeds = bond.faceValue - totalExpenses;
     const periodsPerYear = this.getPeriodsPerYear(bond.paymentFrequency);
@@ -274,30 +218,28 @@ export class BondCalculatorService {
     return {
       bondId: bond.id!,
       calculationDate: new Date().toISOString(),
-      tcea: this.round(
-        this.calculateEffectiveRate(cashFlows, netProceeds, periodsPerYear) * 100
-      ),
-      trea: this.round(
-        this.calculateEffectiveRate(cashFlows, bond.faceValue, periodsPerYear) * 100
-      ),
-      duration: this.round(
-        this.calculateDuration(cashFlows, periodicRate, periodsPerYear)
-      ),
-      modifiedDuration: this.round(
-        this.calculateModifiedDuration(cashFlows, periodicRate, periodsPerYear)
-      ),
-      convexity: this.round(
-        this.calculateConvexity(cashFlows, periodicRate, periodsPerYear)
-      ),
-      marketPrice: this.round(
-        this.calculateMarketPrice(cashFlows, periodicRate)
-      ),
+      tcea: this.round(this.calculateEffectiveRate(cashFlows, netProceeds, periodsPerYear) * 100),
+      trea: this.round(this.calculateEffectiveRate(cashFlows, bond.faceValue, periodsPerYear) * 100),
+      duration: this.round(this.calculateDuration(cashFlows, periodicRate, periodsPerYear)),
+      modifiedDuration: this.round(this.calculateModifiedDuration(cashFlows, periodicRate, periodsPerYear)),
+      convexity: this.round(this.calculateConvexity(cashFlows, periodicRate, periodsPerYear)),
+      marketPrice: this.round(this.calculateMarketPrice(bond, cashFlows))
     };
   }
 
-  // ========================================================================
-  // FUNCIONES DE UTILIDAD (SIN CAMBIOS)
-  // ========================================================================
+  private calculateMarketPrice(bond: BondModel, cashFlows: CashflowModel[]): number {
+    const marketPeriodicRate = this.convertToPeriodicRate(
+      bond.marketRate,
+      bond.rateType,
+      bond.paymentFrequency,
+      bond.compounding
+    );
+
+    return cashFlows.reduce(
+      (pv, cf, index) => pv + cf.installment / Math.pow(1 + marketPeriodicRate, index + 1),
+      0
+    );
+  }
 
   private getPeriodsPerYear(frequency: string): number {
     const periods = this.FREQUENCY_PERIODS[frequency];
@@ -334,33 +276,17 @@ export class BondCalculatorService {
 
   private addPeriods(startDate: string, periods: number, frequency: string): string {
     const date = new Date(startDate);
-
     switch (frequency) {
-      case 'MONTHLY':
-        date.setMonth(date.getMonth() + periods);
-        break;
-      case 'BIMONTHLY':
-        date.setMonth(date.getMonth() + periods * 2);
-        break;
-      case 'QUARTERLY':
-        date.setMonth(date.getMonth() + periods * 3);
-        break;
-      case 'SEMIANNUAL':
-        date.setMonth(date.getMonth() + periods * 6);
-        break;
-      case 'ANNUAL':
-        date.setFullYear(date.getFullYear() + periods);
-        break;
+      case 'MONTHLY': date.setMonth(date.getMonth() + periods); break;
+      case 'BIMONTHLY': date.setMonth(date.getMonth() + periods * 2); break;
+      case 'QUARTERLY': date.setMonth(date.getMonth() + periods * 3); break;
+      case 'SEMIANNUAL': date.setMonth(date.getMonth() + periods * 6); break;
+      case 'ANNUAL': date.setFullYear(date.getFullYear() + periods); break;
     }
-
     return date.toISOString().split('T')[0];
   }
 
-  private getPeriodType(
-    period: number,
-    gracePeriod: number,
-    graceType: string
-  ): { type: string } {
+  private getPeriodType(period: number, gracePeriod: number, graceType: string): { type: string } {
     if (period <= gracePeriod) {
       return { type: graceType === 'TOTAL' ? 'GRACE_TOTAL' : 'GRACE_PARTIAL' };
     }
@@ -372,47 +298,22 @@ export class BondCalculatorService {
     return Math.round(value * precision) / precision;
   }
 
-  // ========================================================================
-  // VALIDACIÓN (MODIFICADA PARA FECHAS)
-  // ========================================================================
-
   public validateBond(bond: BondModel): void {
     const errors: string[] = [];
 
-    if (!bond.name || bond.name.trim().length === 0) {
-      errors.push('El nombre del bono es requerido');
-    }
+    if (!bond.name || bond.name.trim().length === 0) errors.push('El nombre del bono es requerido');
+    if (bond.faceValue <= 0) errors.push('El valor nominal debe ser mayor a cero');
+    if (bond.interestRate < 0) errors.push('La tasa de interés no puede ser negativa');
 
-    if (bond.faceValue <= 0) {
-      errors.push('El valor nominal debe ser mayor a cero');
-    }
-
-    if (bond.interestRate < 0) {
-      errors.push('La tasa de interés no puede ser negativa');
-    }
-
-    // Validación de fechas
     try {
       const totalPeriods = this.calculateTotalPeriodsFromDates(
         bond.issueDate,
         bond.maturityDate,
         bond.paymentFrequency
       );
-
-      console.log(bond.issueDate);
-      console.log(bond.maturityDate);
-      console.log(bond.paymentFrequency);
-
-
-      if (bond.gracePeriod < 0) {
-        errors.push('El período de gracia no puede ser negativo');
-      }
-
-      if (bond.gracePeriod >= totalPeriods) {
-        errors.push('El período de gracia no puede ser mayor o igual al plazo total');
-      }
+      if (bond.gracePeriod < 0) errors.push('El período de gracia no puede ser negativo');
+      if (bond.gracePeriod >= totalPeriods) errors.push('El período de gracia no puede ser mayor o igual al plazo total');
     } catch (e) {
-      console.error('Error al calcular períodos desde fechas:', e);
       errors.push(`Error en fechas: ${e instanceof Error ? e.message : 'Error desconocido'}`);
     }
 
@@ -425,17 +326,12 @@ export class BondCalculatorService {
     }
   }
 
-  // ========================================================================
-  // MÉTODOS AUXILIARES PARA MÉTRICAS (SIN CAMBIOS)
-  // ========================================================================
-
   private calculateEffectiveRate(
     cashFlows: CashflowModel[],
     initialAmount: number,
     periodsPerYear: number
   ): number {
-    let rate = 0.1; // Tasa inicial del 10%
-
+    let rate = 0.1;
     for (let i = 0; i < this.DEFAULT_CONFIG.maxIterations; i++) {
       let npv = -initialAmount;
       let npvDerivative = 0;
@@ -454,11 +350,7 @@ export class BondCalculatorService {
     return rate;
   }
 
-  private calculateDuration(
-    cashFlows: CashflowModel[],
-    periodicRate: number,
-    periodsPerYear: number
-  ): number {
+  private calculateDuration(cashFlows: CashflowModel[], periodicRate: number, periodsPerYear: number): number {
     let weightedTime = 0;
     let presentValue = 0;
 
@@ -466,7 +358,6 @@ export class BondCalculatorService {
       const period = index + 1;
       const timeInYears = period / periodsPerYear;
       const pv = cf.installment / Math.pow(1 + periodicRate, period);
-
       weightedTime += timeInYears * pv;
       presentValue += pv;
     });
@@ -474,20 +365,12 @@ export class BondCalculatorService {
     return weightedTime / presentValue;
   }
 
-  private calculateModifiedDuration(
-    cashFlows: CashflowModel[],
-    periodicRate: number,
-    periodsPerYear: number
-  ): number {
+  private calculateModifiedDuration(cashFlows: CashflowModel[], periodicRate: number, periodsPerYear: number): number {
     const duration = this.calculateDuration(cashFlows, periodicRate, periodsPerYear);
     return duration / (1 + periodicRate);
   }
 
-  private calculateConvexity(
-    cashFlows: CashflowModel[],
-    periodicRate: number,
-    periodsPerYear: number
-  ): number {
+  private calculateConvexity(cashFlows: CashflowModel[], periodicRate: number, periodsPerYear: number): number {
     let weightedTime = 0;
     let presentValue = 0;
 
@@ -495,22 +378,10 @@ export class BondCalculatorService {
       const period = index + 1;
       const timeInYears = period / periodsPerYear;
       const pv = cf.installment / Math.pow(1 + periodicRate, period);
-
       weightedTime += timeInYears * (timeInYears + 1 / periodsPerYear) * pv;
       presentValue += pv;
     });
 
     return weightedTime / (presentValue * Math.pow(1 + periodicRate, 2));
-  }
-
-  private calculateMarketPrice(
-    cashFlows: CashflowModel[],
-    periodicRate: number
-  ): number {
-    const marketRate = periodicRate * (1 + this.DEFAULT_CONFIG.marketSpread);
-    return cashFlows.reduce(
-      (pv, cf, index) => pv + cf.installment / Math.pow(1 + marketRate, index + 1),
-      0
-    );
   }
 }

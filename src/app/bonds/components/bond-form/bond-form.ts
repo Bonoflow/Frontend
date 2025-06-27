@@ -77,6 +77,7 @@ export class BondForm implements OnInit {
       grace_period: [0, [Validators.required, Validators.min(0)]],
       issue_date: [null, [Validators.required]],
       maturity_date: [null, [Validators.required]],
+      market_rate: [0, [Validators.required]],
       issuance_expenses: [{ value: 0, disabled: true }],
       placement_expenses: [{ value: 0, disabled: true }],
       structuring_expenses: [{ value: 0, disabled: true }],
@@ -160,6 +161,7 @@ export class BondForm implements OnInit {
               placement_expenses: bond.placementExpenses || 0,
               structuring_expenses: bond.structuringExpenses || 0,
               cavali_expenses: bond.cavaliExpenses || 0,
+              market_rate: bond.marketRate || 0,
             });
           }
         },
@@ -206,6 +208,7 @@ export class BondForm implements OnInit {
         placementExpenses: form.placement_expenses,
         structuringExpenses: form.structuring_expenses,
         cavaliExpenses: form.cavali_expenses,
+        marketRate: form.market_rate,
       };
 
       console.log(bondData);

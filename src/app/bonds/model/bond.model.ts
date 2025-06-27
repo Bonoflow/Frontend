@@ -16,6 +16,7 @@ export class BondModel {
   placementExpenses?: number;
   structuringExpenses?: number;
   cavaliExpenses?: number;
+  marketRate: number;
 
   constructor(
     clientId: number,
@@ -35,7 +36,8 @@ export class BondModel {
     issuanceExpenses?: number,
     placementExpenses?: number,
     structuringExpenses?: number,
-    cavaliExpenses?: number
+    cavaliExpenses?: number,
+    marketRate?: number
   ) {
     this.id = id;
     this.clientId = clientId;
@@ -54,5 +56,6 @@ export class BondModel {
     this.placementExpenses = placementExpenses || 0;
     this.structuringExpenses = structuringExpenses || 0;
     this.cavaliExpenses = cavaliExpenses || 0;
+    this.marketRate = marketRate || 0;
   }
 }
