@@ -214,6 +214,31 @@
   }
 }
 
+.container.mat-typography {
+  max-width: 1300px !important;
+  width: 98vw;
+}
+
+.bond-detail-tabs-card-outline {
+  max-width: 100%;
+  width: 100%;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.bond-detail-tab-body {
+  padding: 40px 0 !important;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.bond-detail-cashflow-table {
+  min-width: 1200px;
+}
+
 .bond-detail-metrics-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

@@ -87,9 +87,9 @@
         <mat-card-content>
           <p class="bond-summary-modern-value">
             {{ formatCurrency(
-            (bond.issuanceExpenses ?? 0) +
+            (bond.issuanceExpenses ?? 0) -
             (bond.placementExpenses ?? 0) +
-            (bond.structuringExpenses ?? 0) +
+            (bond.structuringExpenses ?? 0) -
             (bond.cavaliExpenses ?? 0),
             bond.currency
           ) }}
