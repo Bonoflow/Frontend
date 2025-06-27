@@ -9,6 +9,7 @@ export class CashflowModel {
   fixedInstallment?: number; // Este campo es opcional
   installment: number;
   finalBalance: number;
+  expenses: number;
 
   constructor(
     bondId: number,
@@ -20,7 +21,8 @@ export class CashflowModel {
     installment: number,
     finalBalance: number,
     id?: number,
-    fixedInstallment?: number // Este campo es opcional
+    fixedInstallment?: number,
+    expenses: number = 0
   ) {
     this.id = id;
     this.bondId = bondId;
@@ -32,5 +34,6 @@ export class CashflowModel {
     this.installment = installment;
     this.finalBalance = finalBalance;
     this.fixedInstallment = fixedInstallment; // Asignar el valor del campo opcional
+    this.expenses = expenses;
   }
 }

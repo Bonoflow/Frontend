@@ -27,7 +27,7 @@ export class BondDetail implements OnInit, AfterViewInit {
   isLoading = true;
   isCalculating = false;
   activeTab = "cash-flow";
-  displayedColumns: string[] = ['period','date','initialBalance','interest','amortization','installment','finalBalance'];
+  displayedColumns: string[] = ['period','date','initialBalance','interest','amortization','installment','expenses','finalBalance'];
   cashFlowsDataSource = new MatTableDataSource<CashflowModel>();
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;

@@ -208,6 +208,8 @@ export class BondForm implements OnInit {
         cavaliExpenses: form.cavali_expenses,
       };
 
+      console.log(bondData);
+
       try {
         this.bondCalculatorService.validateBond(bondData);
       } catch (error) {

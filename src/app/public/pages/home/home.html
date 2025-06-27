@@ -69,14 +69,13 @@
               <th mat-header-cell *matHeaderCellDef>Tasa</th>
               <td mat-cell *matCellDef="let bond">
                 {{ bond.interestRate }}%
-                <div class="rate-type">{{ bond.rateType === 'effective' ? 'Efectiva' : 'Nominal' }}</div>
+                <div class="rate-type">{{ bond.rateType === 'EFFECTIVE' ? 'Efectiva' : 'Nominal' }}</div>
               </td>
             </ng-container>
             <ng-container matColumnDef="term">
               <th mat-header-cell *matHeaderCellDef>Plazo</th>
               <td mat-cell *matCellDef="let bond">
-                {{ bond.term }} meses
-                <div class="payment-frequency">{{ bond.paymentFrequency }}</div>
+                <div class="payment-frequency">{{ getPaymentFrequencyLabel(bond.paymentFrequency) }}</div>
               </td>
             </ng-container>
             <ng-container matColumnDef="actions">

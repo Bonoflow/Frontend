@@ -101,21 +101,23 @@ export class BondCalculatorService {
       throw new Error('La fecha de vencimiento debe ser posterior a la fecha de emisión');
     }
 
-    let monthsDiff = (maturity.getFullYear() - issue.getFullYear()) * 12;
-    monthsDiff += maturity.getMonth() - issue.getMonth();
+    // Calcular diferencia en meses de forma más precisa
+    const diffYears = maturity.getFullYear() - issue.getFullYear();
+    const diffMonths = maturity.getMonth() - issue.getMonth();
+    let totalMonths = diffYears * 12 + diffMonths;
 
-    // Ajustar por días si es necesario
+    // Ajustar por días
     if (maturity.getDate() < issue.getDate()) {
-      monthsDiff--;
+      totalMonths--;
     }
 
     switch (frequency) {
-      case 'MONTHLY': return monthsDiff;
-      case 'BIMONTHLY': return Math.floor(monthsDiff / 2);
-      case 'QUARTERLY': return Math.floor(monthsDiff / 3);
-      case 'SEMIANNUAL': return Math.floor(monthsDiff / 6);
-      case 'ANNUAL': return Math.floor(monthsDiff / 12);
-      default: throw new Error('Frecuencia de pago no válida');
+      case 'MONTHLY': return Math.max(1, totalMonths);
+      case 'BIMONTHLY': return Math.max(1, Math.floor(totalMonths / 2));
+      case 'QUARTERLY': return Math.max(1, Math.floor(totalMonths / 3));
+      case 'SEMIANNUAL': return Math.max(1, Math.floor(totalMonths / 6));
+      case 'ANNUAL': return Math.max(1, Math.floor(totalMonths / 12));
+      default: throw new Error(`Frecuencia de pago no válida: ${frequency}`);
     }
   }
 
@@ -184,20 +186,28 @@ export class BondCalculatorService {
     const cashFlows: CashflowModel[] = [];
     let currentBalance = bond.faceValue;
 
-    // Agregar período 0 (inicial)
+    // Calcular gastos totales (solo en período 0)
+    const totalExpenses =
+      (bond.issuanceExpenses || 0) +
+      (bond.placementExpenses || 0) +
+      (bond.structuringExpenses || 0) +
+      (bond.cavaliExpenses || 0);
+
+    // ===== PERÍODO 0 (EMISIÓN) =====
     cashFlows.push({
       bondId: bond.id!,
       period: 0,
-      date: bond.issueDate, // La fecha de emisión
+      date: bond.issueDate,
       initialBalance: this.round(currentBalance),
       interest: 0,
       amortization: 0,
       installment: 0,
-      finalBalance: this.round(currentBalance),
-      fixedInstallment: this.round(fixedInstallment)
+      finalBalance: this.round(currentBalance-totalExpenses),
+      fixedInstallment: 0,
+      expenses: totalExpenses
     });
 
-    // Generar los períodos restantes (1 a totalPeriods)
+    // ===== PERÍODOS 1 A N (PAGOS) =====
     for (let period = 1; period <= totalPeriods; period++) {
       const periodInfo = this.getPeriodType(period, bond.gracePeriod, bond.graceType);
       const date = this.addPeriods(bond.issueDate, period, bond.paymentFrequency);
@@ -228,7 +238,8 @@ export class BondCalculatorService {
         amortization: this.round(amortization),
         installment: this.round(installment),
         finalBalance: this.round(currentBalance),
-        fixedInstallment: this.round(fixedInstallment)
+        fixedInstallment: this.round(fixedInstallment),
+        expenses: 0 // No hay gastos en períodos posteriores
       });
     }
 

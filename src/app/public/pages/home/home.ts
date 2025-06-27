@@ -79,6 +79,18 @@ export class Home implements OnInit {
     this.loadBonds();
   }
 
+  getPaymentFrequencyLabel(frequency: string): string {
+    switch (frequency) {
+      case 'MONTHLY': return 'Mensual';
+      case 'BIMONTHLY': return 'Bimestral';
+      case 'QUARTERLY': return 'Trimestral';
+      case 'SEMIANNUAL': return 'Semestral';
+      case 'ANNUAL': return 'Anual';
+      case 'DAILY': return 'Diaria';
+      default: return frequency;
+    }
+  }
+
   loadBonds(): void {
     this.isLoading = true;
     this.clientId = this.clientService.getClientId();
