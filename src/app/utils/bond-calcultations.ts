@@ -203,7 +203,7 @@ export class BondCalculatorService {
       amortization: 0,
       installment: 0,
       finalBalance: this.round(currentBalance-totalExpenses),
-      fixedInstallment: 0,
+      fixedInstallment: this.round(bond.faceValue-totalExpenses),
       expenses: totalExpenses
     });
 

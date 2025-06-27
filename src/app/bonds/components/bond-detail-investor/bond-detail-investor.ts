@@ -27,7 +27,7 @@ export class BondDetailInvestor implements OnInit, AfterViewInit {
   isLoading = true;
   hasInvested = false;
   investorId: number | null = null;
-  displayedColumns: string[] = ['period','date','initialBalance','interest','amortization','installment','expenses','finalBalance'];
+  displayedColumns: string[] = ['period','date','initialBalance','interest','amortization','installment','expenses','fixedInstallment','finalBalance'];
   cashFlowsDataSource = new MatTableDataSource<CashflowModel>();
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   selectedTabIndex = 0;

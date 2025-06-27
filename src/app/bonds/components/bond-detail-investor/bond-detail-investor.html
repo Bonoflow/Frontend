@@ -78,6 +78,30 @@
           </p>
         </mat-card-content>
       </mat-card>
+
+      <mat-card class="bond-summary-modern-card">
+        <div class="bond-summary-modern-icon-bg">
+          <mat-icon class="bond-summary-modern-icon">receipt_long</mat-icon>
+        </div>
+        <mat-card-title class="bond-summary-modern-title">Costos</mat-card-title>
+        <mat-card-content>
+          <p class="bond-summary-modern-value">
+            {{ formatCurrency(
+            (bond.issuanceExpenses ?? 0) +
+            (bond.placementExpenses ?? 0) +
+            (bond.structuringExpenses ?? 0) +
+            (bond.cavaliExpenses ?? 0),
+            bond.currency
+          ) }}
+          </p>
+          <span class="bond-summary-modern-label">Costos iniciales asociados al bono</span>
+          <ul style="margin: 12px 0 0 0; padding-left: 18px; font-size: 0.98rem; color: #223a7a;">
+            <li *ngIf="bond.placementExpenses">Colocación: {{ formatCurrency(bond.placementExpenses, bond.currency) }}</li>
+            <li *ngIf="bond.cavaliExpenses">Cavali: {{ formatCurrency(bond.cavaliExpenses, bond.currency) }}</li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+
     </div>
 
     <mat-card class="bond-detail-tabs-card mat-elevation-z2 bond-detail-tabs-card-outline">
@@ -91,42 +115,105 @@
               <h2 class="bond-detail-section-title">Flujo de Caja (Método Francés)</h2>
             </div>
             <div style="overflow-x: auto;">
-              <table mat-table [dataSource]="cashFlowsDataSource" class="bond-detail-cashflow-table" >
+              <table mat-table [dataSource]="cashFlowsDataSource" class="bond-detail-cashflow-table">
+
+                <!-- Período -->
                 <ng-container matColumnDef="period">
                   <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Período</th>
                   <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">{{ flow.period }}</td>
                 </ng-container>
+
+                <!-- Fecha -->
                 <ng-container matColumnDef="date">
                   <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Fecha</th>
-                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">{{ formatDate(flow.date) }}</td>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">{{ flow.date }}</td>
                 </ng-container>
+
+                <!-- Saldo Inicial -->
                 <ng-container matColumnDef="initialBalance">
                   <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Saldo Inicial</th>
-                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">{{ formatCurrency(flow.initialBalance, bond.currency) }}</td>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">
+                    {{ formatCurrency(flow.initialBalance, bond.currency) }}
+                  </td>
                 </ng-container>
+
+                <!-- Interés (ingreso para el inversor) -->
                 <ng-container matColumnDef="interest">
                   <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Interés</th>
-                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">{{ formatCurrency(flow.interest, bond.currency) }}</td>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell"
+                      [ngClass]="{ 'positive': true }">
+                    +{{ formatCurrency(flow.interest, bond.currency) }}
+                  </td>
                 </ng-container>
+
+                <!-- Amortización (ingreso) -->
                 <ng-container matColumnDef="amortization">
                   <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Amortización</th>
-                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">{{ formatCurrency(flow.amortization, bond.currency) }}</td>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell"
+                      [ngClass]="{ 'positive': true }">
+                    +{{ formatCurrency(flow.amortization, bond.currency) }}
+                  </td>
                 </ng-container>
+
+                <!-- Cuota Fija (ingreso) -->
                 <ng-container matColumnDef="installment">
                   <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Cuota Fija</th>
-                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">{{ formatCurrency(flow.installment, bond.currency) }}</td>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell"
+                      [ngClass]="{ 'positive': flow.period !== 0, 'negative': flow.period === 0 }">
+                    {{ flow.period === 0 ? '-' : '+' }}{{ formatCurrency(flow.installment, bond.currency) }}
+                  </td>
                 </ng-container>
+
+                <!-- Gastos (egreso del inversor) -->
                 <ng-container matColumnDef="expenses">
                   <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Gastos</th>
-                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">{{ formatCurrency(flow.expenses, bond.currency) }}</td>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell"
+                      [ngClass]="{ 'negative': true }">
+                    <ng-container *ngIf="flow.period === 0; else normalExpenses">
+                      -{{ formatCurrency(
+                      (flow.expenses ?? 0) +
+                      (bond.placementExpenses ?? 0) +
+                      (bond.cavaliExpenses ?? 0),
+                      bond.currency
+                    ) }}
+                    </ng-container>
+                    <ng-template #normalExpenses>
+                      -{{ formatCurrency(flow.expenses, bond.currency) }}
+                    </ng-template>
+                  </td>
                 </ng-container>
+
+                <!-- Cuota Fija Constante -->
+                <ng-container matColumnDef="fixedInstallment">
+                  <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Flujo</th>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell"
+                      [ngClass]="{ 'negative': flow.period !== 0, 'positive': flow.period === 0 }">
+                    <ng-container *ngIf="flow.period === 0; else normalFlow">
+                      -{{ formatCurrency(
+                      (flow.fixedInstallment ?? 0) +
+                      (bond.issuanceExpenses ?? 0) +
+                      (bond.structuringExpenses ?? 0),
+                      bond.currency
+                    ) }}
+                    </ng-container>
+                    <ng-template #normalFlow>
+                      +{{ formatCurrency(flow.fixedInstallment, bond.currency) }}
+                    </ng-template>
+                  </td>
+                </ng-container>
+
+                <!-- Saldo Final -->
                 <ng-container matColumnDef="finalBalance">
                   <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Saldo Final</th>
-                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">{{ formatCurrency(flow.finalBalance, bond.currency) }}</td>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">
+                    {{ formatCurrency(flow.finalBalance, bond.currency) }}
+                  </td>
                 </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bond-detail-table-header-row" ></tr>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bond-detail-table-header-row"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="bond-detail-table-row"></tr>
               </table>
+
               <mat-paginator
                 [length]="cashFlowsDataSource.data.length"
                 [pageSize]="10"
@@ -136,6 +223,7 @@
               </mat-paginator>
             </div>
           </div>
+
         </mat-tab>
 
         <mat-tab>

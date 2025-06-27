@@ -245,6 +245,17 @@
   min-width: 0;
 }
 
+.positive {
+  color: green;
+  font-weight: 500;
+}
+
+.negative {
+  color: red;
+  font-weight: 500;
+}
+
+
 .bond-detail-metrics-title {
   font-size: 1.1rem;
   font-weight: 700;
