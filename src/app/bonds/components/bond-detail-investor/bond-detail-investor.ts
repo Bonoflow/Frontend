@@ -42,7 +42,7 @@ export class BondDetailInvestor implements OnInit, AfterViewInit {
     private investorService: InvestorService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {

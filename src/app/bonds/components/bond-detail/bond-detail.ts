@@ -10,6 +10,8 @@ import {forkJoin} from 'rxjs';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {BondCalculatorService} from '../../../utils/bond-calcultations';
+import {MatDialog} from '@angular/material/dialog';
+import {ConfirmDialog} from '../../../public/components/confirm-dialog/confirm-dialog';
 
 
 @Component({
@@ -40,7 +42,8 @@ export class BondDetail implements OnInit, AfterViewInit {
     private cashFlowService: CashFlowService,
     private financialMetricService: FinancialMetricService,
     private cdr: ChangeDetectorRef,
-    private bondCalculatorService: BondCalculatorService
+    private bondCalculatorService: BondCalculatorService,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -68,17 +71,26 @@ export class BondDetail implements OnInit, AfterViewInit {
     }
   }
 
-  deleteBond(){
-    if (this.bond) {
-      this.bondService.delete(this.bond.id).subscribe({
-        next: () => {
-          this.router.navigate(["/client/bonds"]);
-        },
-        error: (error) => {
-          console.error("Error al eliminar el bono:", error);
-        }
-      });
-    }
+  deleteBond() {
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      data: {
+        title: 'Eliminar bono',
+        message: '¿Está seguro que desea eliminar este bono? Esta acción no se puede deshacer.'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && this.bond) {
+        this.bondService.delete(this.bond.id).subscribe({
+          next: () => {
+            this.router.navigate(['/client/bonds']);
+          },
+          error: (error) => {
+            console.error('Error al eliminar el bono:', error);
+          }
+        });
+      }
+    });
   }
 
   onTabChange(index: number): void {

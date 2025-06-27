@@ -17,7 +17,7 @@ export class Home implements OnInit {
 
   bonds$: Observable<BondModel[]> = of([]);
   isLoading = true
-  firstName = ""
+  company = ""
   clientId: number | null = null;
 
   quickActions = [
@@ -106,7 +106,7 @@ export class Home implements OnInit {
     this.profileService.getProfileByUserId(userId).subscribe({
       next: (currentUser) => {
         if (currentUser) {
-          this.firstName = currentUser.firstName ?? "";
+          this.company = currentUser.company ?? "";
         }
         this.isLoading = false;
       },

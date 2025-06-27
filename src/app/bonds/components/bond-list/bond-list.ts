@@ -4,6 +4,8 @@ import {BondModel} from '../../model/bond.model';
 import {BondService} from '../../service/bond.service';
 import {Router} from '@angular/router';
 import {ClientService} from '../../../users/services/client.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ConfirmDialog} from '../../../public/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-bond-list',
@@ -20,7 +22,8 @@ export class BondList implements OnInit {
   constructor(
     private bondService: BondService,
     private router: Router,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private dialog: MatDialog,
   ) {
     this.clientId = this.clientService.getClientId();
     this.bonds$ = this.bondService.getAll().pipe(
@@ -55,25 +58,32 @@ export class BondList implements OnInit {
   }
 
   deleteBond(bondId: number): void {
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      data: {
+        title: 'Eliminar bono',
+        message: '¿Estás seguro de que deseas eliminar este bono? Esta acción no se puede deshacer.'
+      }
+    });
 
-    if (confirm("¿Estás seguro de que deseas eliminar este bono? Esta acción no se puede deshacer.")) {
-      this.bondService.delete(bondId).subscribe({
-        next: () => {
-          alert("Bono eliminado exitosamente.");
-          this.loadBonds(); // Recarga la lista de bonos
-        },
-        error: (error) => {
-          console.error("Error al eliminar el bono:", error);
-          if (error.status === 404) {
-            alert("El bono no existe o ya fue eliminado.");
-          } else if (error.status === 401 || error.status === 403) {
-            alert("No tienes permisos para eliminar este bono.");
-          } else {
-            alert("Error al eliminar el bono. Por favor, inténtalo de nuevo más tarde.");
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.bondService.delete(bondId).subscribe({
+          next: () => {
+            this.loadBonds(); // Recarga la lista de bonos
+          },
+          error: (error) => {
+            console.error("Error al eliminar el bono:", error);
+            if (error.status === 404) {
+              // Manejo opcional: mostrar mensaje en UI si lo deseas
+            } else if (error.status === 401 || error.status === 403) {
+              // Manejo opcional: mostrar mensaje en UI si lo deseas
+            } else {
+              // Manejo opcional: mostrar mensaje en UI si lo deseas
+            }
           }
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   formatCurrency(amount: number, currency: string): string {
