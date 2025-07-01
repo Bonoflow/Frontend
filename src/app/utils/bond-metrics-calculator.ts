@@ -92,23 +92,22 @@ export class BondMetricsCalculator {
     return rate;
   }
 
-  private static calculateDuration(
-    cashFlows: CashflowModel[],
-    periodicRate: number,
-    periodsPerYear: number
-  ): number {
-    let weightedTime = 0;
-    let presentValue = 0;
+  private static calculateDuration(cashFlows: CashflowModel[], periodicRate: number, periodsPerYear: number): number {
+    let weightedTime = 0
+    let presentValue = 0
 
-    cashFlows.forEach((cf, index) => {
-      const period = index + 1;
-      const timeInYears = period / periodsPerYear;
-      const pv = cf.installment / Math.pow(1 + periodicRate, period);
-      weightedTime += timeInYears * pv;
-      presentValue += pv;
-    });
+    // Excluir período 0
+    const operationalCashFlows = cashFlows.filter((cf) => cf.period > 0)
 
-    return weightedTime / presentValue;
+    operationalCashFlows.forEach((cf, index) => {
+      const period = index + 1
+      const timeInYears = period / periodsPerYear
+      const pv = cf.installment / Math.pow(1 + periodicRate, period)
+      weightedTime += timeInYears * pv
+      presentValue += pv
+    })
+
+    return presentValue > 0 ? weightedTime / presentValue : 0
   }
 
   private static calculateModifiedDuration(
@@ -120,23 +119,22 @@ export class BondMetricsCalculator {
     return duration / (1 + periodicRate);
   }
 
-  private static calculateConvexity(
-    cashFlows: CashflowModel[],
-    periodicRate: number,
-    periodsPerYear: number
-  ): number {
-    let weightedTime = 0;
-    let presentValue = 0;
+  private static calculateConvexity(cashFlows: CashflowModel[], periodicRate: number, periodsPerYear: number): number {
+    let weightedTime = 0
+    let presentValue = 0
 
-    cashFlows.forEach((cf, index) => {
-      const period = index + 1;
-      const timeInYears = period / periodsPerYear;
-      const pv = cf.installment / Math.pow(1 + periodicRate, period);
-      weightedTime += timeInYears * (timeInYears + 1 / periodsPerYear) * pv;
-      presentValue += pv;
-    });
+    // Excluir período 0
+    const operationalCashFlows = cashFlows.filter((cf) => cf.period > 0)
 
-    return weightedTime / (presentValue * Math.pow(1 + periodicRate, 2));
+    operationalCashFlows.forEach((cf, index) => {
+      const period = index + 1
+      const timeInYears = period / periodsPerYear
+      const pv = cf.installment / Math.pow(1 + periodicRate, period)
+      weightedTime += timeInYears * (timeInYears + 1 / periodsPerYear) * pv
+      presentValue += pv
+    })
+
+    return presentValue > 0 ? weightedTime / (presentValue * Math.pow(1 + periodicRate, 2)) : 0
   }
 
   private static calculateMarketPrice(
