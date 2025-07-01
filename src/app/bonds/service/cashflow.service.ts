@@ -21,5 +21,10 @@ export class CashFlowService extends BaseService<CashflowModel> {
       .pipe(catchError(this.handleError));
   }
 
+  getAllByClientId(clientId: number) {
+    this.setToken();
+    return this.http.get<CashflowModel[]>(`${this.buildPath()}/client/${clientId}`, this.httpOptions)
+      .pipe(catchError(this.handleError));
+  }
 
 }
