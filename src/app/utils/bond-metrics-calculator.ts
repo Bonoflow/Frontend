@@ -28,17 +28,17 @@ export class BondMetricsCalculator {
     return {
       bondId: bond.id!,
       calculationDate: new Date().toISOString(),
-      tcea: this.round(this.calculateEffectiveRate(
+      tcea: this.round(this.calculateTIR(
         cashFlows,
         netProceeds,
         periodsPerYear,
-        bond.compounding
+        "EMISOR"
       ) * 100),
-      trea: this.round(this.calculateEffectiveRate(
+      trea: this.round(this.calculateTIR(
         cashFlows,
         netProceedsInvestor,
         periodsPerYear,
-        bond.compounding
+        "INVERSIONISTA"
       ) * 100),
       duration: this.round(this.calculateDuration(cashFlows, periodicRate, periodsPerYear)),
       modifiedDuration: this.round(this.calculateModifiedDuration(cashFlows, periodicRate, periodsPerYear)),
@@ -47,49 +47,116 @@ export class BondMetricsCalculator {
     };
   }
 
-  private static calculateEffectiveRate(
+  private static calculateTIR(
     cashFlows: CashflowModel[],
-    initialAmount: number,
-    paymentPeriodsPerYear: number,
-    compounding?: string
+    initialInvestment: number,
+    periodsPerYear: number,
+    type: "EMISOR" | "INVERSIONISTA",
   ): number {
-    // 1. Calculate periodic IRR
-    const periodicIRR = this.calculatePeriodicIRR(cashFlows, initialAmount);
-    console.log("TIR: ",periodicIRR);
+    console.log("--- INICIO CÁLCULO TIR ---")
+    console.log(`Parámetros iniciales:`)
+    console.log(`- Inversión inicial (D₀): ${initialInvestment}`)
+    console.log(`- Períodos por año: ${periodsPerYear}`)
+    console.log(`- Tipo: ${type}`)
 
-    // 2. Get compounding periods
-    const compoundingPeriodsPerYear = this.getCompoundingPeriodsPerYear(compounding || 'ANNUAL');
+    const futureCashFlows = cashFlows.filter((cf) => cf.period > 0)
+    console.log(
+      `Flujos futuros filtrados (${futureCashFlows.length} períodos > 0):`,
+      futureCashFlows.map((cf) => cf.installment),
+    )
 
-    // 3. Apply annualization formula: (1 + IRR)^(compoundingPeriods/paymentPeriods) - 1
-    return Math.pow(1 + periodicIRR, compoundingPeriodsPerYear / paymentPeriodsPerYear) - 1;
-  }
+    // CORRECCIÓN 1: r debe ser la tasa periódica, no anual
+    let r = 0.01 // Empezar con 1% periódico
+    const maxIterations = BondConfig.DEFAULT_CONFIG.maxIterations
+    const tolerance = BondConfig.DEFAULT_CONFIG.tolerance
 
-  private static calculatePeriodicIRR(
-    cashFlows: CashflowModel[],
-    initialAmount: number
-  ): number {
-    let rate = 0.1;
-    const maxIterations = BondConfig.DEFAULT_CONFIG.maxIterations;
-    const tolerance = BondConfig.DEFAULT_CONFIG.tolerance;
-
-    console.log("Initial Amount: ", initialAmount);
-    console.log("Cash Flows: ", cashFlows);
+    console.log(`Configuración iterativa: maxIterations=${maxIterations}, tolerance=${tolerance}`)
 
     for (let i = 0; i < maxIterations; i++) {
-      let npv = -initialAmount;
-      let npvDerivative = 0;
+      console.log(`\n--- Iteración ${i + 1} ---`)
+      console.log(`Tasa periódica actual (r): ${r} (${(r * 100).toFixed(6)}%)`)
 
-      cashFlows.forEach((cf, index) => {
-        const period = index + 1;
-        const discountFactor = Math.pow(1 + rate, period);
-        npv += cf.fixedInstallment / discountFactor;
-        npvDerivative -= (period * cf.fixedInstallment) / Math.pow(1 + rate, period + 1);
-      });
+      let van = 0
+      let vanDerivative = 0
 
-      if (Math.abs(npv) < tolerance) break;
-      rate = rate - npv / npvDerivative;
+      // CORRECCIÓN 2: Para el emisor, la inversión inicial es positiva (recibe dinero)
+      // Para el inversionista, la inversión inicial es negativa (paga dinero)
+      if (type === "EMISOR") {
+        van = initialInvestment // El emisor recibe el dinero
+      } else {
+        van = -initialInvestment // El inversionista paga el dinero
+      }
+
+      futureCashFlows.forEach((cf) => {
+        const n = cf.period
+        const cfValue = cf.installment
+        const discountFactor = Math.pow(1 + r, n)
+        const presentValue = cfValue / discountFactor
+
+        // CORRECCIÓN 3: Para el emisor, los pagos son negativos (sale dinero)
+        // Para el inversionista, los pagos son positivos (entra dinero)
+        if (type === "EMISOR") {
+          van -= presentValue // El emisor paga las cuotas
+          vanDerivative += (n * cfValue) / Math.pow(1 + r, n + 1) // Derivada positiva
+        } else {
+          van += presentValue // El inversionista recibe las cuotas
+          vanDerivative -= (n * cfValue) / Math.pow(1 + r, n + 1) // Derivada negativa
+        }
+
+        console.log(`  Período ${n}:`)
+        console.log(`  - Flujo: ${cfValue}`)
+        console.log(`  - Factor descuento: ${discountFactor.toFixed(8)}`)
+        console.log(`  - VP: ${presentValue.toFixed(8)}`)
+      })
+
+      console.log(`VAN total: ${van.toFixed(8)}`)
+      console.log(`VAN Derivada: ${vanDerivative.toFixed(8)}`)
+
+      if (Math.abs(van) < tolerance) {
+        console.log(`CONVERGENCIA ALCANZADA. VAN < tolerancia (${Math.abs(van)} < ${tolerance})`)
+        break
+      }
+
+      if (Math.abs(vanDerivative) < tolerance) {
+        console.warn(`ADVERTENCIA: Derivada cercana a cero (${vanDerivative}). Abortando iteración.`)
+        break
+      }
+
+      const newRate = r - van / vanDerivative
+      const rateChange = newRate - r
+
+      console.log(`Nueva tasa calculada: ${newRate.toFixed(8)} (Cambio: ${rateChange.toFixed(8)})`)
+
+      // Control de cambios drásticos
+      if (Math.abs(rateChange) > 0.1) {
+        const adjustedChange = Math.sign(rateChange) * 0.01
+        r += adjustedChange
+        console.warn(`AJUSTE: Cambio drástico detectado. Ajustando tasa en ${adjustedChange} a ${r}`)
+      } else {
+        r = newRate
+      }
+
+      // Limitar rango de tasas periódicas
+      if (r < -0.99) {
+        console.warn(`AJUSTE: Tasa mínima alcanzada. Limitando a -0.99`)
+        r = -0.99
+      }
+      if (r > 1) {
+        console.warn(`AJUSTE: Tasa máxima alcanzada. Limitando a 1`)
+        r = 1
+      }
+
+      console.log(`Tasa actualizada para próxima iteración: ${r.toFixed(8)}`)
     }
-    return rate;
+
+    // CORRECCIÓN 4: Convertir tasa periódica a tasa efectiva anual
+    const effectiveAnnualRate = Math.pow(1 + r, periodsPerYear) - 1
+
+    console.log("--- FIN CÁLCULO TIR ---")
+    console.log(`TIR periódica calculada: ${r.toFixed(8)} (${(r * 100).toFixed(6)}%)`)
+    console.log(`TIR efectiva anual: ${effectiveAnnualRate.toFixed(8)} (${(effectiveAnnualRate * 100).toFixed(6)}%)`)
+
+    return effectiveAnnualRate
   }
 
   private static calculateDuration(cashFlows: CashflowModel[], periodicRate: number, periodsPerYear: number): number {
@@ -293,26 +360,4 @@ export class BondMetricsCalculator {
     return Math.pow(1 + effectiveAnnualRate, 1 / periodsPerYear) - 1;
   }
 
-  static calculatePeriodicCok(
-    annualCokRate: number,
-    rateType: string,
-    paymentFrequency: string,
-    compounding?: string
-  ): number {
-    const periodsPerYear = this.getPeriodsPerYear(paymentFrequency);
-
-    if (rateType === 'EFFECTIVE') {
-      return Math.pow(1 + annualCokRate / 100, 1 / periodsPerYear) - 1;
-    }
-
-    if (!compounding) {
-      throw new Error('Se requiere capitalización para tasa nominal');
-    }
-
-    const compoundingPeriods = this.getCompoundingPeriodsPerYear(compounding);
-    const nominalRate = annualCokRate / 100;
-    const effectiveAnnualRate = Math.pow(1 + nominalRate / compoundingPeriods, compoundingPeriods) - 1;
-
-    return Math.pow(1 + effectiveAnnualRate, 1 / periodsPerYear) - 1;
-  }
 }
