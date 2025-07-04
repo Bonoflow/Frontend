@@ -2,7 +2,7 @@
   <mat-toolbar color="primary" class="header-toolbar">
     <span>Mis Bonos</span>
     <span class="spacer"></span>
-    <button mat-raised-button color="accent" (click)="createNewBond()">
+    <button mat-raised-button class="main-button" (click)="createNewBond()">
       <mat-icon>add</mat-icon>
       Nuevo Bono
     </button>
@@ -18,7 +18,17 @@
   <div *ngIf="!isLoading" class="cards-container">
     <mat-card *ngFor="let bond of bonds$ | async" class="bond-card" (click)="viewBondDetail(bond.id!)">
       <mat-card-header>
-        <mat-card-title class="bond-name">{{ bond.name }}</mat-card-title>
+        <div class="bond-header">
+          <mat-card-title class="bond-name">{{ bond.name }}</mat-card-title>
+          <button
+            mat-icon-button
+            class="delete-button"
+            *ngIf="bond.id !== undefined"
+            (click)="deleteBond(bond.id); $event.stopPropagation()"
+            aria-label="Eliminar bono">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
         <mat-card-subtitle class="bond-currency">{{ bond.currency }}</mat-card-subtitle>
       </mat-card-header>
 
@@ -28,22 +38,26 @@
             <span class="bond-detail-label">Valor nominal:</span>
             <span class="bond-detail-value">{{ formatCurrency(bond.faceValue, bond.currency) }}</span>
           </div>
-
           <div class="bond-detail-row">
             <span class="bond-detail-label">Tasa de interés:</span>
             <span class="bond-detail-value">{{ bond.interestRate }}% {{ getRateTypeLabel(bond.rateType) }}</span>
           </div>
-
           <div class="bond-detail-row">
-            <span class="bond-detail-label">Plazo:</span>
-            <span class="bond-detail-value">{{ bond.term }} meses</span>
+            <span class="bond-detail-label">Tasa de Descuento:</span>
+            <span class="bond-detail-value">{{ bond.marketRate }}%</span>
           </div>
-
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Fecha de Emision:</span>
+            <span class="bond-detail-value">{{ bond.issueDate }}</span>
+          </div>
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Fecha de Vencimiento:</span>
+            <span class="bond-detail-value">{{ bond.maturityDate }}</span>
+          </div>
           <div class="bond-detail-row">
             <span class="bond-detail-label">Frecuencia:</span>
             <span class="bond-detail-value">{{ getPaymentFrequencyLabel(bond.paymentFrequency) }}</span>
           </div>
-
           <div class="bond-detail-row">
             <span class="bond-detail-label">Tipo de gracia:</span>
             <span class="bond-detail-value">{{ getGraceTypeLabel(bond.graceType) }}</span>
@@ -52,7 +66,7 @@
       </mat-card-content>
 
       <mat-card-actions>
-        <button mat-button color="primary" class="detail-button">
+        <button mat-button class="main-button detail-button">
           Ver detalles
         </button>
       </mat-card-actions>
@@ -66,7 +80,7 @@
           <mat-icon class="empty-icon">description</mat-icon>
           <h3 class="empty-title">No hay bonos</h3>
           <p class="empty-description">Comienza creando tu primer bono.</p>
-          <button mat-raised-button color="primary" (click)="createNewBond()" class="empty-button">
+          <button mat-raised-button class="main-button empty-button" (click)="createNewBond()">
             <mat-icon>add</mat-icon>
             Crear bono
           </button>

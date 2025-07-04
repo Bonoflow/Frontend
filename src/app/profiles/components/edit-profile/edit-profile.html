@@ -1,0 +1,56 @@
+<mat-card class="edit-profile-card client-theme">
+
+  <mat-toolbar color="primary" class="edit-profile-header-toolbar" >
+    <span class="edit-profile-header-title">Información de tu cuenta de perfil</span>
+    <span class="spacer"></span>
+  </mat-toolbar>
+
+  <mat-card-content class="edit-profile-card-content">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="edit-profile-form-grid">
+        <!-- Columna de la foto -->
+        <div class="edit-profile-photo-col">
+          <div class="profile-photo-preview" *ngIf="profileForm.get('photo')?.value">
+            <img [src]="profileForm.get('photo')?.value" alt="Foto de perfil" />
+            <mat-spinner *ngIf="isLoading" diameter="32" class="photo-spinner"></mat-spinner>
+          </div>
+          <div class="edit-profile-actions-image">
+            <input #photoInput type="file" accept="image/*" (change)="onPhotoSelected($event)" style="display:none;">
+            <button mat-stroked-button color="primary" type="button" (click)="photoInput.click()" [disabled]="isLoading">
+              Cambiar foto
+            </button>
+          </div>
+        </div>
+        <!-- Columna de los campos -->
+        <div class="edit-profile-fields-wrapper">
+          <div class="edit-profile-fields">
+            <mat-form-field appearance="fill" class="edit-profile-field">
+              <mat-label>Nombre de empresa</mat-label>
+              <input matInput formControlName="company" required>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="edit-profile-field">
+              <mat-label>RUC</mat-label>
+              <input matInput formControlName="ruc" required maxlength="11" minlength="11">
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="edit-profile-field">
+              <mat-label>Descripción de la empresa</mat-label>
+              <textarea matInput formControlName="description" rows="2"></textarea>
+            </mat-form-field>
+            <div class="edit-profile-actions">
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!isProfileChanged() || profileForm.invalid || isLoading"
+                [ngClass]="{'edit-profile-changed': isProfileChanged(),'edit-profile-inactive': !isProfileChanged()}"
+              >
+                Guardar cambios
+
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

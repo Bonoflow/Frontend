@@ -1,0 +1,308 @@
+/* Estilos generales */
+.horizontal-layout-investor {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f7fa;
+}
+
+/* Sección de imagen */
+.horizontal-layout-investor .image-side-investor {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.horizontal-layout-investor .image-side-investor .image-overlay-investor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(63, 81, 181, 0.3), rgba(48, 63, 159, 0.3));
+  z-index: 1;
+}
+
+.horizontal-layout-investor .image-side-investor .background-image-investor {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.horizontal-layout-investor .image-side-investor .image-content-investor {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem;
+  max-width: 500px;
+}
+
+.horizontal-layout-investor .image-side-investor .image-content-investor h2 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.horizontal-layout-investor .image-side-investor .image-content-investor p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Sección de formulario */
+.form-side-investor {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.register-investor-card {
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: none;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Logo */
+.logo-container-investor {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo-container-investor .logo-investor {
+  width: 200px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+  display: inline-block;
+}
+
+/* Cabecera */
+.card-header-investor {
+  text-align: center;
+  margin-bottom: 2rem;
+  align-content: center;
+  justify-content: center;
+}
+
+.card-header-investor .card-title-investor {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.card-header-investor .card-subtitle-investor {
+  color: #7f8c8d;
+  font-size: 1rem;
+}
+
+/* Grid formulario 2 columnas */
+.form-grid-container-investor {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Sección izquierda - imagen */
+.profile-section-investor {
+  flex: 1;
+  max-width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-upload-card-investor {
+  width: 100%;
+  max-width: 260px;
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+/* Título y descripción de foto */
+.upload-title-investor {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.upload-description-investor {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-bottom: 1rem;
+}
+
+/* Vista previa de imagen */
+.image-preview-container-investor {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 1rem;
+  position: relative;
+}
+
+.image-preview-investor {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview-investor img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image-investor {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #e74c3c;
+}
+
+/* Placeholder si no hay imagen */
+.image-placeholder-investor {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f2f5;
+  border: 3px dashed #c0c0c0;
+  color: #7f8c8d;
+}
+
+.image-placeholder-investor mat-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Texto debajo de imagen */
+.upload-hint-investor {
+  font-size: 0.75rem;
+  color: #95a5a6;
+  margin-top: 0.25rem;
+}
+
+/* Botón cambiar imagen */
+.upload-action-investor {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  text-transform: none;
+}
+
+/* Sección derecha - formulario */
+.form-section-investor {
+  flex: 1;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Fila doble */
+.form-row-investor {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.form-field-investor {
+  flex: 1;
+}
+
+.form-field-investor.full-width-investor {
+  width: 100%;
+}
+
+/* Acciones */
+.form-actions-investor {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.submit-button-investor,
+.cancel-button-investor {
+  padding: 0.5rem 2rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.submit-button-investor:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3);
+}
+
+.cancel-button-investor:hover {
+  transform: translateY(-2px);
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .horizontal-layout-investor {
+    flex-direction: column;
+  }
+
+  .horizontal-layout-investor .image-side-investor {
+    display: none;
+  }
+
+  .form-side-investor {
+    padding: 1.5rem;
+  }
+
+  .register-investor-card {
+    padding: 1.5rem;
+  }
+
+  .form-grid-container-investor {
+    flex-direction: column;
+  }
+
+  .profile-section-investor,
+  .form-section-investor {
+    max-width: 100%;
+  }
+
+  .form-section-investor .form-row-investor {
+    flex-direction: column;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

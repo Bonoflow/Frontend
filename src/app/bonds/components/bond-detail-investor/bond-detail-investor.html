@@ -1,0 +1,287 @@
+<div class="container mat-typography" style="margin: 32px auto; max-width: 1200px;">
+  <mat-toolbar class="bond-detail-header-toolbar" color="primary">
+    <button mat-icon-button (click)="goBack()" style="margin-right: 16px;">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="bond-detail-header-title">{{ bond?.name || 'Detalle del Bono' }}</span>
+    <span class="spacer"></span>
+    <button
+      mat-flat-button
+      color="primary"
+      *ngIf="!hasInvested && bond"
+      (click)="investInBond()"
+    >
+      <mat-icon>trending_up</mat-icon>
+      Invertir
+    </button>
+  </mat-toolbar>
+
+  <div *ngIf="isLoading" class="bond-loading-overlay">
+    <mat-spinner diameter="48" color="primary"></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && !bond" class="text-center" style="padding: 48px 0;">
+    <mat-card class="mx-auto" style="max-width: 400px;">
+      <mat-card-content>
+        <h3 class="mat-title">Bono no encontrado</h3>
+        <p class="mat-body-2">El bono que buscas no existe o ha sido eliminado.</p>
+        <div style="margin-top: 24px;">
+          <button mat-stroked-button color="primary" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Volver
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!isLoading && bond">
+    <div class="bond-summary-cards-modern">
+      <mat-card class="bond-summary-modern-card">
+        <div class="bond-summary-modern-icon-bg">
+          <mat-icon class="bond-summary-modern-icon">attach_money</mat-icon>
+        </div>
+        <mat-card-title class="bond-summary-modern-title">Valor nominal</mat-card-title>
+        <mat-card-content>
+          <p class="bond-summary-modern-value">{{ formatCurrency(bond.faceValue, bond.currency) }}</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="bond-summary-modern-card">
+        <div class="bond-summary-modern-icon-bg">
+          <mat-icon class="bond-summary-modern-icon">percent</mat-icon>
+        </div>
+        <mat-card-title class="bond-summary-modern-title">Tasa de interés</mat-card-title>
+        <mat-card-content>
+          <p class="bond-summary-modern-value">
+            {{ bond.interestRate }}% {{ getRateTypeLabel(bond.rateType) }}
+          </p>
+          <span *ngIf="bond.compounding && bond.rateType !== 'EFFECTIVE'" class="bond-summary-modern-label">
+            Capitalización: {{ getCompoundingLabel(bond.compounding) }}
+          </span>
+          <p class="bond-summary-modern-label">Tasa de Descuento: {{ bond.marketRate }}%</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="bond-summary-modern-card">
+        <div class="bond-summary-modern-icon-bg">
+          <mat-icon class="bond-summary-modern-icon">schedule</mat-icon>
+        </div>
+        <mat-card-title class="bond-summary-modern-title">Fechas</mat-card-title>
+        <mat-card-content>
+          <p class="bond-summary-modern-value">Emisión: {{ bond.issueDate }}</p>
+          <p class="bond-summary-modern-label">Vencimiento: {{ bond.maturityDate }}</p>
+          <p class="bond-summary-modern-label">Frecuencia: {{ getPaymentFrequencyLabel(bond.paymentFrequency) }}</p>
+          <p class="bond-summary-modern-label">Tipo de gracia: {{ getGraceTypeLabel(bond.graceType) }}</p>
+          <p
+            class="bond-summary-modern-label"
+            *ngIf="bond.graceType === 'PARCIAL' || bond.graceType === 'TOTAL'"
+          >
+            Numero de periodos de gracia: {{ bond.gracePeriod }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="bond-summary-modern-card">
+        <div class="bond-summary-modern-icon-bg">
+          <mat-icon class="bond-summary-modern-icon">receipt_long</mat-icon>
+        </div>
+        <mat-card-title class="bond-summary-modern-title">Costos</mat-card-title>
+        <mat-card-content>
+          <p class="bond-summary-modern-value">
+            {{ formatCurrency(
+            (bond.placementExpenses ?? 0) +
+            (bond.cavaliExpenses ?? 0),
+            bond.currency
+          ) }}
+          </p>
+          <span class="bond-summary-modern-label">Costos iniciales asociados al bono</span>
+          <ul style="margin: 12px 0 0 0; padding-left: 18px; font-size: 0.98rem; color: #223a7a;">
+            <li *ngIf="bond.placementExpenses">Colocación: {{ formatCurrency(bond.placementExpenses, bond.currency) }}</li>
+            <li *ngIf="bond.cavaliExpenses">Cavali: {{ formatCurrency(bond.cavaliExpenses, bond.currency) }}</li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+
+    <mat-card class="bond-detail-tabs-card mat-elevation-z2 bond-detail-tabs-card-outline">
+      <mat-tab-group class="bond-detail-tab-group" [(selectedIndex)]="selectedTabIndex" (selectedIndexChange)="onTabChange($event)">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span class="bond-detail-tab-label" [ngClass]="{'bond-detail-tab-label-active': selectedTabIndex === 0}">Flujo de Caja</span>
+          </ng-template>
+          <div class="bond-detail-tab-body" style="padding: 24px 0;">
+            <div class="bond-detail-section-header">
+              <h2 class="bond-detail-section-title">Flujo de Caja (Método Francés)</h2>
+            </div>
+            <div style="overflow-x: auto;">
+              <table mat-table [dataSource]="cashFlowsDataSource" class="bond-detail-cashflow-table">
+
+                <!-- Período -->
+                <ng-container matColumnDef="period">
+                  <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Período</th>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">{{ flow.period }}</td>
+                </ng-container>
+
+                <!-- Fecha -->
+                <ng-container matColumnDef="date">
+                  <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Fecha</th>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">{{ flow.date }}</td>
+                </ng-container>
+
+                <!-- Saldo Inicial -->
+                <ng-container matColumnDef="initialBalance">
+                  <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Saldo Inicial</th>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">
+                    {{ formatCurrency(flow.initialBalance, bond.currency) }}
+                  </td>
+                </ng-container>
+
+                <!-- Interés (ingreso para el inversor) -->
+                <ng-container matColumnDef="interest">
+                  <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Interés</th>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell"
+                      [ngClass]="{ 'positive': true }">
+                    +{{ formatCurrency(flow.interest, bond.currency) }}
+                  </td>
+                </ng-container>
+
+                <!-- Amortización (ingreso) -->
+                <ng-container matColumnDef="amortization">
+                  <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Amortización</th>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell"
+                      [ngClass]="{ 'positive': true }">
+                    +{{ formatCurrency(flow.amortization, bond.currency) }}
+                  </td>
+                </ng-container>
+
+                <!-- Cuota Fija (ingreso) -->
+                <ng-container matColumnDef="installment">
+                  <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Cuota Fija</th>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell"
+                      [ngClass]="{ 'positive': flow.period !== 0, 'negative': flow.period === 0 }">
+                    {{ flow.period === 0 ? '-' : '+' }}{{ formatCurrency(flow.installment, bond.currency) }}
+                  </td>
+                </ng-container>
+
+                <!-- Gastos (egreso del inversor) -->
+                <ng-container matColumnDef="expenses">
+                  <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Gastos</th>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell"
+                      [ngClass]="{ 'negative': true }">
+                    <ng-container *ngIf="flow.period === 0; else normalExpenses">
+                      -{{ formatCurrency(
+                      (flow.expenses ?? 0) -
+                      (bond.issuanceExpenses ?? 0) -
+                      (bond.structuringExpenses ?? 0),
+                      bond.currency
+                    ) }}
+                    </ng-container>
+                    <ng-template #normalExpenses>
+                      -{{ formatCurrency(flow.expenses, bond.currency) }}
+                    </ng-template>
+                  </td>
+                </ng-container>
+
+                <!-- Cuota Fija Constante -->
+                <ng-container matColumnDef="fixedInstallment">
+                  <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Flujo</th>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell"
+                      [ngClass]="{ 'negative': flow.period !== 0, 'positive': flow.period === 0 }">
+                    <ng-container *ngIf="flow.period === 0; else normalFlow">
+                      -{{ formatCurrency(flow.investorFlow ?? 0, bond.currency) }}
+                    </ng-container>
+                    <ng-template #normalFlow>
+                      +{{ formatCurrency(flow.investorFlow, bond.currency) }}
+                    </ng-template>
+                  </td>
+                </ng-container>
+
+                <!-- Saldo Final -->
+                <ng-container matColumnDef="finalBalance">
+                  <th mat-header-cell *matHeaderCellDef class="bond-detail-table-header-cell">Saldo Final</th>
+                  <td mat-cell *matCellDef="let flow" class="bond-detail-table-cell">
+                    <ng-container *ngIf="flow.period === 0; else normalFinalBalance">
+                      {{ formatCurrency((flow.finalBalance ?? 0) + (bond.issuanceExpenses ?? 0) + (bond.structuringExpenses ?? 0), bond.currency) }}
+                    </ng-container>
+                    <ng-template #normalFinalBalance>
+                      {{ formatCurrency(flow.finalBalance, bond.currency) }}
+                    </ng-template>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bond-detail-table-header-row"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="bond-detail-table-row"></tr>
+              </table>
+
+              <mat-paginator
+                [length]="cashFlowsDataSource.data.length"
+                [pageSize]="10"
+                [pageSizeOptions]="[10, 20, 50]"
+                [hidePageSize]="false"
+                showFirstLastButtons>
+              </mat-paginator>
+            </div>
+          </div>
+
+        </mat-tab>
+
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span class="bond-detail-tab-label" [ngClass]="{'bond-detail-tab-label-active': selectedTabIndex === 1}">Métricas Financieras</span>
+          </ng-template>
+          <div class="bond-detail-tab-body" style="padding: 24px 0;">
+            <h2 class="bond-detail-section-title" style="margin-bottom: 24px;">Métricas Financieras</h2>
+            <div *ngIf="metrics; else noMetrics" class="bond-detail-metrics-grid">
+              <mat-card class="bond-detail-metrics-card">
+                <mat-card-title class="bond-detail-metrics-title">Tasas</mat-card-title>
+                <mat-card-content>
+                  <p class="bond-detail-metrics-label">Tasas efectivas anuales</p>
+                  <div>
+                    <div>
+                      <span class="bond-detail-metrics-label">TCEA</span>
+                      <div class="bond-detail-metrics-value">{{ formatPercent(metrics.tcea) }}</div>
+                    </div>
+                    <div>
+                      <span class="bond-detail-metrics-label">TREA</span>
+                      <div class="bond-detail-metrics-value">{{ formatPercent(metrics.trea) }}</div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+
+              <mat-card class="bond-detail-metrics-card">
+                <mat-card-title class="bond-detail-metrics-title">Duración</mat-card-title>
+                <mat-card-content>
+                  <p class="bond-detail-metrics-label">Sensibilidad a cambios en la tasa</p>
+                  <div>
+                    <span class="bond-detail-metrics-label">Duración</span>
+                    <div class="bond-detail-metrics-value">{{ metrics.duration.toFixed(2) }} años</div>
+                  </div>
+                  <div>
+                    <span class="bond-detail-metrics-label">Duración Modificada</span>
+                    <div class="bond-detail-metrics-value">{{ metrics.modifiedDuration.toFixed(2) }} %</div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+              <mat-card class="bond-detail-metrics-card">
+                <mat-card-title class="bond-detail-metrics-title">Convexidad</mat-card-title>
+                <mat-card-content>
+                  <p class="bond-detail-metrics-label">Medida de curvatura</p>
+                  <div class="bond-detail-metrics-value">{{ metrics.convexity.toFixed(2) }}</div>
+                  <p class="bond-detail-metrics-label" style="margin-top: 8px;">
+                    La convexidad es una medida de la curvatura en la relación entre los precios de los bonos y los rendimientos.
+                  </p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <ng-template #noMetrics>
+              <div class="text-center" style="padding: 48px 0;">
+                <p class="mat-body-2">No hay métricas financieras disponibles para este bono.</p>
+              </div>
+            </ng-template>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
+</div>

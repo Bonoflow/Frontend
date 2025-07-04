@@ -5,6 +5,7 @@ import {HttpClient} from "@angular/common/http";
 //Import the user model
 import {User} from "../models/user.model";
 import {BaseService} from '../../shared/services/base.service';
+import {BehaviorSubject} from 'rxjs';
 
 
 @Injectable({
@@ -14,6 +15,14 @@ export class UserApiService extends  BaseService<User>{
   constructor(http: HttpClient) {
     super(http);
     this.extraUrl = environment.userURL;
+  }
+
+  private isInvestorSubject = new BehaviorSubject<boolean>(this.getIsInvestor());
+  isInvestor$ = this.isInvestorSubject.asObservable();
+
+  private loggedIn = new BehaviorSubject<boolean>(this.isLogged());
+  get isLogged$() {
+    return this.loggedIn.asObservable();
   }
 
   setLogged(isLogged: boolean){
@@ -31,10 +40,20 @@ export class UserApiService extends  BaseService<User>{
     return false;
   }
 
-  setIsDoctor(isDoctor: boolean) {
+  setIsInvestor(isInvestor: boolean) {
     if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('isDoctor', String(isDoctor));
+      this.isInvestorSubject.next(isInvestor);
+      localStorage.setItem('isInvestor', String(isInvestor));
     }
+
+  }
+
+  getIsInvestor(): boolean {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const isInvestor = localStorage.getItem('isInvestor');
+      return isInvestor === 'true';
+    }
+    return false;
   }
 
   getIsDoctor(): boolean {
@@ -58,6 +77,8 @@ export class UserApiService extends  BaseService<User>{
     }
     return 0;
   }
+
+
 
 
 

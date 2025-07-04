@@ -17,16 +17,15 @@ import {Router} from '@angular/router';
   styleUrl: './register-client.css'
 })
 export class RegisterClient {
-
+  hidePassword = true;
   selectedFile: File | null = null;
   imagePreview: string | null = null;
   registerForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-    firstname: new FormControl('', [Validators.required]),
-    lastname: new FormControl('', [Validators.required]),
-    birthDate: new FormControl('', [Validators.required]),
-    photo: new FormControl('', [Validators.required]),
+    company: new FormControl('', [Validators.required]),
+    ruc: new FormControl('', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]),
+    photo: new FormControl('xd', [Validators.required]),
     description: new FormControl(''),
   });
 
@@ -93,20 +92,25 @@ export class RegisterClient {
         this.userApiService.setLogged(true);
 
         const clientProfile = new Profile(
-          this.registerForm.value.firstname,
-          this.registerForm.value.lastname,
-          this.registerForm.value.birthDate,
-          userId,
-          this.registerForm.value.description,
-          this.photo_d ?? undefined
+          'noname', // firstName
+          'no_lastname', // lastName
+          new Date('1990-01-01'), // birthDate
+          userId, // userId
+          this.registerForm.value.description, // description
+          this.photo_d ?? '', // photo
+          this.registerForm.value.company, // company
+          this.registerForm.value.ruc // ruc
         );
+
+        console.log(clientProfile);
 
         this.profileService.create(clientProfile).subscribe(
           (profileResponse: any) => {
-            this.clientService.getOne(userId).subscribe(
+            this.clientService.getClientByUserId(userId).subscribe(
               (client: ClientModel) => {
                 if (client.id !== undefined) {
                   this.clientService.setClientId(client.id);
+                  this.userApiService.setIsInvestor(false);
                   this.snackBar.open('Bienvenido ' + clientProfile.firstName + ' 🤗', 'Cerrar', { duration: 2000 });
                   this.router.navigateByUrl('/client/home');
                 }

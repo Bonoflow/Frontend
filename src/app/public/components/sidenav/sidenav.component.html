@@ -2,8 +2,7 @@
 
   <ul class="sidenav-nav">
     <div class="sidenav-header">
-      <img src="assets/images/image-login.png" alt="Logo" class="logo" />
-      <h2 class="app-name">BonoFlow</h2>
+      <img src="assets/images/logo-bonoflow.png" alt="Logo" class="logo" />
     </div>
     <li class="sidenav-nav-item" *ngFor="let button of getSidebarButtons()">
       <a class="sidenav-nav-link"
@@ -13,7 +12,7 @@
         <span class="sidenav-link-text">{{ button }}</span>
       </a>
     </li>
-    <li class="sidenav-nav-item">
+    <li class="sidenav-nav-item logout-item">
       <a class="sidenav-nav-link logout-link" (click)="logOut()" routerLink="login">
         <mat-icon class="sidenav-link-icon">exit_to_app</mat-icon>
         <span class="sidenav-link-text">Cerrar sesión</span>
