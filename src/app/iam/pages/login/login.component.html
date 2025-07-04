@@ -1,54 +1,64 @@
 <div class="login-container">
-  <!-- Lado izquierdo: formulario -->
+  <!-- Columna izquierda: formulario -->
   <div class="login-form-section">
-    <div class="logo-container">
-      <img src="assets/images/image-login.png" alt="Logo" class="logo" />
-    </div>
-
-    <h2 class="login-title">INGRESAR CUENTA</h2>
-
-    <form [formGroup]="loginForm" (ngSubmit)="login()" class="form-wrapper">
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label class="labels">Email</mat-label>
-        <input matInput formControlName="email" type="email" />
-        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
-          El correo es obligatorio.
-        </mat-error>
-        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
-          Ingresa un correo válido.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Contraseña</mat-label>
-        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
-        <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button" aria-label="Mostrar u ocultar contraseña">
-          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-          La contraseña es obligatoria.
-        </mat-error>
-      </mat-form-field>
-
-      <div *ngIf="errorMessage" class="error-message">
-        {{ errorMessage }}
+    <div class="form-content">
+      <div class="logo-container">
+        <img src="assets/images/logo-bonoflow.png" alt="Logo" class="logo" />
       </div>
 
-      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid" class="login-button">
-        Ingresar
-        <mat-icon>arrow_forward</mat-icon>
-      </button>
-    </form>
+      <h2 class="login-title">INGRESAR CUENTA</h2>
 
-    <div class="register-option">
-      <p>¿No tienes una cuenta?
-        <a (click)="redirectSignUp()">Regístrate aquí</a>
-      </p>
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="form-wrapper">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" />
+          <mat-icon matPrefix>mail_outline</mat-icon>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+            El correo es obligatorio.
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+            Ingresa un correo válido.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button" aria-label="Mostrar u ocultar contraseña">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            La contraseña es obligatoria.
+          </mat-error>
+        </mat-form-field>
+
+        <div *ngIf="errorMessage" class="error-message">
+          <mat-icon>error_outline</mat-icon>
+          {{ errorMessage }}
+        </div>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid" class="login-button">
+          Ingresar
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </form>
+
+      <div class="register-option">
+        <p>¿No tienes una cuenta?
+          <a (click)="redirectSignUp()" class="register-link">Regístrate aquí</a>
+        </p>
+      </div>
     </div>
   </div>
 
-  <!-- Lado derecho: imagen -->
+  <!-- Columna derecha: imagen -->
   <div class="login-image-section">
-    <img src="assets/images/image-login.png" alt="Fondo login" />
+    <div class="image-overlay"></div>
+    <img src="assets/images/image-login.png" alt="Fondo login" class="background-image" />
+    <div class="image-content">
+      <h2>Bienvenido de vuelta</h2>
+      <p>Accede a tu cuenta para gestionar tus proyectos y tareas</p>
+    </div>
   </div>
 </div>

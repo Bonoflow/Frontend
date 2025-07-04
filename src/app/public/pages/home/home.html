@@ -1,1 +1,114 @@
-<p>home works!</p>
+<div class="dashboard-container">
+  <div class="dashboard-content">
+
+    <!-- Header de Bienvenida -->
+    <mat-card class="welcome-card">
+      <mat-card-title class="welcome-title">
+        ¡Bienvenido, {{ company }}! 👋
+      </mat-card-title>
+      <mat-card-content class="welcome-message">
+        <p>
+          Gestiona tus bonos financieros con el método francés de amortización.
+          Calcula flujos de caja, métricas financieras y toma decisiones informadas.
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Acciones Rápidas -->
+    <mat-card class="actions-card">
+      <mat-card-title class="section-title">¿Qué quieres hacer hoy?</mat-card-title>
+      <mat-card-content class="actions-grid">
+        <mat-card *ngFor="let action of quickActions" class="action-card" (click)="action.action()">
+          <div class="action-icon-container">
+            <button mat-fab class="action-icon">
+              <mat-icon>{{ action.icon }}</mat-icon>
+            </button>
+          </div>
+          <mat-card-title class="action-title">{{ action.title }}</mat-card-title>
+          <mat-card-content class="action-description">
+            <p>{{ action.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Características del Sistema -->
+    <mat-card class="features-card">
+      <mat-card-title class="section-title">Características del Sistema</mat-card-title>
+      <mat-card-content class="features-grid">
+        <mat-card *ngFor="let feature of features" class="feature-card">
+          <div class="feature-icon">{{ feature.icon }}</div>
+          <mat-card-title class="feature-title">{{ feature.title }}</mat-card-title>
+          <mat-card-content class="feature-description">
+            <p>{{ feature.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Bonos Recientes -->
+    <mat-card *ngIf="!isLoading && (((bonds$ | async) || []).length > 0)" class="recent-bonds-card">
+      <mat-card-title class="section-title">
+        <span>Tus Bonos Recientes</span>
+      </mat-card-title>
+      <mat-card-content>
+        <div class="bonds-table-container">
+          <table mat-table [dataSource]="((bonds$ | async) || []).slice(0, 5)" class="bonds-table">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let bond">
+                <div class="bond-name">{{ bond.name }}</div>
+                <div class="bond-currency">{{ bond.currency }}</div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="faceValue">
+              <th mat-header-cell *matHeaderCellDef>Valor Nominal</th>
+              <td mat-cell *matCellDef="let bond">{{ formatCurrency(bond.faceValue, bond.currency) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="interestRate">
+              <th mat-header-cell *matHeaderCellDef>Tasa</th>
+              <td mat-cell *matCellDef="let bond">
+                {{ bond.interestRate }}%
+                <div class="rate-type">{{ bond.rateType === 'EFFECTIVE' ? 'Efectiva' : 'Nominal' }}</div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="term">
+              <th mat-header-cell *matHeaderCellDef>Plazo</th>
+              <td mat-cell *matCellDef="let bond">
+                <div class="payment-frequency">{{ getPaymentFrequencyLabel(bond.paymentFrequency) }}</div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let bond">
+                <button mat-button class="details-button">Ver detalles</button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['name', 'faceValue', 'interestRate', 'term', 'actions']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['name', 'faceValue', 'interestRate', 'term', 'actions'];"></tr>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Estado Vacío -->
+    <mat-card *ngIf="!isLoading && (((bonds$ | async) || []).length === 0)" class="empty-state-card">
+      <div class="empty-state-icon">🚀</div>
+      <mat-card-title class="empty-state-title">¡Comienza tu viaje financiero!</mat-card-title>
+      <mat-card-content class="empty-state-message">
+        <p>
+          Aún no tienes bonos registrados. Crea tu primer bono y comienza a gestionar tus inversiones con nuestro sistema de método francés.
+        </p>
+        <button mat-raised-button class="create-bond-button">
+          <mat-icon>add</mat-icon>
+          Crear mi primer bono
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-spinner">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+  </div>
+</div>

@@ -1,10 +1,13 @@
 export class Profile {
-  firstName: string;
-  lastName: string;
-  birthDate: Date;
+  id?: number;
+  firstName?: string;
+  lastName?: string;
+  birthDate?: Date;
   description?: string;
   photo?: string;
   userId: number;
+  company ?: string;
+   ruc?: string;
 
   constructor(
     firstName: string,
@@ -13,6 +16,8 @@ export class Profile {
     userId: number,
     description?: string,
     photo?: string,
+    company?: string,
+    ruc?: string
   ) {
     this.firstName = firstName;
     this.lastName = lastName;
@@ -20,6 +25,8 @@ export class Profile {
     this.userId = userId;
     this.description = description;
     this.photo = photo;
+    this.company = company;
+    this.ruc = ruc;
   }
 
 

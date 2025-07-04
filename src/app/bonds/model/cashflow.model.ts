@@ -6,8 +6,11 @@ export class CashflowModel {
   initialBalance: number;
   interest: number;
   amortization: number;
+  fixedInstallment: number; // Este campo es opcional
   installment: number;
   finalBalance: number;
+  expenses: number;
+  investorFlow: number;
 
   constructor(
     bondId: number,
@@ -18,7 +21,10 @@ export class CashflowModel {
     amortization: number,
     installment: number,
     finalBalance: number,
-    id?: number
+    id?: number,
+    fixedInstallment: number = 0,
+    expenses: number = 0,
+    investorFlow: number = 0 // Asignar un valor por defecto
   ) {
     this.id = id;
     this.bondId = bondId;
@@ -29,5 +35,8 @@ export class CashflowModel {
     this.amortization = amortization;
     this.installment = installment;
     this.finalBalance = finalBalance;
+    this.fixedInstallment = fixedInstallment; // Asignar el valor del campo opcional
+    this.expenses = expenses;
+    this.investorFlow = investorFlow; // Asignar el valor del flujo del inversionista
   }
 }

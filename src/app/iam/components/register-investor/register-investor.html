@@ -1,0 +1,134 @@
+<div class="horizontal-layout-investor">
+  <!-- Sección de imagen inversor -->
+  <div class="image-side-investor">
+    <div class="image-overlay-investor"></div>
+    <img src="assets/images/image-login.png" alt="Fondo decorativo" class="background-image-investor" />
+    <div class="image-content-investor">
+      <h2>Únete como inversor</h2>
+      <p>Regístrate para descubrir oportunidades y gestionar tus inversiones</p>
+    </div>
+  </div>
+
+  <!-- Sección de formulario inversor -->
+  <div class="form-side-investor">
+    <mat-card class="register-investor-card">
+      <!-- Encabezado -->
+      <div class="logo-container-investor">
+        <img src="assets/images/logo-bonoflow.png" alt="Logo OnContigo" class="logo-investor" />
+      </div>
+
+      <mat-card-header class="card-header-investor">
+        <mat-card-title class="card-title-investor">Registro de Inversor</mat-card-title>
+        <mat-card-subtitle class="card-subtitle-investor">Completa los campos para registrarte como inversor</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <!-- Contenedor principal de 2 columnas -->
+          <div class="form-grid-container-investor">
+
+            <!-- Columna izquierda - Imagen de perfil inversor -->
+            <div class="profile-section-investor">
+              <div class="image-upload-card-investor">
+                <h3 class="upload-title-investor">Foto de Perfil</h3>
+                <p class="upload-description-investor">Tu imagen se mostrará en tu perfil público.</p>
+
+                <div class="image-preview-container-investor" (click)="fileInput.click()">
+                  <div *ngIf="imagePreview; else placeholder" class="image-preview-investor">
+                    <img [src]="imagePreview" alt="Preview de imagen de perfil" />
+                    <button mat-icon-button class="remove-image-investor" (click)="removeImage()" type="button">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                  <ng-template #placeholder>
+                    <div class="image-placeholder-investor">
+                      <mat-icon>add_a_photo</mat-icon>
+                      <span>Sube tu foto</span>
+                    </div>
+                  </ng-template>
+                </div>
+
+                <input #fileInput type="file" accept="image/*" (change)="onImagePicked($event)" hidden />
+
+                <div class="upload-hint-investor">
+                  <small>Formatos: JPG, PNG (Max. 2MB)</small>
+                </div>
+
+                <button mat-stroked-button color="primary" (click)="fileInput.click()" class="upload-action-investor">
+                  <mat-icon>file_upload</mat-icon> Cambiar Foto
+                </button>
+              </div>
+            </div>
+
+            <!-- Columna derecha - Campos del formulario inversor -->
+            <div class="form-section-investor">
+              <!-- Fila de 2 columnas para nombres -->
+              <div class="form-row-investor">
+                <mat-form-field appearance="outline" class="form-field-investor">
+                  <mat-label>Nombre</mat-label>
+                  <input matInput formControlName="firstname" />
+                  <mat-icon matPrefix>person</mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field-investor">
+                  <mat-label>Apellido</mat-label>
+                  <input matInput formControlName="lastname" />
+                  <mat-icon matPrefix>person_outline</mat-icon>
+                </mat-form-field>
+              </div>
+
+              <!-- Fila completa para email -->
+              <mat-form-field appearance="outline" class="form-field-investor full-width-investor">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" type="email" />
+                <mat-icon matPrefix>alternate_email</mat-icon>
+              </mat-form-field>
+
+              <!-- Fila completa para contraseña -->
+              <mat-form-field appearance="outline" class="form-field-investor full-width-investor">
+                <mat-label>Contraseña</mat-label>
+                <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
+                <mat-icon matPrefix>lock</mat-icon>
+                <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+                  <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </mat-form-field>
+
+              <!-- Fila completa para fecha de nacimiento -->
+              <mat-form-field appearance="outline" class="form-field-investor full-width-investor">
+                <mat-label>Fecha de Nacimiento</mat-label>
+                <input matInput formControlName="birthDate" type="date" />
+                <mat-icon matPrefix>cake</mat-icon>
+              </mat-form-field>
+
+              <!-- Fila completa para descripción -->
+              <mat-form-field appearance="outline" class="form-field-investor full-width-investor">
+                <mat-label>Descripción</mat-label>
+                <textarea matInput formControlName="description" rows="2"></textarea>
+                <mat-icon matPrefix>notes</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Acciones del formulario inversor -->
+          <div class="form-actions-investor">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              class="submit-button-investor"
+              [disabled]="registerForm.invalid">
+              <mat-icon>how_to_reg</mat-icon>
+              Registrar
+            </button>
+
+            <button mat-stroked-button type="button" (click)="goBack()" class="cancel-button-investor">
+              <mat-icon>arrow_back</mat-icon>
+              Volver
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

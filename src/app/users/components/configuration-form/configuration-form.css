@@ -1,0 +1,76 @@
+.configuration-card {
+  max-width: 600px;
+  margin: 40px auto;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+  background: #fff;
+}
+
+.configuration-header-toolbar {
+  border-radius: 10px 10px 0 0;
+  background: #fff !important;
+  color: #2f4eb3 !important;
+  box-shadow: none;
+  padding: 18px 24px;
+}
+
+.configuration-header-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2f4eb3;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.configuration-card-content {
+  padding: 32px 24px;
+}
+
+.configuration-fields-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.configuration-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 32px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.configuration-field {
+  flex: 1 1 260px;
+  min-width: 220px;
+}
+
+.configuration-actions {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.config-btn[disabled] {
+  background: #e0e3ee !important;
+  color: #a0a4b8 !important;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+@media (max-width: 700px) {
+  .configuration-fields {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .configuration-field {
+    min-width: 100%;
+  }
+  .configuration-card {
+    margin: 16px;
+  }
+}

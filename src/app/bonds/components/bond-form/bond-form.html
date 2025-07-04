@@ -1,128 +1,212 @@
 <div class="bond-form-container">
+  <mat-toolbar class="bond-form-header-toolbar">
+    <span class="bond-form-header-title">
+      {{ isEditMode ? 'Editar Bono' : 'Nuevo Bono' }}
+    </span>
+  </mat-toolbar>
   <div class="bond-form-card">
     <mat-card>
-      <mat-card-header>
-        <mat-card-title>
-          {{ isEditMode ? 'Editar Bono' : 'Nuevo Bono' }}
-        </mat-card-title>
-        <mat-card-subtitle>
-          {{ isEditMode ? 'Modifica los detalles del bono' : 'Ingresa los detalles del nuevo bono' }}
-        </mat-card-subtitle>
-      </mat-card-header>
       <mat-card-content>
         <form [formGroup]="bondForm" (ngSubmit)="onSubmit()">
+          <div class="bond-form-columns">
+            <!-- Columna 1: Información Básica -->
+            <div class="bond-form-col bond-form-col-left">
+              <div class="bond-section">
+                <h3 class="bond-section-title">Información General</h3>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Nombre del bono</mat-label>
+                    <input matInput formControlName="name" placeholder="Ej: Bono Corporativo ABC" />
+                    <mat-error *ngIf="nameInvalid && nameTouched">
+                      <span *ngIf="name?.errors?.['required']">El nombre es requerido</span>
+                      <span *ngIf="name?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
 
-          <!-- Información general -->
-          <h3 class="bond-section-title">Información general</h3>
-          <mat-form-field appearance="outline" class="bond-form-field">
-            <mat-label>Nombre del bono</mat-label>
-            <input matInput formControlName="name" placeholder="Ej: Bono Corporativo ABC" />
-            <mat-error *ngIf="nameInvalid && nameTouched">
-              <span *ngIf="name?.errors?.['required']">El nombre es requerido</span>
-              <span *ngIf="name?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres</span>
-            </mat-error>
-          </mat-form-field>
-          <div class="bond-form-row">
-            <mat-form-field appearance="outline" class="bond-form-field-half">
-              <mat-label>Valor nominal</mat-label>
-              <input matInput type="number" formControlName="nominal_value" min="0" step="0.01" placeholder="10000" />
-              <mat-error *ngIf="nominalValueInvalid && nominalValueTouched">
-                <span *ngIf="nominal_value?.errors?.['required']">El valor nominal es requerido</span>
-                <span *ngIf="nominal_value?.errors?.['min']">El valor debe ser mayor a 0</span>
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="bond-form-field-half">
-              <mat-label>Moneda</mat-label>
-              <mat-select formControlName="currency">
-                <mat-option *ngFor="let currency of currencies" [value]="currency.value">
-                  {{ currency.label }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Valor nominal</mat-label>
+                    <input matInput type="number" formControlName="nominal_value" min="0" step="0.01" placeholder="10000" />
+                    <mat-error *ngIf="nominalValueInvalid && nominalValueTouched">
+                      <span *ngIf="nominal_value?.errors?.['required']">El valor nominal es requerido</span>
+                      <span *ngIf="nominal_value?.errors?.['min']">El valor debe ser mayor a 0</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
 
-          <mat-divider class="bond-section-divider"></mat-divider>
+              <div class="bond-section">
+                <h3 class="bond-section-title">Fechas Clave</h3>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Fecha de emisión</mat-label>
+                    <input matInput [matDatepicker]="pickerIssue" formControlName="issue_date" placeholder="Selecciona fecha" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerIssue"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerIssue></mat-datepicker>
+                    <mat-error *ngIf="bondForm.get('issue_date')?.invalid && bondForm.get('issue_date')?.touched">
+                      La fecha de emisión es requerida
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Fecha de vencimiento</mat-label>
+                    <input matInput [matDatepicker]="pickerMaturity" formControlName="maturity_date" placeholder="Selecciona fecha" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerMaturity"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerMaturity></mat-datepicker>
+                    <mat-error *ngIf="bondForm.get('maturity_date')?.invalid && bondForm.get('maturity_date')?.touched">
+                      La fecha de vencimiento es requerida
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
 
-          <!-- Tasa -->
-          <h3 class="bond-section-title">Tasa</h3>
-          <div class="bond-form-row">
-            <mat-form-field appearance="outline" class="bond-form-field-half">
-              <mat-label>Tasa de interés (%)</mat-label>
-              <input matInput type="number" formControlName="interest_rate" min="0" step="0.01" placeholder="5.5" />
-              <mat-error *ngIf="interestRateInvalid && interestRateTouched">
-                <span *ngIf="interest_rate?.errors?.['required']">La tasa de interés es requerida</span>
-                <span *ngIf="interest_rate?.errors?.['min']">La tasa debe ser mayor a 0</span>
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="bond-form-field-half">
-              <mat-label>Tipo de tasa</mat-label>
-              <mat-select formControlName="rate_type">
-                <mat-option *ngFor="let type of rateTypes" [value]="type.value">
-                  {{ type.label }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <mat-form-field *ngIf="showCapitalization" appearance="outline" class="bond-form-field">
-            <mat-label>Capitalización</mat-label>
-            <mat-select formControlName="capitalization">
-              <mat-option *ngFor="let cap of capitalizations" [value]="cap.value">
-                {{ cap.label }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+            <!-- Columna 2: Configuración Financiera -->
+            <div class="bond-form-col bond-form-col-middle">
+              <div class="bond-section">
+                <h3 class="bond-section-title">Tasa de Interés</h3>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Tasa de interés (%)</mat-label>
+                    <input matInput type="number" formControlName="interest_rate" min="0" step="0.01" placeholder="5.5" />
+                    <mat-error *ngIf="interestRateInvalid && interestRateTouched">
+                      <span *ngIf="interest_rate?.errors?.['required']">La tasa de interés es requerida</span>
+                      <span *ngIf="interest_rate?.errors?.['min']">La tasa debe ser mayor a 0</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
 
-          <mat-divider class="bond-section-divider"></mat-divider>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Tasa de descuento (%)</mat-label>
+                    <input matInput type="number" formControlName="market_rate" min="0" step="0.01" placeholder="6.0" />
+                    <mat-error *ngIf="bondForm.get('market_rate')?.invalid && bondForm.get('market_rate')?.touched">
+                      <span *ngIf="bondForm.get('market_rate')?.errors?.['required']">La tasa de mercado es requerida</span>
+                      <span *ngIf="bondForm.get('market_rate')?.errors?.['min']">La tasa debe ser mayor a 0</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
 
-          <!-- Plazos y pagos -->
-          <h3 class="bond-section-title">Plazos y pagos</h3>
-          <div class="bond-form-row">
-            <mat-form-field appearance="outline" class="bond-form-field-half">
-              <mat-label>Plazo (meses)</mat-label>
-              <input matInput type="number" formControlName="term" min="1" placeholder="12" />
-              <mat-error *ngIf="termInvalid && termTouched">
-                <span *ngIf="term?.errors?.['required']">El plazo es requerido</span>
-                <span *ngIf="term?.errors?.['min']">El plazo debe ser al menos 1 mes</span>
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="bond-form-field-half">
-              <mat-label>Frecuencia de pago</mat-label>
-              <mat-select formControlName="payment_frequency">
-                <mat-option *ngFor="let freq of paymentFrequencies" [value]="freq.value">
-                  {{ freq.label }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Tipo de tasa</mat-label>
+                    <mat-select formControlName="rate_type">
+                      <mat-option *ngFor="let type of rateTypes" [value]="type.value">
+                        {{ type.label }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
 
-          <mat-divider class="bond-section-divider"></mat-divider>
+                <div class="bond-form-field-wrapper" *ngIf="showCapitalization">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Capitalización</mat-label>
+                    <mat-select formControlName="capitalization">
+                      <mat-option *ngFor="let cap of capitalizations" [value]="cap.value">
+                        {{ cap.label }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
 
-          <!-- Gracia -->
-          <h3 class="bond-section-title">Período de gracia</h3>
-          <div class="bond-form-row">
-            <mat-form-field appearance="outline" class="bond-form-field-half">
-              <mat-label>Tipo de gracia</mat-label>
-              <mat-select formControlName="grace_type">
-                <mat-option *ngFor="let grace of graceTypes" [value]="grace.value">
-                  {{ grace.label }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="bond-form-field-half">
-              <mat-label>Período de gracia (meses)</mat-label>
-              <input matInput type="number" formControlName="grace_period" min="0" placeholder="0" />
-              <mat-error *ngIf="gracePeriodInvalid && gracePeriodTouched">
-                <span *ngIf="grace_period?.errors?.['required']">El período de gracia es requerido</span>
-                <span *ngIf="grace_period?.errors?.['min']">El período debe ser 0 o mayor</span>
-              </mat-error>
-            </mat-form-field>
+              <div class="bond-section">
+                <h3 class="bond-section-title">Plazos y Pagos</h3>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Frecuencia de pago</mat-label>
+                    <mat-select formControlName="payment_frequency">
+                      <mat-option *ngFor="let freq of paymentFrequencies" [value]="freq.value">
+                        {{ freq.label }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna 3: Configuraciones Adicionales -->
+            <div class="bond-form-col bond-form-col-right">
+              <div class="bond-section">
+                <h3 class="bond-section-title">Período de Gracia</h3>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Tipo de gracia</mat-label>
+                    <mat-select formControlName="grace_type">
+                      <mat-option *ngFor="let grace of graceTypes" [value]="grace.value">
+                        {{ grace.label }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="bond-form-field-wrapper" *ngIf="bondForm.get('grace_type')?.value === 'PARTIAL' || bondForm.get('grace_type')?.value === 'TOTAL'">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Numero de periodos de gracia</mat-label>
+                    <input matInput type="number" formControlName="grace_period" min="0" placeholder="0" />
+                    <mat-error *ngIf="gracePeriodInvalid && gracePeriodTouched">
+                      <span *ngIf="grace_period?.errors?.['required']">El período de gracia es requerido</span>
+                      <span *ngIf="grace_period?.errors?.['min']">El período debe ser 0 o mayor</span>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="bond-section">
+                <h3 class="bond-section-title">Gastos</h3>
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Gastos de emisión (1%)</mat-label>
+                    <input matInput type="number" formControlName="issuance_expenses" readonly />
+                  </mat-form-field>
+                </div>
+
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Gastos de colocación (0.5%)</mat-label>
+                    <input matInput type="number" formControlName="placement_expenses" readonly />
+                  </mat-form-field>
+                </div>
+
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Gastos de estructuración (0.3%)</mat-label>
+                    <input matInput type="number" formControlName="structuring_expenses" readonly />
+                  </mat-form-field>
+                </div>
+
+                <div class="bond-form-field-wrapper">
+                  <mat-form-field appearance="outline" class="bond-form-field">
+                    <mat-label>Gastos Cavali (0.2%)</mat-label>
+                    <input matInput type="number" formControlName="cavali_expenses" readonly />
+                  </mat-form-field>
+                </div>
+
+              </div>
+            </div>
           </div>
 
           <!-- Botones -->
           <div class="bond-form-actions">
-            <button mat-stroked-button type="button" (click)="onCancel()" class="bond-btn">Cancelar</button>
-            <button mat-flat-button color="primary" type="submit" [disabled]="bondForm.invalid || isLoading" class="bond-btn">
-              <mat-progress-spinner *ngIf="isLoading" diameter="20" mode="indeterminate" color="accent"></mat-progress-spinner>
+            <button mat-stroked-button type="button" (click)="onCancel()" class="bond-btn bond-btn-cancel">
+              Cancelar
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="bondForm.invalid || isLoading"
+              [ngClass]="{'edit-profile-changed': bondForm.valid && !isLoading,'edit-profile-inactive': bondForm.invalid || isLoading}"
+              class="bond-btn main-button"
+            >
+              <mat-progress-spinner
+                *ngIf="isLoading"
+                diameter="20"
+                mode="indeterminate"
+                color="accent"
+              ></mat-progress-spinner>
               <span *ngIf="!isLoading">{{ isEditMode ? 'Actualizar' : 'Crear' }} Bono</span>
               <span *ngIf="isLoading">Guardando...</span>
             </button>

@@ -1,0 +1,98 @@
+<div class="container">
+  <mat-toolbar color="primary" class="header-toolbar">
+    <span>Bonos Disponibles</span>
+  </mat-toolbar>
+
+  <mat-progress-spinner
+    *ngIf="isLoading"
+    class="loading-spinner"
+    color="primary"
+    mode="indeterminate">
+  </mat-progress-spinner>
+
+  <div *ngIf="!isLoading" class="cards-container">
+    <mat-card *ngFor="let bond of (bonds$ | async) ?? []" class="bond-card">
+      <mat-card-header>
+        <div class="bond-header">
+          <mat-card-title class="bond-name">{{ bond?.name ?? '-' }}</mat-card-title>
+        </div>
+        <mat-card-subtitle class="bond-currency">{{ bond?.currency ?? '-' }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="bond-details">
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Valor nominal:</span>
+            <span class="bond-detail-value">
+              {{ bond?.faceValue && bond?.currency ? formatCurrency(bond.faceValue, bond.currency) : '-' }}
+            </span>
+          </div>
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Tasa de interés:</span>
+            <span class="bond-detail-value">
+              {{ bond?.interestRate ?? '-' }}% {{ getRateTypeLabel(bond?.rateType ?? '') }}
+            </span>
+          </div>
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Tasa de interés:</span>
+            <span class="bond-detail-value">
+              {{ bond?.interestRate ?? '-' }}% {{ getRateTypeLabel(bond?.rateType ?? '') }}
+            </span>
+          </div>
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Tasa de Descuento:</span>
+            <span class="bond-detail-value">{{ bond.marketRate }}%</span>
+          </div>
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Fecha de Emisión:</span>
+            <span class="bond-detail-value">{{ bond?.issueDate ?? '-' }}</span>
+          </div>
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Fecha de Vencimiento:</span>
+            <span class="bond-detail-value">{{ bond?.maturityDate ?? '-' }}</span>
+          </div>
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Frecuencia de pago:</span>
+            <span class="bond-detail-value">
+              {{ getPaymentFrequencyLabel(bond?.paymentFrequency ?? '') }}
+            </span>
+          </div>
+          <div class="bond-detail-row">
+            <span class="bond-detail-label">Tipo de gracia:</span>
+            <span class="bond-detail-value">
+              {{ getGraceTypeLabel(bond?.graceType ?? '') }}
+            </span>
+          </div>
+          <!-- Puedes agregar más información relevante aquí si lo deseas -->
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-stroked-button color="primary" class="main-button detail-button"
+                [disabled]="!bond?.id"
+                (click)="bond?.id && viewBondDetail(bond.id!)">
+          <mat-icon>search</mat-icon>
+          Ver detalle
+        </button>
+        <button mat-raised-button color="accent" class="main-button invest-button"
+                [disabled]="!bond?.id"
+                (click)="bond?.id && investInBond(bond.id!)">
+          <mat-icon>monetization_on</mat-icon>
+          Invertir
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!isLoading && ((bonds$ | async) ?? []).length === 0" class="empty-state">
+    <mat-card class="empty-card">
+      <mat-card-content>
+        <div class="empty-content">
+          <mat-icon class="empty-icon">description</mat-icon>
+          <h3 class="empty-title">No hay bonos disponibles</h3>
+          <p class="empty-description">Actualmente no hay bonos para invertir.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
