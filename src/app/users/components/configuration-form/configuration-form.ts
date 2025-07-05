@@ -22,6 +22,7 @@ import {FinancialMetricService} from '../../../bonds/service/financial-metric.se
 export class ConfigurationForm implements OnInit {
   form: FormGroup;
   configuration?: ConfigurationModel;
+  isLoading = false;
 
   currency = [
     { value: 'PEN', label: 'Soles' },
@@ -156,6 +157,7 @@ export class ConfigurationForm implements OnInit {
 
   onSubmit() {
     if (this.form.valid && this.configuration && this.configuration.id) {
+      this.isLoading = true;
       const updated = { ...this.configuration, ...this.form.value };
       this.configurationService.update(this.configuration.id, updated).subscribe({
         next: () => {
@@ -219,16 +221,19 @@ export class ConfigurationForm implements OnInit {
 
           forkJoin(updateObservables).subscribe({
             next: () => {
-              this.snackBar.open('Configuración, bonos, cashflows y métricas actualizados correctamente 🎉', 'Cerrar', { duration: 3000 });
+              this.snackBar.open('Configuración actualizada correctamente 🎉', 'Cerrar', { duration: 3000 });
               this.currencyOriginal = newCurrency;
+              this.isLoading = false;
             },
             error: () => {
               this.snackBar.open('Error al actualizar cashflows, bonos o métricas 😥', 'Cerrar', { duration: 3000 });
+              this.isLoading = false;
             }
           });
         },
         error: () => {
           this.snackBar.open('Ocurrió un error al actualizar la configuración 😥', 'Cerrar', { duration: 3000 });
+          this.isLoading = false;
         }
       });
     }

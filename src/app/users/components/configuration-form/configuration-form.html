@@ -5,8 +5,8 @@
   </mat-toolbar>
   <mat-card-content class="configuration-card-content">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <div class="configuration-fields-wrapper">
-        <div class="configuration-fields">
+      <div class="configuration-fields-wrapper" style="position: relative;">
+        <div class="configuration-fields" [class.blur]="isLoading">
           <mat-form-field appearance="fill" class="configuration-field">
             <mat-label>Moneda</mat-label>
             <mat-select formControlName="currency" required>
@@ -45,12 +45,16 @@
               mat-flat-button
               color="primary"
               type="submit"
-              [disabled]="form.invalid || !form.dirty"
+              [disabled]="form.invalid || !form.dirty || isLoading"
               class="config-btn"
+              style="min-width: 180px; display: flex; align-items: center; justify-content: center;"
             >
-              Guardar configuración
+              <span>Guardar configuración</span>
             </button>
           </div>
+        </div>
+        <div *ngIf="isLoading" class="loading-overlay">
+          <mat-progress-spinner mode="indeterminate" diameter="48" color="primary"></mat-progress-spinner>
         </div>
       </div>
     </form>
