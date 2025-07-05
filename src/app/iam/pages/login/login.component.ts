@@ -66,7 +66,6 @@ export class LoginComponent implements OnInit {
           if (client) {
             if (client.id !== undefined) {
               this.clientService.setClientId(client.id);
-              this.userApiService.setUserId(client.id);
               this.userApiService.setIsInvestor(false);
             }
             this.router.navigateByUrl('/client/home');
@@ -76,7 +75,6 @@ export class LoginComponent implements OnInit {
               const investor = investors.find((inv) => inv.userId === response['id']);
               if (investor && investor.id !== undefined) {
                 this.investorService.setInvestorId(investor.id);
-                this.userApiService.setUserId(investor.id);
                 this.userApiService.setIsInvestor(true);
                 this.router.navigateByUrl('/investor/home');
               } else {

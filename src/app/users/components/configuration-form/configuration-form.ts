@@ -184,20 +184,20 @@ export class ConfigurationForm implements OnInit {
                     if (this.currencyOriginal === 'PEN' && newCurrency === 'USD') {
                       // PEN a USD: dividir
                       console.log("Dividiendo valores de PEN a USD");
-                      updatedBond.faceValue = Number((bond.faceValue / rate).toFixed(2));
-                      updatedBond.issuanceExpenses = Number(((bond.issuanceExpenses || 0) / rate).toFixed(2));
-                      updatedBond.placementExpenses = Number(((bond.placementExpenses || 0) / rate).toFixed(2));
-                      updatedBond.structuringExpenses = Number(((bond.structuringExpenses || 0) / rate).toFixed(2));
-                      updatedBond.cavaliExpenses = Number(((bond.cavaliExpenses || 0) / rate).toFixed(2));
+                      updatedBond.faceValue = Number((bond.faceValue / rate).toFixed(3));
+                      updatedBond.issuanceExpenses = Number(((bond.issuanceExpenses || 0) / rate).toFixed(3));
+                      updatedBond.placementExpenses = Number(((bond.placementExpenses || 0) / rate).toFixed(3));
+                      updatedBond.structuringExpenses = Number(((bond.structuringExpenses || 0) / rate).toFixed(3));
+                      updatedBond.cavaliExpenses = Number(((bond.cavaliExpenses || 0) / rate).toFixed(3));
                       console.log("Valor Nominal Actualizado: ", updatedBond.faceValue);
                     } else if (this.currencyOriginal === 'USD' && newCurrency === 'PEN') {
                       // USD a PEN: multiplicar
                       console.log("Multiplicando valores de USD a PEN");
-                      updatedBond.faceValue = Number((bond.faceValue * rate).toFixed(2));
-                      updatedBond.issuanceExpenses = Number(((bond.issuanceExpenses || 0) * rate).toFixed(2));
-                      updatedBond.placementExpenses = Number(((bond.placementExpenses || 0) * rate).toFixed(2));
-                      updatedBond.structuringExpenses = Number(((bond.structuringExpenses || 0) * rate).toFixed(2));
-                      updatedBond.cavaliExpenses = Number(((bond.cavaliExpenses || 0) * rate).toFixed(2));
+                      updatedBond.faceValue = Number((bond.faceValue * rate).toFixed(3));
+                      updatedBond.issuanceExpenses = Number(((bond.issuanceExpenses || 0) * rate).toFixed(3));
+                      updatedBond.placementExpenses = Number(((bond.placementExpenses || 0) * rate).toFixed(3));
+                      updatedBond.structuringExpenses = Number(((bond.structuringExpenses || 0) * rate).toFixed(3));
+                      updatedBond.cavaliExpenses = Number(((bond.cavaliExpenses || 0) * rate).toFixed(3));
                       console.log("Valor Nominal Actualizado: ", updatedBond.faceValue);
                     }
                   }

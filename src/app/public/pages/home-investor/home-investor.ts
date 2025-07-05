@@ -95,6 +95,7 @@ export class HomeInvestor {
       next: (currentUser: any) => {
         if (currentUser) {
           this.firstName = currentUser.firstName ?? '';
+          console.log(this.firstName);
         }
         this.isLoading = false;
       },

@@ -22,7 +22,7 @@ export class BondMetricsCalculator {
     const totalExpensesInvestor = (bond.placementExpenses || 0) + (bond.cavaliExpenses || 0);
 
     const netProceeds = bond.faceValue - totalExpenses;
-    const netProceedsInvestor = bond.faceValue - totalExpensesInvestor;
+    const netProceedsInvestor = bond.faceValue + totalExpensesInvestor;
     const periodsPerYear = this.getPeriodsPerYear(bond.paymentFrequency);
 
     return {
@@ -53,110 +53,64 @@ export class BondMetricsCalculator {
     periodsPerYear: number,
     type: "EMISOR" | "INVERSIONISTA",
   ): number {
-    console.log("--- INICIO CÁLCULO TIR ---")
-    console.log(`Parámetros iniciales:`)
-    console.log(`- Inversión inicial (D₀): ${initialInvestment}`)
-    console.log(`- Períodos por año: ${periodsPerYear}`)
-    console.log(`- Tipo: ${type}`)
-
-    const futureCashFlows = cashFlows.filter((cf) => cf.period > 0)
-    console.log(
-      `Flujos futuros filtrados (${futureCashFlows.length} períodos > 0):`,
-      futureCashFlows.map((cf) => cf.installment),
-    )
-
-    // CORRECCIÓN 1: r debe ser la tasa periódica, no anual
-    let r = 0.01 // Empezar con 1% periódico
-    const maxIterations = BondConfig.DEFAULT_CONFIG.maxIterations
-    const tolerance = BondConfig.DEFAULT_CONFIG.tolerance
-
-    console.log(`Configuración iterativa: maxIterations=${maxIterations}, tolerance=${tolerance}`)
+    const futureCashFlows = cashFlows.filter((cf) => cf.period > 0);
+    let r = 0.1; // Empezar con 10% periódico
+    const maxIterations = BondConfig.DEFAULT_CONFIG.maxIterations;
+    const tolerance = BondConfig.DEFAULT_CONFIG.tolerance;
 
     for (let i = 0; i < maxIterations; i++) {
-      console.log(`\n--- Iteración ${i + 1} ---`)
-      console.log(`Tasa periódica actual (r): ${r} (${(r * 100).toFixed(6)}%)`)
+      let van = 0;
+      let vanDerivative = 0;
 
-      let van = 0
-      let vanDerivative = 0
-
-      // CORRECCIÓN 2: Para el emisor, la inversión inicial es positiva (recibe dinero)
-      // Para el inversionista, la inversión inicial es negativa (paga dinero)
       if (type === "EMISOR") {
-        van = initialInvestment // El emisor recibe el dinero
+        van = initialInvestment;
       } else {
-        van = -initialInvestment // El inversionista paga el dinero
+        van = -initialInvestment;
       }
 
       futureCashFlows.forEach((cf) => {
-        const n = cf.period
-        const cfValue = cf.installment
-        const discountFactor = Math.pow(1 + r, n)
-        const presentValue = cfValue / discountFactor
+        const n = cf.period;
+        const cfValue = cf.installment;
+        const discountFactor = Math.pow(1 + r, n);
+        const presentValue = cfValue / discountFactor;
 
-        // CORRECCIÓN 3: Para el emisor, los pagos son negativos (sale dinero)
-        // Para el inversionista, los pagos son positivos (entra dinero)
         if (type === "EMISOR") {
-          van -= presentValue // El emisor paga las cuotas
-          vanDerivative += (n * cfValue) / Math.pow(1 + r, n + 1) // Derivada positiva
+          van -= presentValue;
+          vanDerivative += (n * cfValue) / Math.pow(1 + r, n + 1);
         } else {
-          van += presentValue // El inversionista recibe las cuotas
-          vanDerivative -= (n * cfValue) / Math.pow(1 + r, n + 1) // Derivada negativa
+          van += presentValue;
+          vanDerivative -= (n * cfValue) / Math.pow(1 + r, n + 1);
         }
-
-        console.log(`  Período ${n}:`)
-        console.log(`  - Flujo: ${cfValue}`)
-        console.log(`  - Factor descuento: ${discountFactor.toFixed(8)}`)
-        console.log(`  - VP: ${presentValue.toFixed(8)}`)
-      })
-
-      console.log(`VAN total: ${van.toFixed(8)}`)
-      console.log(`VAN Derivada: ${vanDerivative.toFixed(8)}`)
+      });
 
       if (Math.abs(van) < tolerance) {
-        console.log(`CONVERGENCIA ALCANZADA. VAN < tolerancia (${Math.abs(van)} < ${tolerance})`)
-        break
+        break;
       }
 
       if (Math.abs(vanDerivative) < tolerance) {
-        console.warn(`ADVERTENCIA: Derivada cercana a cero (${vanDerivative}). Abortando iteración.`)
-        break
+        break;
       }
 
-      const newRate = r - van / vanDerivative
-      const rateChange = newRate - r
+      const newRate = r - van / vanDerivative;
+      const rateChange = newRate - r;
 
-      console.log(`Nueva tasa calculada: ${newRate.toFixed(8)} (Cambio: ${rateChange.toFixed(8)})`)
-
-      // Control de cambios drásticos
       if (Math.abs(rateChange) > 0.1) {
-        const adjustedChange = Math.sign(rateChange) * 0.01
-        r += adjustedChange
-        console.warn(`AJUSTE: Cambio drástico detectado. Ajustando tasa en ${adjustedChange} a ${r}`)
+        const adjustedChange = Math.sign(rateChange) * 0.01;
+        r += adjustedChange;
       } else {
-        r = newRate
+        r = newRate;
       }
 
-      // Limitar rango de tasas periódicas
       if (r < -0.99) {
-        console.warn(`AJUSTE: Tasa mínima alcanzada. Limitando a -0.99`)
-        r = -0.99
+        r = -0.99;
       }
       if (r > 1) {
-        console.warn(`AJUSTE: Tasa máxima alcanzada. Limitando a 1`)
-        r = 1
+        r = 1;
       }
-
-      console.log(`Tasa actualizada para próxima iteración: ${r.toFixed(8)}`)
     }
 
-    // CORRECCIÓN 4: Convertir tasa periódica a tasa efectiva anual
-    const effectiveAnnualRate = Math.pow(1 + r, periodsPerYear) - 1
-
-    console.log("--- FIN CÁLCULO TIR ---")
-    console.log(`TIR periódica calculada: ${r.toFixed(8)} (${(r * 100).toFixed(6)}%)`)
-    console.log(`TIR efectiva anual: ${effectiveAnnualRate.toFixed(8)} (${(effectiveAnnualRate * 100).toFixed(6)}%)`)
-
-    return effectiveAnnualRate
+    const effectiveAnnualRate = Math.pow(1 + r, periodsPerYear) - 1;
+    return effectiveAnnualRate;
   }
 
   private static calculateDuration(cashFlows: CashflowModel[], periodicRate: number, periodsPerYear: number): number {

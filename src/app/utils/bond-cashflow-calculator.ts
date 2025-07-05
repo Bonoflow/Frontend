@@ -61,7 +61,7 @@ export class BondCashflowCalculator {
       finalBalance: BondMetricsCalculator.round(currentBalance - totalExpenses),
       fixedInstallment: BondMetricsCalculator.round(bond.faceValue - totalExpenses),
       expenses: totalExpenses,
-      investorFlow: BondMetricsCalculator.round(bond.faceValue - totalExpensesInvestor)
+      investorFlow: BondMetricsCalculator.round(bond.faceValue + totalExpensesInvestor)
     });
 
     for (let period = 1; period <= totalPeriods; period++) {

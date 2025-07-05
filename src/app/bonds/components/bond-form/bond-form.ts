@@ -147,7 +147,7 @@ export class BondForm implements OnInit {
           if (bond) {
             this.bondForm.patchValue({
               name: bond.name,
-              nominal_value: bond.faceValue,
+              nominal_value: Number(bond.faceValue.toFixed(2)),
               currency: bond.currency,
               interest_rate: bond.interestRate,
               rate_type: bond.rateType,
@@ -157,10 +157,6 @@ export class BondForm implements OnInit {
               grace_period: bond.gracePeriod,
               issue_date: bond.issueDate,
               maturity_date: bond.maturityDate,
-              issuance_expenses: bond.issuanceExpenses || 0,
-              placement_expenses: bond.placementExpenses || 0,
-              structuring_expenses: bond.structuringExpenses || 0,
-              cavali_expenses: bond.cavaliExpenses || 0,
               market_rate: bond.marketRate || 0,
             });
           }
